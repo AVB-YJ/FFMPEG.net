@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 using System.IO;
 
 using Multimedia.FFmpeg;
@@ -35,13 +36,26 @@ namespace Harness
             videoCodec.Open(videoStream.CodecContext);
             AvFrame finsihedFrame = null;
             AvPacket pkt;
-            while (finsihedFrame == null)
+            int frame = 0;
+            for (int i = 0; i < 500000; i++)
             {
                 pkt = context.ReadFrame(null);
-                finsihedFrame = videoCodec.DecodeVideo(pkt);
+                if (pkt.StreamIndex == videoStream.Index)
+                {
+                    finsihedFrame = videoCodec.DecodeVideo(pkt);
+                    if (finsihedFrame != null)
+                    {
+                        Bitmap p = finsihedFrame.ConvertToBitmap(videoCodec.Context);
+                        p.Save(@"C:\out\frame" + frame + @".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                        p.Dispose();
+                        finsihedFrame = null;
+                        ++frame;
+                    }
+                }
+                else
+                    Console.WriteLine("Not");
+                pkt.Dispose();
             }
-            finsihedFrame.ConvertToBitmap(videoCodec.Context);
-
             return;
 
             AvCodec codec = streams[0].CodecContext.GetCodec();

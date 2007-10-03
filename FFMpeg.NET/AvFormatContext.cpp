@@ -50,12 +50,9 @@ namespace Multimedia
 
 		AvPacket^ AvFormatContext::ReadFrame(AvStream^ stream)
 		{
-			AVPacket packet;
-			if(av_read_frame(this->Handle, &packet) != 0)
-				throw gcnew IO::IOException();
 			AVPacket* final = new AVPacket;
-			memcpy(final, &packet, sizeof(AVPacket));
-			
+			if(av_read_frame(this->Handle, final) != 0)
+				throw gcnew IO::IOException();			
 			return gcnew AvPacket(final);
 		}
 

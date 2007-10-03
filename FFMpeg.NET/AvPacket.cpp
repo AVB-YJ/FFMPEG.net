@@ -11,5 +11,10 @@ namespace Multimedia
 			data = gcnew array<uint8_t>(packet->size);
 			System::Runtime::InteropServices::Marshal::Copy(IntPtr(packet->data), data, 0, packet->size);
 		}
+
+		AvPacket::~AvPacket()
+		{
+			av_free_packet(Handle);
+		}
 	}
 }

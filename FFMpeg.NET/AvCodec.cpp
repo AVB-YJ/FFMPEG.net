@@ -60,6 +60,9 @@ namespace Multimedia
 			pin_ptr<uint8_t> dataPtr = &packet->Data[0];
 
 			int result = avcodec_decode_video((AVCodecContext*)context, (AVFrame*)finishedFrame, &frame_finished, dataPtr, packet->Data->Length);
+			if(result < 0)
+				Console::WriteLine("Error");
+			//	throw gcnew Exception("An error occured.");
 
 			if(frame_finished == 0)
 				return nullptr;

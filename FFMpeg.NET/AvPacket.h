@@ -26,6 +26,8 @@ namespace Multimedia
 				delete this->Handle; 
 			}
 
+			~AvPacket();
+
 		internal:
 			AvPacket(AVPacket*);
 

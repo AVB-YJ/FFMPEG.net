@@ -2,6 +2,8 @@
 
 #include "NativeWrapper.h"
 
+using namespace System::Drawing;
+
 namespace Multimedia
 {
 	namespace FFmpeg
@@ -12,7 +14,7 @@ namespace Multimedia
 		{
 		public:
 			AvFrame(void);
-			void ConvertToBitmap(AvCodecContext^ context);
+			Bitmap^ ConvertToBitmap(AvCodecContext^ context);
 
 			explicit operator AVPicture*() { return (AVPicture*)this->Handle; }
 		};
