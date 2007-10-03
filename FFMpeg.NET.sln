@@ -5,8 +5,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FFMpeg.NET", "FFMpeg.NET\FF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harness", "Harness\Harness.csproj", "{EAEA4E6F-A534-471D-9A45-F659637EB190}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dump", "Dump\Dump.vcproj", "{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug (Shared FFMPEG)|Any CPU = Debug (Shared FFMPEG)|Any CPU
@@ -49,19 +47,6 @@ Global
 		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release|Win32.ActiveCfg = Release|Any CPU
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Debug (Shared FFMPEG)|Any CPU.ActiveCfg = Debug|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Debug (Shared FFMPEG)|Mixed Platforms.ActiveCfg = Debug|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Debug (Shared FFMPEG)|Win32.ActiveCfg = Debug|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Debug|Win32.ActiveCfg = Debug|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Debug|Win32.Build.0 = Debug|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Release|Any CPU.ActiveCfg = Release|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Release|Win32.ActiveCfg = Release|Win32
-		{152D0C68-4816-48EB-8AF1-3D6C1EBAD00B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
