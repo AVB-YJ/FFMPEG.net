@@ -54,7 +54,7 @@ namespace Multimedia
 			if(context->Handle->sample_fmt != SAMPLE_FMT_S16)
 				throw gcnew Exception("Sample type mismatch.");
 
-			return gcnew AvSamples(final);
+			return gcnew AvSamples(final, context->Channels, context->SampleRate);
 		}
 
 		AvFrame^ AvCodec::DecodeVideo(AvPacket^ packet)

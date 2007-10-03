@@ -47,10 +47,33 @@ namespace Multimedia
 				array<int16_t>^ get() { return shortSamples; }
 			}
 
-			AvSamples(array<uint8_t>^ samples);
-			AvSamples(array<int16_t>^ samples);
-			AvSamples(array<int32_t>^ samples, AudioFormat format);
-			AvSamples(array<float>^ samples);
+			property int SampleRate { int get() { return sampleRate; } }
+			property int Channels { int get() { return channels; } }
+
+			property int BitsPerSample
+			{
+				int get() 
+				{
+					switch(format)
+					{
+					case AudioFormat::Unsigned8:
+						return 8;
+					case AudioFormat::Signed16:
+						return 16;
+					case AudioFormat::Signed24:
+						return 24;
+					case AudioFormat::Float:
+					case AudioFormat::Signed32:
+						return 32;
+					}
+					return 0;
+				}
+			}
+
+			AvSamples(array<uint8_t>^ samples, int channels, int samplerate);
+			AvSamples(array<int16_t>^ samples, int channels, int samplerate);
+			AvSamples(array<int32_t>^ samples, int channels, int samplerate, AudioFormat format);
+			AvSamples(array<float>^ samples, int channels, int samplerate);
 			
 		private:
 			AudioFormat format;
@@ -58,6 +81,7 @@ namespace Multimedia
 			array<int16_t>^ shortSamples;
 			array<int32_t>^ intSamples;
 			array<float>^ floatSamples;
+			int channels, sampleRate, bitsPerSample;
 		};
 	}
 }

@@ -12,7 +12,7 @@ namespace Harness
     {
         static void Main(string[] args)
         {
-            AvFormatContext context = AvFormatContext.Open(@"D:\Breach.DVDRip.XviD-DMT\CD1\dmt-breach-cd1.avi");
+            AvFormatContext context = AvFormatContext.Open(@"D:\BBC.Absolute.Zero.1of2.The.Conquest.of.Cold.2007.DVBC.XviD.MP3.www.mvgroup.org.avi");
             string s = context.ToString();
             AvStream[] streams = context.GetStreams();
                     
@@ -43,11 +43,26 @@ namespace Harness
             AvFrame finsihedFrame = null;
             AvPacket pkt;
             int frame = 0;
-            for (int i = 0; i < 500000; i++)
+
+            BinaryWriter writer = new BinaryWriter(File.OpenWrite(@"C:\out\out.wav"));
+            writer.Write(Encoding.ASCII.GetBytes("RIFF"), 0, 4);
+            writer.Write((int)0);
+            writer.Write(Encoding.ASCII.GetBytes("WAVEfmt "), 0, 8);
+            writer.Write((int)16);
+            writer.Write((short)1);
+            writer.Write((short)audioCodec.Context.Channels);
+            writer.Write((int)audioCodec.Context.SampleRate);
+            writer.Write((int)(audioCodec.Context.SampleRate * audioCodec.Context.Channels * 16 / 8));
+            writer.Write((short)(audioCodec.Context.Channels * 16 / 8));
+            writer.Write((short)16);
+
+            MemoryStream str = new MemoryStream();
+            BinaryWriter sampleWriter = new BinaryWriter(str);
+            for (int i = 0; i < 2000; i++)
             {
                 pkt = context.ReadFrame(null);
                 if (pkt.StreamIndex == videoStream.Index ) {
-                        finsihedFrame = videoCodec.DecodeVideo(pkt);
+                        /*finsihedFrame = videoCodec.DecodeVideo(pkt);
                         if (finsihedFrame != null)
                         {
                             Console.WriteLine("Frame format: " + finsihedFrame.Format + " (" + finsihedFrame.Width + "x" + finsihedFrame.Height + ")");
@@ -57,18 +72,30 @@ namespace Harness
                             finsihedFrame.Dispose();
                             finsihedFrame = null;
                             ++frame;
-                        }
+                        }*/
                 }
                 else if(pkt.StreamIndex == audioStream.Index)
                 {
                         AvSamples samples = audioCodec.DecodeAudio(pkt);
                         if (samples.Count > 0)
+                        {
                             Console.WriteLine("Audio Format: " + samples.Format + " (" + samples.Count + " samples)");
+                            for (int xi = 0; xi < samples.Count; xi++)
+                                sampleWriter.Write(samples.ShortSamples[xi]);
+                        }   
                 }
                 else
                     Console.WriteLine("Erorr");
                 pkt.Dispose();
             }
+            sampleWriter.Close();
+            byte[] sampleBytes = str.ToArray();
+            writer.Write(Encoding.ASCII.GetBytes("data"), 0, 4);
+            writer.Write(sampleBytes.Length);
+            writer.Write(sampleBytes);
+            writer.Seek(4, SeekOrigin.Begin);
+            writer.Write((int)36 + sampleBytes.Length);
+            writer.Close();
             return;
         }
     }

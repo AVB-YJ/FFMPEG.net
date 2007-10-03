@@ -30,6 +30,16 @@ namespace Multimedia
 				int get(); 
 			}
 
+			property int Channels
+			{
+				int get() { return Handle->channels; }
+			}
+
+			property int SampleRate
+			{
+				int get() { return Handle->sample_rate; }
+			}
+
 			property int BitrateTolerance
 			{
 				int get();
