@@ -241,6 +241,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="$(SolutionDir)\ffmpeg\include"
 				RuntimeLibrary="2"
 				WarningLevel="2"
 				DebugInformationFormat="3"
@@ -257,6 +258,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="avutil-49.lib avcodec-51.lib avformat-51.lib swscale-0.lib $(NOINHERIT)"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\ffmpeg\lib&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 			/>
