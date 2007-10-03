@@ -12,11 +12,11 @@ namespace Harness
     {
         static void Main(string[] args)
         {
-            AvFormatContext context = AvFormatContext.Open(@"E:\BBC\Light Fantastic\01 - Let There Be Light.avi");
+            AvFormatContext context = AvFormatContext.Open(@"D:\Breach.DVDRip.XviD-DMT\CD1\dmt-breach-cd1.avi");
             string s = context.ToString();
             AvStream[] streams = context.GetStreams();
-
-            AvStream videoStream = null;
+                    
+            AvStream videoStream = null, audioStream = null;
 
             foreach (AvStream stream in streams)
             {
@@ -25,6 +25,9 @@ namespace Harness
                     case CodecType.Video:
                         videoStream = stream;
                         break;
+                    case CodecType.Audio:
+                        audioStream = stream;
+                        break;
                 }
             }
 
@@ -32,53 +35,41 @@ namespace Harness
                 return;
 
             AvCodec videoCodec = videoStream.CodecContext.GetCodec();
+            AvCodec audioCodec = audioStream.CodecContext.GetCodec();
 
             videoCodec.Open(videoStream.CodecContext);
+            audioCodec.Open(audioStream.CodecContext);
+
             AvFrame finsihedFrame = null;
             AvPacket pkt;
             int frame = 0;
             for (int i = 0; i < 500000; i++)
             {
                 pkt = context.ReadFrame(null);
-                if (pkt.StreamIndex == videoStream.Index)
+                if (pkt.StreamIndex == videoStream.Index ) {
+                        finsihedFrame = videoCodec.DecodeVideo(pkt);
+                        if (finsihedFrame != null)
+                        {
+                            Console.WriteLine("Frame format: " + finsihedFrame.Format + " (" + finsihedFrame.Width + "x" + finsihedFrame.Height + ")");
+                            Bitmap p = finsihedFrame.ConvertToBitmap();
+                            p.Save(@"C:\out\frame" + frame + @".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                            p.Dispose();
+                            finsihedFrame.Dispose();
+                            finsihedFrame = null;
+                            ++frame;
+                        }
+                }
+                else if(pkt.StreamIndex == audioStream.Index)
                 {
-                    finsihedFrame = videoCodec.DecodeVideo(pkt);
-                    if (finsihedFrame != null)
-                    {
-                        Bitmap p = finsihedFrame.ConvertToBitmap(videoCodec.Context);
-                        p.Save(@"C:\out\frame" + frame + @".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-                        p.Dispose();
-                        finsihedFrame = null;
-                        ++frame;
-                    }
+                        AvSamples samples = audioCodec.DecodeAudio(pkt);
+                        if (samples.Count > 0)
+                            Console.WriteLine("Audio Format: " + samples.Format + " (" + samples.Count + " samples)");
                 }
                 else
-                    Console.WriteLine("Not");
+                    Console.WriteLine("Erorr");
                 pkt.Dispose();
             }
             return;
-
-            AvCodec codec = streams[0].CodecContext.GetCodec();
-            codec.Open(streams[0].CodecContext);
-
-            Stream str = File.OpenWrite(@"C:\out.wav");
-            for (int i = 0; i < 5000; i++)
-            {
-                AvPacket packet = context.ReadFrame(null);
-                if (packet.StreamIndex == streams[0].Index)
-                {
-                    short[] x = codec.DecodeAudio(packet);
-                    if (x.Length != 0)
-                        Console.WriteLine(x.Length);
-                    for (int j = 0; j < x.Length; j++)
-                    {
-                        byte[] array = new byte[] { (byte)(x[j] >> 8), (byte)x[j] };
-                        str.Write(array, 0, 2);
-                    }
-                }
-            }
-            str.Close();
-            codec.Close();
         }
     }
 }

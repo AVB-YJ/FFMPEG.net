@@ -9,6 +9,8 @@ namespace Multimedia
 		template<typename T>
 		public ref class NativeWrapper
 		{
+		public:
+			
 		internal:
 			NativeWrapper(T* ptr)
 			{

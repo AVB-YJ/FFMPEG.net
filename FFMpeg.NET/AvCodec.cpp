@@ -35,10 +35,10 @@ namespace Multimedia
 			this->context = context;
 		}
 
-		array<int16_t>^ AvCodec::DecodeAudio(AvPacket^ packet)
+		AvSamples^ AvCodec::DecodeAudio(AvPacket^ packet)
 		{
 			if(this->context == nullptr)
-				throw gcnew InvalidOperationException("This is not open yet.");
+				throw gcnew InvalidOperationException("This codec is not open yet.");
 			array<int16_t>^ outputBuffer = gcnew array<int16_t>((AVCODEC_MAX_AUDIO_FRAME_SIZE * 3) / 2);
 
 			pin_ptr<int16_t> samplePtr = &outputBuffer[0];
@@ -50,20 +50,22 @@ namespace Multimedia
 			int decoded = avcodec_decode_audio2((AVCodecContext*)context, samplePtr, &length, inputPtr, packet->Data->Length);
 			array<int16_t>^ final = gcnew array<int16_t>(length / sizeof(int16_t));
 			Array::Copy(outputBuffer, final, final->Length);
-			return final;
+
+			if(context->Handle->sample_fmt != SAMPLE_FMT_S16)
+				throw gcnew Exception("Sample type mismatch.");
+
+			return gcnew AvSamples(final);
 		}
 
 		AvFrame^ AvCodec::DecodeVideo(AvPacket^ packet)
 		{
 			int frame_finished;
-			AvFrame^ finishedFrame = gcnew AvFrame();
+			AvFrame^ finishedFrame = gcnew AvFrame(context->PictureFormat, context->Width, context->Height);
 			pin_ptr<uint8_t> dataPtr = &packet->Data[0];
 
 			int result = avcodec_decode_video((AVCodecContext*)context, (AVFrame*)finishedFrame, &frame_finished, dataPtr, packet->Data->Length);
 			if(result < 0)
 				Console::WriteLine("Error");
-			//	throw gcnew Exception("An error occured.");
-
 			if(frame_finished == 0)
 				return nullptr;
 			return finishedFrame;

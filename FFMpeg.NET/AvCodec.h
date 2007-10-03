@@ -4,6 +4,7 @@ using namespace System;
 #include "NativeWrapper.h"
 #include "AvPacket.h"
 #include "AvFrame.h"
+#include "AvSamples.h"
 
 namespace Multimedia
 {
@@ -27,7 +28,7 @@ namespace Multimedia
 			void Open(AvCodecContext^ context);
 			void Close();
 
-			array<int16_t>^ DecodeAudio(AvPacket^ packet);
+			AvSamples^ DecodeAudio(AvPacket^ packet);
 			AvFrame^ DecodeVideo(AvPacket^ packet);
 			int DecodeSubtitle();
 

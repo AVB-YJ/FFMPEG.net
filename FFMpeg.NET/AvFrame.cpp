@@ -10,50 +10,41 @@ namespace Multimedia
 {
 	namespace FFmpeg
 	{
-		AvFrame::AvFrame(void)
+		AvFrame::AvFrame(int format, int width, int height)
 			: NativeWrapper(avcodec_alloc_frame())
-		{ }
+		{ 
+			this->format = (FrameFormat)format;
+			this->size = System::Drawing::Size(width, height);
+		}
 
-		Bitmap^ AvFrame::ConvertToBitmap(AvCodecContext^ context)
+		AvFrame::AvFrame(int format, System::Drawing::Size size)
+			: NativeWrapper(avcodec_alloc_frame())
+		{ 
+			this->format = (FrameFormat)format;
+			this->size = size;
+		}
+
+		AvFrame::~AvFrame()
 		{
-			AvFrame^ final = gcnew AvFrame();
-			int dst_fmt = PIX_FMT_RGB24;
-			/*
-			avpicture_layout((AVPicture*)this, context->PictureFormat, context->Width, context->Height, buffer, count);
+			av_free(this->Handle);
+		}
 
-			Stream^ str = File::OpenWrite("C:\\out.bmp");
-			str->Write(bufferArr, 0, count);
-			str->Close();
-			return nullptr;
-			*/
-			int count = avpicture_get_size(dst_fmt, context->Width, context->Height);
+		Bitmap^ AvFrame::ConvertToBitmap()
+		{
+			AvFrame^ final = gcnew AvFrame(PIX_FMT_BGR24, this->size);
+			int dst_fmt = (int)final->Format;
+			int count = avpicture_get_size(dst_fmt, this->Width, this->Height);
 
 			array<uint8_t>^ bufferArr = gcnew array<uint8_t>(count);
 			pin_ptr<uint8_t> buffer = &bufferArr[0];
 			
-			avpicture_fill((AVPicture*)final, buffer, dst_fmt, context->Width, context->Height);
+			avpicture_fill((AVPicture*)final, buffer, dst_fmt, Width, Height);
 
-			SwsContext* swsContext = sws_getContext(context->Width, context->Height, context->PictureFormat, 
-				context->Width, context->Height, dst_fmt, SWS_BICUBIC, NULL, NULL, NULL);
+			SwsContext* swsContext = sws_getContext(Width, Height, (int)Format, 
+				Width, Height, dst_fmt, SWS_BICUBIC, NULL, NULL, NULL);
 			if(swsContext == NULL)
 				throw gcnew Exception();
-			sws_scale(swsContext, this->Handle->data, Handle->linesize, 0, context->Height, final->Handle->data, final->Handle->linesize);
-			
-			/*
-			Stream^ str2 = File::OpenWrite("C:\\out.ppm");
-
-			String^ header = String::Format("P6\n{0} {1}\n255\n", context->Width, context->Height);
-			str2->Write(Encoding::ASCII->GetBytes(header), 0, Encoding::ASCII->GetByteCount(header));
-			str2->Write(bufferArr, 0, count);
-			for(int y = 0; y < context->Height; y++)
-			{
-				for(int x = 0; x < context->Width * 3; x++)
-				{
-					str2->WriteByte(buffer[0 + y * final->Handle->linesize[0] + x]);
-				}
-			}
-			str2->Close();
-			*/
+			sws_scale(swsContext, this->Handle->data, Handle->linesize, 0, Height, final->Handle->data, final->Handle->linesize);
 
 			Stream^ str = gcnew MemoryStream();
 			BinaryWriter^ writer = gcnew BinaryWriter(str);
@@ -63,8 +54,8 @@ namespace Multimedia
 			writer->Write((int32_t)0);
 			writer->Write((int32_t)0x36);
 			writer->Write((int32_t)40);
-			writer->Write((int32_t)context->Width);
-			writer->Write((int32_t)context->Height);
+			writer->Write((int32_t)Width);
+			writer->Write((int32_t)Height);
 			writer->Write((int16_t)1);
 			writer->Write((int16_t)24);
 			writer->Write((int32_t)0);
@@ -73,15 +64,14 @@ namespace Multimedia
 			writer->Write((int32_t)3780);
 			writer->Write((int32_t)0);
 			writer->Write((int32_t)0);
-			Array::Reverse(bufferArr);
-			writer->Write(bufferArr);
+			// Array::Reverse(bufferArr);
+			for(int y = Height - 1; y >= 0; y--)
+				writer->Write(bufferArr, y * final->Handle->linesize[0], Width * 3);
 			writer->Flush();
 			writer->Seek(0, SeekOrigin::Begin);
 
-			// Stream^ str = gcnew MemoryStream(bufferArr);
 			Bitmap^ bitmap = gcnew Bitmap(str);
 			return bitmap;
-			// final->Free();
 		}
 	}
 }
