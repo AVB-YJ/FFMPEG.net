@@ -13,3 +13,7 @@ void Utility::Initialize(void)
 	av_register_all();
 	Initialized = true;
 }
+
+void main()
+{
+}
