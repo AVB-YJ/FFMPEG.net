@@ -9,17 +9,31 @@ namespace Multimedia
 	namespace FFmpeg
 	{
 		AvCodec::AvCodec(AVCodec* codec)
-		: NativeWrapper(codec)
+			: NativeWrapper(codec)
+		{ }
+
+		AvCodec::AvCodec(AVCodec* codec, AvCodecContext^ context)
+			: NativeWrapper(codec)
 		{
-			RawData = gcnew array<uint8_t>(sizeof(AVCodec));
-			Marshal::Copy(IntPtr((void*)codec), RawData, 0, sizeof(AVCodec));
+			this->context = context;
+		}
+
+		void AvCodec::Cleanup(bool disposing)
+		{
+			if(!Cleaned) 
+			{
+				if(disposing && context != nullptr)
+				{
+					delete context;
+					context = nullptr;
+				}
+				Cleaned = true;
+			}
 		}
 
 		String^ AvCodec::Name::get()
 		{
-			pin_ptr<uint8_t> ptr = &RawData[0];
-			AVCodec* codec = (AVCodec*)ptr;
-			return gcnew String(codec->name);
+			return gcnew String(Handle->name);
 		}
 
 		AvCodecContext^ AvCodec::Context::get()
@@ -27,17 +41,18 @@ namespace Multimedia
 			return this->context;
 		}
 
-		void AvCodec::Open(AvCodecContext^ context)
+		void AvCodec::Open()
 		{
-			if(this->context != nullptr)
-				throw gcnew InvalidOperationException("This codec is already open in another context.");
+			if(this->context == nullptr)
+				throw gcnew InvalidOperationException("Invalid context.");
 			avcodec_open((AVCodecContext*)context, (AVCodec*)this);
 			this->context = context;
+			opened = true;
 		}
 
 		AvSamples^ AvCodec::DecodeAudio(AvPacket^ packet)
 		{
-			if(this->context == nullptr)
+			if(!opened)
 				throw gcnew InvalidOperationException("This codec is not open yet.");
 			array<int16_t>^ outputBuffer = gcnew array<int16_t>((AVCODEC_MAX_AUDIO_FRAME_SIZE * 3) / 2);
 
@@ -59,6 +74,9 @@ namespace Multimedia
 
 		AvFrame^ AvCodec::DecodeVideo(AvPacket^ packet)
 		{
+			if(!opened)
+				throw gcnew InvalidOperationException("This codec is not open yet.");
+
 			int frame_finished;
 			AvFrame^ finishedFrame = gcnew AvFrame(context->PictureFormat, context->Width, context->Height);
 			pin_ptr<uint8_t> dataPtr = &packet->Data[0];
@@ -73,13 +91,32 @@ namespace Multimedia
 
 		int AvCodec::DecodeSubtitle()
 		{
+			if(!opened)
+				throw gcnew InvalidOperationException("This codec is not open yet.");
 			return 0;
 		}
 
 		void AvCodec::Close()
 		{
+			if(!opened)
+				throw gcnew InvalidOperationException("This codec is not open yet.");
 			avcodec_close((AVCodecContext*)context);
-			this->context = nullptr;
+		}
+
+		AvCodec^ AvCodec::FindEncoder(CodecId id)
+		{
+			AVCodec* codec = avcodec_find_encoder((::CodecID)id);
+			if(codec == NULL)
+				return nullptr;
+			AvCodec^ codecManaged = gcnew AvCodec(codec);
+			AvCodecContext^ context = gcnew AvCodecContext();
+			codecManaged->context = context;
+			return codecManaged;
+		}
+
+		AvCodec^ AvCodec::FindEncoder(String^ name)
+		{
+			return nullptr;
 		}
 	}
 }

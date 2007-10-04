@@ -27,7 +27,7 @@ namespace Multimedia
 		public:
 			property int Bitrate
 			{
-				int get(); 
+				int get() { return Handle->bit_rate; }
 			}
 
 			property int Channels
@@ -65,9 +65,9 @@ namespace Multimedia
 				MotionEstimation get();
 			}
 
-			property int CodecId
+			property CodecId Id
 			{
-				int get();
+				CodecId get() { return (CodecId)(Handle->codec_id); }
 			}
 
 			property int Width
@@ -85,11 +85,18 @@ namespace Multimedia
 				int get() { return this->Handle->pix_fmt; }
 			}
 
+			AvCodecContext();
+
 			AvCodec^ GetCodec();
+
+		protected:
+			virtual void Cleanup(bool disposing) override;
+
 		internal:
 			AvCodecContext(AVCodecContext*);
+
 		private:
-			array<uint8_t>^ rawData;
+			bool needFree;
 		};
 	}
 }

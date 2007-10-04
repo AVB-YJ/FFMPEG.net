@@ -13,7 +13,7 @@ namespace Multimedia
 		public:
 			property array<uint8_t>^ Data
 			{
-				array<uint8_t>^ get() { return data; }
+				array<uint8_t>^ get();
 			}
 
 			property int StreamIndex
@@ -21,17 +21,15 @@ namespace Multimedia
 				int get() { return this->Handle->stream_index; }
 			}
 
-			!AvPacket() 
-			{ 
-				delete this->Handle; 
-			}
-
-			~AvPacket();
+		protected:
+			virtual void Cleanup(bool disposing) override;
 
 		internal:
 			AvPacket(AVPacket*);
+			AvPacket();
 
 		private:
+			bool needFree;
 			array<uint8_t>^ data;
 		};
 	}

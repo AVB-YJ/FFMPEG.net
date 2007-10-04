@@ -12,7 +12,7 @@ namespace Multimedia
 			: NativeWrapper(stream)
 		{
 			this->rawData = gcnew array<uint8_t>(sizeof(AVStream));
-			CodecID id = stream->codec->codec_id;
+			CodecID id = (CodecID)stream->codec->codec_id;
 			Marshal::Copy(IntPtr(stream), this->rawData, 0, sizeof(AVStream));
 			context = gcnew AvCodecContext(stream->codec);
 		}

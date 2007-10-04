@@ -8,18 +8,16 @@ namespace Multimedia
 {
 	namespace FFmpeg
 	{
-		AvCodecContext::AvCodecContext(AVCodecContext* ptr)
-		: NativeWrapper(ptr)
-		{
-			rawData = gcnew array<uint8_t>(sizeof(AVCodecContext));
-			Marshal::Copy(IntPtr(ptr), rawData, 0, sizeof(AVCodecContext));
+		AvCodecContext::AvCodecContext()
+			: NativeWrapper(avcodec_alloc_context())
+		{ 
+			needFree = true;
 		}
 
-		int AvCodecContext::Bitrate::get()
-		{
-			pin_ptr<uint8_t> ptr = &rawData[0];
-			AVCodecContext* codec = (AVCodecContext*)ptr;
-			return codec->bit_rate;
+		AvCodecContext::AvCodecContext(AVCodecContext* ptr)
+			: NativeWrapper(ptr)
+		{ 
+			needFree = false;
 		}
 
 		int AvCodecContext::BitrateTolerance::get()
@@ -32,6 +30,16 @@ namespace Multimedia
 			return 0;
 		}
 
+		void AvCodecContext::Cleanup(bool disposing)
+		{
+			if(!Cleaned) 
+			{
+				if(needFree && Handle != NULL) 
+					av_free(Handle);
+				Cleaned = true;
+			}
+		}
+
 		MotionEstimation AvCodecContext::MotionEstimationMethod::get()
 		{
 			return MotionEstimation::Zero;
@@ -42,20 +50,10 @@ namespace Multimedia
 			return 0;
 		}
 
-		int AvCodecContext::CodecId::get()
-		{
-			pin_ptr<uint8_t> ptr = &rawData[0];
-			AVCodecContext* codec = (AVCodecContext*)ptr;
-			return codec->codec_id;
-		}
-
 		AvCodec^ AvCodecContext::GetCodec()
 		{
-			pin_ptr<uint8_t> ptr = &rawData[0];
-			AVCodecContext* codec = (AVCodecContext*)ptr;
-			AVCodec* codecInstance = avcodec_find_decoder((CodecID)CodecId);
-
-			return gcnew AvCodec(codecInstance);
+			AVCodec* codecInstance = avcodec_find_decoder((::CodecID)Id);
+			return gcnew AvCodec(codecInstance, this);
 		}
 	};
 };

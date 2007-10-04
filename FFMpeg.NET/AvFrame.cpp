@@ -24,9 +24,10 @@ namespace Multimedia
 			this->size = size;
 		}
 
-		AvFrame::~AvFrame()
+		void AvFrame::Cleanup(bool disposing)
 		{
 			av_free(this->Handle);
+			this->Cleaned = true;
 		}
 
 		Bitmap^ AvFrame::ConvertToBitmap()

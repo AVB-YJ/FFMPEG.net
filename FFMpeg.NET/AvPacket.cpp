@@ -1,20 +1,39 @@
 #include "StdAfx.h"
 #include "AvPacket.h"
 
+using namespace System::Runtime::InteropServices;
+
 namespace Multimedia
 {
 	namespace FFmpeg
 	{
 		AvPacket::AvPacket(AVPacket* packet)
 			: NativeWrapper(packet)
-		{
-			data = gcnew array<uint8_t>(packet->size);
-			System::Runtime::InteropServices::Marshal::Copy(IntPtr(packet->data), data, 0, packet->size);
+		{ 
+			needFree = false;
 		}
 
-		AvPacket::~AvPacket()
+		AvPacket::AvPacket()
+			: NativeWrapper(new AVPacket)
 		{
-			av_free_packet(Handle);
+			needFree = true;
+		}
+
+		void AvPacket::Cleanup(bool disposing)
+		{
+			if(needFree)
+				av_free_packet(this->Handle);
+			Cleaned = true;
+		}
+
+		array<uint8_t>^ AvPacket::Data::get()
+		{
+			if(data == nullptr)
+			{
+				data = gcnew array<uint8_t>(Handle->size);
+				Marshal::Copy(IntPtr(Handle->data), data, 0, data->Length);
+			}
+			return data;
 		}
 	}
 }

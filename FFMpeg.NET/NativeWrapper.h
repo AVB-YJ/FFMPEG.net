@@ -17,6 +17,17 @@ namespace Multimedia
 				handle = ptr;
 			}
 
+			!NativeWrapper()
+			{
+				Cleanup(false);
+			}
+
+			~NativeWrapper()
+			{
+				Cleanup(true);
+				GC::SuppressFinalize(this);
+			}
+
 			explicit operator T*()
 			{
 				return handle;
@@ -26,6 +37,11 @@ namespace Multimedia
 			{
 				T* get() { return handle; }
 			}
+
+		protected:
+			bool Cleaned;
+			virtual void Cleanup(bool disposing) { Cleaned = true; }
+
 
 		private:
 			T* handle;

@@ -16,12 +16,25 @@ namespace Multimedia
 		{
 			rawData = gcnew array<uint8_t>(sizeof(AVFormatContext));
 			Marshal::Copy(IntPtr((void*)context), rawData, 0, sizeof(AVFormatContext));
+			opened = true;
+		}
+
+		void AvFormatContext::Cleanup(bool disposing)
+		{
+			if(opened)
+				av_close_input_file((AVFormatContext*)this);
+			Cleaned = true;
+		}
+
+		void AvFormatContext::Close()
+		{
+			av_close_input_file((AVFormatContext*)this);
+			opened = false;
 		}
 
 		AvFormatContext^ AvFormatContext::Open(String^ file)
 		{
 			Utility::Initialize();
-			AVCodec* codec = avcodec_find_decoder(CodecID::CODEC_ID_FLAC);
 			AVFormatContext* pFormatCtx;
 			char* filename = (char*)(void*)Marshal::StringToHGlobalAnsi(file);
 			if(av_open_input_file(&pFormatCtx, filename, NULL, 0, NULL) != 0)
@@ -50,10 +63,10 @@ namespace Multimedia
 
 		AvPacket^ AvFormatContext::ReadFrame(AvStream^ stream)
 		{
-			AVPacket* final = new AVPacket;
-			if(av_read_frame(this->Handle, final) != 0)
+			AvPacket^ final = gcnew AvPacket();
+			if(av_read_frame(this->Handle, (AVPacket*)final) != 0)
 				throw gcnew IO::IOException();			
-			return gcnew AvPacket(final);
+			return final;
 		}
 
 		String^ AvFormatContext::ToString()

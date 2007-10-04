@@ -58,8 +58,6 @@ namespace Multimedia
 			AvFrame(int format, int width, int height);
 			AvFrame(int format, Size size);
 		public:
-			~AvFrame();
-
 			property FrameFormat Format
 			{
 				FrameFormat get() { return format; }
@@ -83,6 +81,10 @@ namespace Multimedia
 			Bitmap^ ConvertToBitmap();
 
 			explicit operator AVPicture*() { return (AVPicture*)this->Handle; }
+
+		protected:
+			virtual void Cleanup(bool disposing) override;
+
 		private:
 			FrameFormat format;
 			System::Drawing::Size size;

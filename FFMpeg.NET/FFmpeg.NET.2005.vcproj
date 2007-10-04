@@ -188,6 +188,7 @@
 				PreprocessorDefinitions="WIN32"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="1"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -202,6 +203,8 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="avutil-49.lib avcodec-51.lib avformat-51.lib swscale-0.lib $(NOINHERIT)"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)\FFMpeg\lib&quot;"
+				GenerateDebugInformation="true"
+				AssemblyDebug="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
