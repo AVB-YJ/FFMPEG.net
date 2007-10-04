@@ -1,52 +1,40 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FFMpeg.NET", "FFMpeg.NET\FFMpeg.NET.vcproj", "{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FFMpeg.NET", "FFMpeg.NET\FFMpeg.NET.2008.vcproj", "{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harness", "Harness\Harness.csproj", "{EAEA4E6F-A534-471D-9A45-F659637EB190}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harness.2008", "Harness\Harness.2008.csproj", "{EAEA4E6F-A534-471D-9A45-F659637EB190}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug (Shared FFMPEG)|Any CPU = Debug (Shared FFMPEG)|Any CPU
 		Debug (Shared FFMPEG)|Mixed Platforms = Debug (Shared FFMPEG)|Mixed Platforms
 		Debug (Shared FFMPEG)|Win32 = Debug (Shared FFMPEG)|Win32
-		Debug|Any CPU = Debug|Any CPU
-		Debug|Mixed Platforms = Debug|Mixed Platforms
-		Debug|Win32 = Debug|Win32
-		Release|Any CPU = Release|Any CPU
-		Release|Mixed Platforms = Release|Mixed Platforms
-		Release|Win32 = Release|Win32
+		Release (Static FFMPEG)|Any CPU = Release (Static FFMPEG)|Any CPU
+		Release (Static FFMPEG)|Mixed Platforms = Release (Static FFMPEG)|Mixed Platforms
+		Release (Static FFMPEG)|Win32 = Release (Static FFMPEG)|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Debug (Shared FFMPEG)|Any CPU.ActiveCfg = Debug (Shared FFMPEG)|Win32
 		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Debug (Shared FFMPEG)|Mixed Platforms.ActiveCfg = Debug (Shared FFMPEG)|Win32
 		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Debug (Shared FFMPEG)|Mixed Platforms.Build.0 = Debug (Shared FFMPEG)|Win32
 		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Debug (Shared FFMPEG)|Win32.ActiveCfg = Debug (Shared FFMPEG)|Win32
-		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Debug|Win32.ActiveCfg = Debug|Win32
-		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Debug|Win32.Build.0 = Debug|Win32
-		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Release|Any CPU.ActiveCfg = Release|Win32
-		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Release|Win32.ActiveCfg = Release|Win32
-		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Release|Win32.Build.0 = Release|Win32
+		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Debug (Shared FFMPEG)|Win32.Build.0 = Debug (Shared FFMPEG)|Win32
+		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Release (Static FFMPEG)|Any CPU.ActiveCfg = Release (Static FFMPEG)|Win32
+		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Release (Static FFMPEG)|Mixed Platforms.ActiveCfg = Release (Static FFMPEG)|Win32
+		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Release (Static FFMPEG)|Mixed Platforms.Build.0 = Release (Static FFMPEG)|Win32
+		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Release (Static FFMPEG)|Win32.ActiveCfg = Release (Static FFMPEG)|Win32
+		{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}.Release (Static FFMPEG)|Win32.Build.0 = Release (Static FFMPEG)|Win32
 		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Debug (Shared FFMPEG)|Any CPU.ActiveCfg = Debug (Shared FFMPEG)|Any CPU
 		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Debug (Shared FFMPEG)|Any CPU.Build.0 = Debug (Shared FFMPEG)|Any CPU
 		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Debug (Shared FFMPEG)|Mixed Platforms.ActiveCfg = Debug (Shared FFMPEG)|Any CPU
 		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Debug (Shared FFMPEG)|Mixed Platforms.Build.0 = Debug (Shared FFMPEG)|Any CPU
 		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Debug (Shared FFMPEG)|Win32.ActiveCfg = Debug (Shared FFMPEG)|Any CPU
-		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release|Win32.ActiveCfg = Release|Any CPU
+		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release (Static FFMPEG)|Any CPU.ActiveCfg = Release (Static FFMPEG)|Any CPU
+		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release (Static FFMPEG)|Any CPU.Build.0 = Release (Static FFMPEG)|Any CPU
+		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release (Static FFMPEG)|Mixed Platforms.ActiveCfg = Release (Static FFMPEG)|Any CPU
+		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release (Static FFMPEG)|Mixed Platforms.Build.0 = Release (Static FFMPEG)|Any CPU
+		{EAEA4E6F-A534-471D-9A45-F659637EB190}.Release (Static FFMPEG)|Win32.ActiveCfg = Release (Static FFMPEG)|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
