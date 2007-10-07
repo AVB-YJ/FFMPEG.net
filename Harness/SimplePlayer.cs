@@ -15,6 +15,13 @@ namespace v
         private LinkedList<AvFrame> frames = new LinkedList<AvFrame>();
         private ManualResetEvent waiter = new ManualResetEvent(false);
 
+        [STAThread]
+        public static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.Run(new SimplePlayer());
+        }
+
         public SimplePlayer()
         {
             InitializeComponent();

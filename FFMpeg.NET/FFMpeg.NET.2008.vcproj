@@ -196,11 +196,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AvInputFormat.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\AvOutputFormat.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\AvPacket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AvRational.cpp"
 				>
 			</File>
 			<File
@@ -246,11 +254,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AvInputFormat.h"
+				>
+			</File>
+			<File
 				RelativePath=".\AvOutputFormat.h"
 				>
 			</File>
 			<File
 				RelativePath=".\AvPacket.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AvRational.h"
 				>
 			</File>
 			<File
