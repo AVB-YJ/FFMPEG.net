@@ -50,7 +50,13 @@ namespace Multimedia
 			return 0;
 		}
 
-		AvCodec^ AvCodecContext::GetCodec()
+		AvCodec^ AvCodecContext::GetEncoder()
+		{
+			AVCodec* codecInstance = avcodec_find_encoder((::CodecID)Id);
+			return gcnew AvCodec(codecInstance, this);
+		}
+
+		AvCodec^ AvCodecContext::GetDecoder()
 		{
 			AVCodec* codecInstance = avcodec_find_decoder((::CodecID)Id);
 			return gcnew AvCodec(codecInstance, this);

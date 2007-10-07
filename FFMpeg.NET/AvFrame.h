@@ -57,6 +57,8 @@ namespace Multimedia
 		internal:
 			AvFrame(int format, int width, int height);
 			AvFrame(int format, Size size);
+			AvFrame(AVFrame*);
+
 		public:
 			property FrameFormat Format
 			{
@@ -78,6 +80,11 @@ namespace Multimedia
 				int get() { return size.Height; }
 			}
 
+			property int PresentationTimeStamp
+			{
+				int get() { return Handle->pts; }
+			}
+
 			Bitmap^ ConvertToBitmap();
 
 			explicit operator AVPicture*() { return (AVPicture*)this->Handle; }
@@ -86,6 +93,7 @@ namespace Multimedia
 			virtual void Cleanup(bool disposing) override;
 
 		private:
+			bool needFree; 
 			FrameFormat format;
 			System::Drawing::Size size;
 		};

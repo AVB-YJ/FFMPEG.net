@@ -43,9 +43,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(SolutionDir)\FFMpeg\include"
-				PreprocessorDefinitions="WIN32"
+				PreprocessorDefinitions="WIN32;_DEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="1"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -58,7 +59,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="avutil-49.lib avcodec-51.lib avformat-51.lib swscale-0.lib $(NOINHERIT)"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)\FFMpeg\lib&quot;"
+				GenerateDebugInformation="true"
+				AssemblyDebug="1"
+				MapExports="false"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -183,12 +188,13 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
+				Optimization="3"
+				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="$(SolutionDir)\FFMpeg\include"
 				PreprocessorDefinitions="WIN32"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="1"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -203,8 +209,8 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="avutil-49.lib avcodec-51.lib avformat-51.lib swscale-0.lib $(NOINHERIT)"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)\FFMpeg\lib&quot;"
-				GenerateDebugInformation="true"
-				AssemblyDebug="1"
+				GenerateDebugInformation="false"
+				AssemblyDebug="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -269,7 +275,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AvInputFormat.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AvOutputFormat.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\AvPacket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AvRational.cpp"
 				>
 			</File>
 			<File
@@ -315,7 +333,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AvInputFormat.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AvOutputFormat.h"
+				>
+			</File>
+			<File
 				RelativePath=".\AvPacket.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AvRational.h"
 				>
 			</File>
 			<File

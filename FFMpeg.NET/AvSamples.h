@@ -74,6 +74,11 @@ namespace Multimedia
 			AvSamples(array<int16_t>^ samples, int channels, int samplerate);
 			AvSamples(array<int32_t>^ samples, int channels, int samplerate, AudioFormat format);
 			AvSamples(array<float>^ samples, int channels, int samplerate);
+
+			AvSamples^ GetSamples(int start, int length);
+
+			static AvSamples^ operator+(AvSamples^ left, AvSamples^ right);
+			//static void operator+=(AvSamples^ right);
 			
 		private:
 			AudioFormat format;

@@ -15,6 +15,7 @@ namespace Multimedia
 		{ 
 			this->format = (FrameFormat)format;
 			this->size = System::Drawing::Size(width, height);
+			needFree = true;
 		}
 
 		AvFrame::AvFrame(int format, System::Drawing::Size size)
@@ -22,11 +23,19 @@ namespace Multimedia
 		{ 
 			this->format = (FrameFormat)format;
 			this->size = size;
+			needFree = true;
+		}
+
+		AvFrame::AvFrame(AVFrame* frame)
+			: NativeWrapper(frame)
+		{			
+			needFree = false;
 		}
 
 		void AvFrame::Cleanup(bool disposing)
 		{
-			av_free(this->Handle);
+			if(needFree)
+				av_free(this->Handle);
 			this->Cleaned = true;
 		}
 

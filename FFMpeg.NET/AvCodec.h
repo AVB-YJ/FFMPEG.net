@@ -1,10 +1,12 @@
 #pragma once
-using namespace System;
 
 #include "NativeWrapper.h"
 #include "AvPacket.h"
 #include "AvFrame.h"
 #include "AvSamples.h"
+
+using namespace System::IO;
+using namespace System;
 
 namespace Multimedia
 {
@@ -242,6 +244,8 @@ namespace Multimedia
 			AvSamples^ DecodeAudio(AvPacket^ packet);
 			AvFrame^ DecodeVideo(AvPacket^ packet);
 			int DecodeSubtitle();
+
+			AvPacket^ EncodeAudio(AvSamples^ samples);
 
 			static AvCodec^ FindEncoder(CodecId id);
 			static AvCodec^ FindEncoder(String^ name);

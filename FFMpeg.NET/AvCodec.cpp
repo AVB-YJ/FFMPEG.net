@@ -45,8 +45,8 @@ namespace Multimedia
 		{
 			if(this->context == nullptr)
 				throw gcnew InvalidOperationException("Invalid context.");
-			avcodec_open((AVCodecContext*)context, (AVCodec*)this);
-			this->context = context;
+			if(avcodec_open((AVCodecContext*)context, (AVCodec*)this) < 0)
+				throw gcnew Exception("Could not open codec.");
 			opened = true;
 		}
 
@@ -94,6 +94,23 @@ namespace Multimedia
 			if(!opened)
 				throw gcnew InvalidOperationException("This codec is not open yet.");
 			return 0;
+		}
+
+		AvPacket^ AvCodec::EncodeAudio(AvSamples^ samples)
+		{
+			array<uint8_t>^ buffer = gcnew array<uint8_t>(FF_MIN_BUFFER_SIZE);
+
+			pin_ptr<uint8_t> bufferPtr = &buffer[0];
+			pin_ptr<int16_t> samplePtr = &samples->ShortSamples[0];
+
+			int nBytes = avcodec_encode_audio((AVCodecContext*)context, 
+				bufferPtr, buffer->Length, samplePtr);
+
+			if(nBytes < 0)
+				throw gcnew Exception();
+
+			Array::Resize<uint8_t>(buffer, nBytes);
+			return gcnew AvPacket(buffer);
 		}
 
 		void AvCodec::Close()

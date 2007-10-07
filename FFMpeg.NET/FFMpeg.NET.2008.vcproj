@@ -196,6 +196,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AvOutputFormat.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\AvPacket.cpp"
 				>
 			</File>
@@ -239,6 +243,10 @@
 			</File>
 			<File
 				RelativePath=".\AvFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AvOutputFormat.h"
 				>
 			</File>
 			<File

@@ -2,6 +2,9 @@
 
 #include "AvCodec.h"
 #include "NativeWrapper.h"
+#include "AvOutputFormat.h"
+#include "AvRational.h"
+#include "AvFrame.h"
 
 namespace Multimedia
 {
@@ -28,21 +31,29 @@ namespace Multimedia
 			property int Bitrate
 			{
 				int get() { return Handle->bit_rate; }
+				void set(int value) { Handle->bit_rate = value; }
 			}
 
 			property int Channels
 			{
 				int get() { return Handle->channels; }
+				void set(int value) { Handle->channels = value; }
 			}
 
 			property int SampleRate
 			{
 				int get() { return Handle->sample_rate; }
+				void set(int value) { Handle->sample_rate = value; }
 			}
 
 			property int BitrateTolerance
 			{
 				int get();
+			}
+
+			property int FrameSize
+			{
+				int get() { return Handle->frame_size; }
 			}
 
 			property int Flags
@@ -58,6 +69,7 @@ namespace Multimedia
 			property CodecType Type
 			{
 				CodecType get() { return (CodecType)this->Handle->codec_type; }
+			internal: void set(CodecType value) { this->Handle->codec_type = (::CodecType)value; }
 			}
 
 			property MotionEstimation MotionEstimationMethod
@@ -68,6 +80,7 @@ namespace Multimedia
 			property CodecId Id
 			{
 				CodecId get() { return (CodecId)(Handle->codec_id); }
+			internal: void set(CodecId value) { this->Handle->codec_id = (CodecID)value; }
 			}
 
 			property int Width
@@ -85,9 +98,17 @@ namespace Multimedia
 				int get() { return this->Handle->pix_fmt; }
 			}
 
+			property AvRational^ TimeBase
+			{
+				AvRational^ get() { return gcnew AvRational(&Handle->time_base); }
+			}
+
+			property AvFrame^ CodedFrame { AvFrame^ get() { return gcnew AvFrame(Handle->coded_frame); } } 
+
 			AvCodecContext();
 
-			AvCodec^ GetCodec();
+			AvCodec^ GetDecoder();
+			AvCodec^ GetEncoder();
 
 		protected:
 			virtual void Cleanup(bool disposing) override;
