@@ -20,135 +20,42 @@
 			Name="Release (Static FFMPEG)|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="0"
 			ManagedExtensions="1"
 			>
 			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="3"
-				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)\ffmpeg\include&quot;"
-				RuntimeLibrary="2"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="liba52.a libamrnb.a libamrwb.a libavcodec.a libavformat.a libavutil.a libfaac.a libfaad.a libgcc.a libgsm.a libmingwex.a libmp3lame.a libogg.a libswscale.a libtheora.a libvfw32.a libvorbis.a libvorbisenc.a libvorbisfile.a libwsock32.a libx264.a libxvidcore.a libz.a libpthreadGC2.a"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)\FFMpeg\lib&quot;"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
+				Name="VCNMakeTool"
+				BuildCommandLine="$(SolutionDir)\build.bat build-release-static $(SolutionDir)"
+				ReBuildCommandLine=""
+				CleanCommandLine=""
+				Output="$(SolutionDir)\bin (release static)\ffmpeg.net.dll"
+				PreprocessorDefinitions=""
+				IncludeSearchPath="&quot;$(SolutionDir)/ffmpeg/include&quot;"
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged="1"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug (Shared FFMPEG)|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="0"
 			ManagedExtensions="1"
 			>
 			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="$(SolutionDir)\ffmpeg\include"
-				RuntimeLibrary="2"
-				WarningLevel="2"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="avutil-49.lib avcodec-51.lib avformat-51.lib swscale-0.lib $(NOINHERIT)"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)\ffmpeg\lib&quot;"
-				GenerateDebugInformation="true"
-				AssemblyDebug="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
+				Name="VCNMakeTool"
+				BuildCommandLine="$(SolutionDir)\build.bat build-debug-shared $(SolutionDir)"
+				ReBuildCommandLine=""
+				CleanCommandLine=" "
+				Output="$(SolutionDir)\bin (debug shared)\ffmpeg.net.dll"
+				PreprocessorDefinitions=""
+				IncludeSearchPath="&quot;$(SolutionDir)/ffmpeg/include&quot;"
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged="1"
 			/>
 		</Configuration>
 	</Configurations>
@@ -178,58 +85,170 @@
 			<File
 				RelativePath=".\AssemblyInfo.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvCodec.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvCodecContext.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvFormatContext.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvFrame.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvInputFormat.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvOutputFormat.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvPacket.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvRational.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvSamples.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvStream.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\NativeWrapper.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Stdafx.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Utility.cpp"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -240,58 +259,170 @@
 			<File
 				RelativePath=".\AvCodec.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvCodecContext.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvFormatContext.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvFrame.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvInputFormat.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvOutputFormat.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvPacket.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvRational.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvSamples.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\AvStream.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\NativeWrapper.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\resource.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Stdafx.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Utility.h"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -302,15 +433,39 @@
 			<File
 				RelativePath=".\app.ico"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\app.rc"
 				>
+				<FileConfiguration
+					Name="Release (Static FFMPEG)|Win32"
+					>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (Shared FFMPEG)|Win32"
+					>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>
+			<FileConfiguration
+				Name="Release (Static FFMPEG)|Win32"
+				>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug (Shared FFMPEG)|Win32"
+				>
+			</FileConfiguration>
 		</File>
 	</Files>
 	<Globals>

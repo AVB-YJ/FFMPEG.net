@@ -41,7 +41,7 @@ namespace Harness
             //    throw new InvalidOperationException();
             //AvStream outputStream = outputContext.AddAudioStream(format.AudioCodec);
 
-            AvFormatContext context = AvFormatContext.Open(@"D:\BBC.Absolute.Zero.2of2.The.Race.for.Absolute.Zero.2007.DVBC.XviD.MP3.www.mvgroup.org.avi");
+            AvFormatContext context = AvFormatContext.Open(@"E:\BBC\Light Fantastic\03 - The Stuff of Light.avi");
             // AvFormatContext context = AvFormatContext.Open(@"E:\BBC\Planet Earth\06 - Ice Worlds.avi");
             //string s = context.ToString();
             AvStream[] streams = context.GetStreams();

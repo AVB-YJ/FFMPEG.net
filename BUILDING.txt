@@ -1,0 +1,9 @@
+In order to build, you must have the following prerequisites:
+ 
+ * NAnt - .NET build system - http://nant.sourceforge.net
+   I use 0.85
+ * Microsoft's C++ compiler and linker
+   Make sure there are in your PATH (Or just open visual studio, if you have it).
+ * Microsoft's C# Compiler
+ 
+The Visual Studio projects are configured to build property if you build the solution (Control + Shift + B).

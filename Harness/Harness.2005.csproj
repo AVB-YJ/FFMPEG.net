@@ -49,16 +49,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FFMpeg.NET\FFmpeg.NET.2005.vcproj">
-      <Project>{C15AE5A5-5266-4731-BAD9-580DD9A356B0}</Project>
-      <Name>FFmpeg.NET</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="SimplePlayer.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SimplePlayer.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FFMpeg.NET\FFmpeg.NET.2005.vcproj">
+      <Project>{C15AE5A5-5266-4731-BAD9-580DD9A356B0}</Project>
+      <Name>FFmpeg.NET</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

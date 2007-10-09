@@ -10,7 +10,7 @@ namespace v
     {
         public static void Main()
         {
-            AvFormatContext context = AvFormatContext.Open(@"D:\BBC.Absolute.Zero.2of2.The.Race.for.Absolute.Zero.2007.DVBC.XviD.MP3.www.mvgroup.org.avi");
+            AvFormatContext context = AvFormatContext.Open(@"E:\BBC\Light Fantastic\03 - The Stuff of Light.avi");
             AvStream[] streams = context.GetStreams();
             AvStream audioStream = null;
 
@@ -25,10 +25,10 @@ namespace v
             }
 
             // set up output
-            AvOutputFormat oFormat = AvOutputFormat.GuessOutputFormat(null, @"D:\output.m4a", null);
+            AvOutputFormat oFormat = AvOutputFormat.GuessOutputFormat(null, @"D:\output.flac", null);
             AvFormatContext oContext = new AvFormatContext();
             oContext.OutputFormat = oFormat;
-            oContext.IOStream = File.OpenWrite(@"D:\output.m4a");
+            oContext.IOStream = File.OpenWrite(@"D:\output.flac");
             AvStream oStream = oContext.AddAudioStream(oFormat.AudioCodec);
 
             AvCodec inCodec = audioStream.CodecContext.GetDecoder();
@@ -40,7 +40,6 @@ namespace v
             inCodec.Open();
             outCodec.Open();
 
-            //oContext.IOStream.Write(new byte[] { 0x66, 0x4C, 0x61, 0x43, 0x80, 0x00, 0x00, 0x22 }, 0, 8);
             oContext.WriteHeader();
             for (int i = 0; i < 5000; i++)
             {
@@ -50,8 +49,8 @@ namespace v
                 {
                     AvSamples audioFrame = inCodec.DecodeAudio(frame);
                     AvPacket outPacket = outCodec.EncodeAudio(audioFrame);
-                    oContext.IOStream.Write(outPacket.Data, 0, outPacket.Length);
-                    //oContext.WritePacket(outPacket, oStream);
+                    //oContext.IOStream.Write(outPacket.Data, 0, outPacket.Length);
+                    oContext.WritePacket(outPacket, oStream);
                 }
             }
             oContext.WriteTrailer();

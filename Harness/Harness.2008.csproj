@@ -12,7 +12,7 @@
     <AssemblyName>Harness</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <StartupObject>v.SimplePlayer</StartupObject>
+    <StartupObject>v.AudioTranscode</StartupObject>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -78,16 +78,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FFMpeg.NET\FFMpeg.NET.2008.vcproj">
-      <Project>{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}</Project>
-      <Name>FFMpeg.NET</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="SimplePlayer.resx">
       <DependentUpon>SimplePlayer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FFMpeg.NET\FFMpeg.NET.2008.vcproj">
+      <Project>{EF0803D6-C125-4EE9-8C6B-F1F2BFC8CB38}</Project>
+      <Name>FFMpeg.NET</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
