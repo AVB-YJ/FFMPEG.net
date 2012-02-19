@@ -47,22 +47,27 @@ namespace v
         private void DecodeWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             AvFormatContext context = AvFormatContext.Open(e.Argument.ToString());
-            AvStream videoStream = null; 
+            AvStream videoStream = null;
+            AvStream audioStream = null;
             foreach (AvStream stream in context.GetStreams())
             {
                 if (stream.CodecContext.Type == CodecType.Video)
                     videoStream = stream;
+                if (stream.CodecContext.Type == CodecType.Audio)
+                    audioStream = stream;
             }
 
             AvCodec codec = videoStream.CodecContext.GetDecoder();
             codec.Open();
 
-            System.Threading.Timer timer = new System.Threading.Timer(GetFrame, 
-                null, 0, 80);
+            //System.Threading.Timer timer = new System.Threading.Timer(GetFrame, 
+            //    null, 0, 1000);
             AvFrame finsihedFrame = null;
+            AvSamples audioFrame = null;
             AvPacket pkt;
             while ((pkt = context.ReadFrame(null)) != null)
             {
+                bool hasvideo = false;
                 if (pkt.StreamIndex == videoStream.Index)
                 {
                     finsihedFrame = codec.DecodeVideo(pkt);
@@ -73,6 +78,16 @@ namespace v
                             frames.AddLast(finsihedFrame);
                             finsihedFrame = null;
                         }
+                        GetFrame(null);
+                        hasvideo = true;
+                    }
+                }
+                if (pkt.StreamIndex == audioStream.Index)
+                {
+                    audioFrame = codec.DecodeAudio(pkt);
+                    if (audioFrame != null)
+                    {
+
                     }
                 }
             }

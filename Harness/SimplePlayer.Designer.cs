@@ -48,7 +48,7 @@ namespace v
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(918, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(918, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -57,13 +57,13 @@ namespace v
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loadToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(39, 21);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -74,17 +74,17 @@ namespace v
             // frameDisplay
             // 
             this.frameDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.frameDisplay.Location = new System.Drawing.Point(0, 24);
+            this.frameDisplay.Location = new System.Drawing.Point(0, 25);
             this.frameDisplay.Name = "frameDisplay";
-            this.frameDisplay.Size = new System.Drawing.Size(918, 437);
+            this.frameDisplay.Size = new System.Drawing.Size(918, 401);
             this.frameDisplay.TabIndex = 1;
             this.frameDisplay.TabStop = false;
             // 
             // SimplePlayer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(918, 461);
+            this.ClientSize = new System.Drawing.Size(918, 426);
             this.Controls.Add(this.frameDisplay);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
