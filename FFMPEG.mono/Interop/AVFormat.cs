@@ -26,7 +26,7 @@ using FFMPEG.mono.AVIO;
 
 namespace FFMPEG.mono
 {
-	namespace AVFormat
+	public class AVFormat
 	{
 		
 	}
