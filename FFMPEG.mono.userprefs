@@ -1,8 +1,14 @@
 ﻿<Properties GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="FFMPEG.mono\MyClass.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="FFMPEG.mono\Interop\AVCodec.cs">
     <Files>
-      <File FileName="FFMPEG.mono\MyClass.cs" Line="1" Column="1" />
+      <File FileName="FFMPEG.mono\AvCodec.cs" Line="23" Column="21" />
+      <File FileName="FFMPEG.mono\Interop\AVFormat.cs" Line="35" Column="1" />
+      <File FileName="FFMPEG.mono\Interop\AVCodec.cs" Line="20" Column="1" />
+      <File FileName="FFMPEG.mono\Interop\AVIO.cs" Line="1" Column="1" />
+      <File FileName="FFMPEG.mono\Interop\AVUtil.cs" Line="1" Column="1" />
+      <File FileName="FFMPEG.mono\Interop\SWScale.cs" Line="1" Column="1" />
+      <File FileName="FFMPEG.mono\AssemblyInfo.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

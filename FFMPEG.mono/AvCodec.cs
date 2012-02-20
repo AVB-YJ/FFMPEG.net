@@ -18,18 +18,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-
 using System;
+using SharpFFmpeg;
+
+
 namespace Multimedia
 {
-	namespace FFMPEG
-	{
-		public class AvCodec
-		{
-			public AvCodec ()
-			{
-			}
-		}
-	}
+    public class AvCodec : NativeWrapper<FFmpeg.AVCodec>
+    {
+        internal AvCodec (IntPtr codec ) : base(codec)
+        {
+        }
+        internal AvCodec (IntPtr codec, IntPtr context) : base(codec)
+        {
+            this.context = new NativeWrapper<FFmpeg.AVCodecContext>(context);
+        }
+        public string Name
+        {
+            get{return Handle.name;}
+        }
+        public NativeWrapper<FFmpeg.AVCodecContext> Context
+        {
+            get{return this.context;}
+        }
+        
+        public void Open()
+        {
+            if( this.context == null )
+                throw new InvalidOperationException("Invalid context.");
+            if( FFmpeg.avcodec_open(context.Ptr, this.Ptr ) < 0 )
+                throw new Exception("Could not open codec.");
+            opened = true;
+        }
+        
+        private bool freeNeeded;
+        private bool opened;
+        private NativeWrapper<FFmpeg.AVCodecContext> context;
+    }
+    
 }
 
