@@ -20,7 +20,7 @@
 
 using System;
 
-namespace FFMPEG.mono
+namespace SharpFFmpeg
 {
 	public class SWScale
 	{

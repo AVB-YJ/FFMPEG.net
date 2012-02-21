@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{93F2BF01-5719-4BE8-B31E-F8C3FBC0342B}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -31,18 +31,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="AvCodec.cs" />
+    <Compile Include="Component\AudioRender.cs" />
+    <Compile Include="Component\AvDecoder.cs" />
+    <Compile Include="Component\BaseComponent.cs" />
+    <Compile Include="Component\Demux.cs" />
+    <Compile Include="Component\FileReader.cs" />
+    <Compile Include="Component\VideoRender.cs" />
+    <Compile Include="FFmpegBase.cs" />
     <Compile Include="Interop\AVFormat.cs" />
     <Compile Include="Interop\AVCodec.cs" />
     <Compile Include="Interop\AVIO.cs" />
     <Compile Include="Interop\AVUtil.cs" />
     <Compile Include="Interop\SWScale.cs" />
+    <Compile Include="IPipe.cs" />
+    <Compile Include="NativeWrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Interop\" />
-  </ItemGroup>
 </Project>
