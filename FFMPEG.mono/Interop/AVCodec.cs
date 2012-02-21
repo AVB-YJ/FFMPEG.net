@@ -19,9 +19,44 @@
  */
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace FFMPEG.mono
 {
+    public delegate void DestructCallback(ref AVPacket AvPacket);
+	[StructLayout(LayoutKind.Sequential)]
+	public struct AVPacket
+	{
+
+	    public Int64 dts;                  //int64_t dts; ///< decompression time stamp in time_base units
+	    private IntPtr _data;       //uint8_t *data;
+        public byte[] data
+        {
+            get
+            {
+                byte[] _data_ = new byte[size];
+                Marshal.Copy(_data, _data_, 0, size);
+                return _data_;
+            }
+        }
+        public Int32 size;                 //int   size;
+        public Int32 stream_index;         //int   stream_index;
+        public Int32 flags;                //int   flags;
+        public Int32 duration;             //int   duration; ///< presentation duration in time_base units (0 if not available)
+        private IntPtr _destruct;   //void  (*destruct)(struct AVPacket *);
+        public DestructCallback destruct
+        {
+            get
+            {
+                if (_destruct == IntPtr.Zero)
+                    return null;
+                return Marshal.GetDelegateForFunctionPointer(_destruct, typeof(DestructCallback)) as DestructCallback;
+            }
+        }
+        public IntPtr priv;                //void  *priv;
+        public Int64 pos;                  //int64_t pos;   
+	}
+	
 	public class AVCodec
 	{
 	}

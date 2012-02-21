@@ -21,8 +21,6 @@
 
 
 using System;
-using FFMPEG.mono.AVCodec;
-using FFMPEG.mono.AVIO;
 
 namespace FFMPEG.mono
 {
