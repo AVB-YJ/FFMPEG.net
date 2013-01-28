@@ -13,6 +13,16 @@ namespace Multimedia
             this.pFormatCtx = ctx;
         }
 
+        public void Seek(long location)
+        {
+            foreach (var streamIndex in router.Keys)
+            {
+                FFmpeg.av_seek_frame(pFormatCtx.Ptr, streamIndex, location, FFmpeg.AVSEEK_FLAG_ANY);
+
+            }
+        }
+
+
         #region IPipe Members
 
         public bool ConnectTo(IPipe pipe)

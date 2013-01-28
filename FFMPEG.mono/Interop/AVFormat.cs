@@ -26,7 +26,7 @@ namespace SharpFFmpeg
 {
     public partial class FFmpeg
     {
-        public const string AVFORMAT = "avformat";
+        public const string AVFORMAT = "avformat-51.dll";
 
         /// <summary>
         /// 
@@ -254,7 +254,7 @@ namespace SharpFFmpeg
         /// <returns></returns>
         [DllImport(AVFORMAT), SuppressUnmanagedCodeSecurity]
         public static extern int av_open_input_file([Out]out IntPtr pFormatContext,
-                                [MarshalAs(UnmanagedType.LPStr)]String filename,
+                                [MarshalAs(UnmanagedType.LPWStr)]String filename,
                                 IntPtr pAVInputFormat, int buf_size, IntPtr pAVFormatParameters);
 
         /// <summary>

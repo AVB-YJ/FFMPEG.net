@@ -14,6 +14,9 @@ namespace Multimedia
             this.pFormatCtx = pFormatCtx;
         }
 
+
+
+
         #region IPipe Members
 
         public bool ConnectTo(IPipe pipe)

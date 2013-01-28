@@ -75,7 +75,22 @@ namespace Multimedia
                 if (queue.Dequeue(out packet) == false)
                     return;
 
-                PushToNext(null);
+                NativeWrapper<FFmpeg.AVFrame> frame = new NativeWrapper<FFmpeg.AVFrame>();
+                // decode
+                if (pCodecCtx.Handle.codec_type == FFmpeg.CodecType.CODEC_TYPE_AUDIO)
+                {
+                    int size = 0;
+                    FFmpeg.avcodec_decode_audio(pCodecCtx.Ptr, frame.Ptr, out size, packet.Handle.data, packet.Handle.size); 
+
+                }
+                else if (pCodecCtx.Handle.codec_type == FFmpeg.CodecType.CODEC_TYPE_VIDEO)
+                {
+                    int finish = 0; ;
+                    FFmpeg.avcodec_decode_video(pCodecCtx.Ptr, frame.Ptr, ref finish, packet.Handle.data, packet.Handle.size);
+
+                }
+
+                PushToNext(frame);
             }
         }
 

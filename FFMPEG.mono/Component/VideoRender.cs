@@ -4,38 +4,58 @@ using System.Text;
 using SharpFFmpeg;
 namespace Multimedia
 {
-    public class VideoRender : IPipe
+    public class VideoRender : IPipe, IVideoRender
     {
+
+        private IntPtr videoWindow;
         #region IPipe Members
 
         public bool ConnectTo(IPipe pipe)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Render should be the last one!");
         }
 
         public bool OnReceiveData(object packet)
         {
-            throw new NotImplementedException();
+            NativeWrapper<FFmpeg.AVFrame> frame = (NativeWrapper<FFmpeg.AVFrame>)packet;
+
+            return true;
         }
 
         public bool Start()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool Stop()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool Close()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool Flush()
         {
-            throw new NotImplementedException();
+            return true;
+        }
+
+        #endregion
+
+        #region IVideoRender Members
+
+        public IntPtr VideoWindow
+        {
+            get
+            {
+                return videoWindow;
+            }
+            set
+            {
+                videoWindow = value;
+            }
         }
 
         #endregion

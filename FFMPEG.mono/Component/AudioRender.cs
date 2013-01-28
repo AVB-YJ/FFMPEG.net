@@ -10,32 +10,38 @@ namespace Multimedia
 
         public bool ConnectTo(IPipe pipe)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Render should be the last one!");
         }
 
         public bool OnReceiveData(object packet)
         {
-            throw new NotImplementedException();
+            // FIXME
+            return true;
+            //throw new NotImplementedException();
         }
 
         public bool Start()
         {
-            throw new NotImplementedException();
+            return true;
+            //throw new NotImplementedException();
         }
 
         public bool Stop()
         {
-            throw new NotImplementedException();
+            return true;
+            //throw new NotImplementedException();
         }
 
         public bool Close()
         {
-            throw new NotImplementedException();
+            return true;
+            //throw new NotImplementedException();
         }
 
         public bool Flush()
         {
-            throw new NotImplementedException();
+            return true;
+            //throw new NotImplementedException();
         }
 
         #endregion

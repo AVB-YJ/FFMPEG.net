@@ -26,7 +26,7 @@ namespace SharpFFmpeg
 {
     public partial class FFmpeg
     {
-        public const string AVCODEC = "avcodec";
+        public const string AVCODEC = "avcodec-51";
         /// <summary>
         /// 
         /// </summary>
