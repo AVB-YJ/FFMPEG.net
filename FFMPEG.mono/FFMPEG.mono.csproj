@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,6 +10,11 @@
     <RootNamespace>FFMPEG.mono</RootNamespace>
     <AssemblyName>FFMPEG.mono</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,6 +50,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -56,11 +62,18 @@
     <Compile Include="Component\FileReader.cs" />
     <Compile Include="Component\VideoRender.cs" />
     <Compile Include="FFmpegBase.cs" />
+    <Compile Include="IAudioRender.cs" />
+    <Compile Include="IDemux.cs" />
     <Compile Include="Interop\AVFormat.cs" />
     <Compile Include="Interop\AVCodec.cs" />
     <Compile Include="Interop\AVIO.cs" />
     <Compile Include="Interop\AVUtil.cs" />
     <Compile Include="Interop\SWScale.cs" />
+    <Compile Include="Interop\Wave\FifoStream.cs" />
+    <Compile Include="Interop\Wave\WaveIn.cs" />
+    <Compile Include="Interop\Wave\WaveNative.cs" />
+    <Compile Include="Interop\Wave\WaveOut.cs" />
+    <Compile Include="Interop\Wave\WaveStream.cs" />
     <Compile Include="IPipe.cs" />
     <Compile Include="IVideoRender.cs" />
     <Compile Include="NativeWrapper.cs" />

@@ -26,6 +26,8 @@ namespace SharpFFmpeg
 {
     public partial class FFmpeg
     {
+        public const string AVUTIL = "avutil-49.dll";
+
         public delegate int Read_PacketCallback(IntPtr opaque, IntPtr buf, int buf_size);
 
         public delegate int WritePacketCallback(IntPtr opaque, IntPtr buf, int buf_size);
@@ -156,5 +158,9 @@ namespace SharpFFmpeg
             [MarshalAs(UnmanagedType.I4)]
             public int den;
         };
+
+
+        [DllImport(AVUTIL), SuppressUnmanagedCodeSecurity]
+        public static extern void av_free(IntPtr ptr);
     }
 }

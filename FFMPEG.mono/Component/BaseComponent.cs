@@ -9,6 +9,7 @@ namespace Multimedia
 
     public class BaseComponent
     {
+
         internal List<IPipe> nextComponents = new List<IPipe>();
 
         internal void AddPipe(IPipe pipe)
@@ -61,9 +62,20 @@ namespace Multimedia
         public class SizeQueue<T>
         {
             private readonly Queue<T> queue = new Queue<T>();
-            private readonly int maxSize;
+            private  int maxSize;
             public SizeQueue(int maxSize) { this.maxSize = maxSize; }
             private bool closing = false;
+            public int Size
+            {
+                get { return maxSize; }
+                set
+                {
+                    lock(queue)
+                    {
+                        maxSize = value;
+                    }
+                }
+            }
 
             public void Close()
             {

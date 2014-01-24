@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using SharpFFmpeg;
+using System.Runtime.InteropServices;
 
 namespace Multimedia
 {
@@ -15,12 +16,20 @@ namespace Multimedia
         private Demux demux = null;
         private IPipe audioRender = null;
         private IPipe videoRender = null;
+        private IntPtr videohandle = IntPtr.Zero;
+
 
  
 
         public FFmpegBase()
         {
-            
+            FFmpeg.av_register_all();
+        }
+
+        public FFmpegBase(IntPtr videoHandle)
+        {
+            FFmpeg.av_register_all();
+            this.videohandle = videoHandle;
         }
 
         public void Close()
@@ -49,10 +58,13 @@ namespace Multimedia
 
             GeneratePipesFromFile(fileName);
 
-            if( audioRender != null ) // use default render
+            if( audioRender == null ) // use default render
                 audioRender = new AudioRender();
-            if( videoRender != null ) // use default render
+            if (videoRender == null) // use default render
+            {
                 videoRender = new VideoRender();
+                (videoRender as VideoRender).VideoWindow = videohandle;
+            }
 
             //connect pipe
             fileReader.ConnectTo(demux);
@@ -65,8 +77,11 @@ namespace Multimedia
 
         private void GeneratePipesFromFile(string fileName)
         {
+            
+            IntPtr str = Marshal.StringToHGlobalAnsi(fileName);
             IntPtr fileContext = IntPtr.Zero;
-            int ret = FFmpeg.av_open_input_file(out fileContext, fileName, IntPtr.Zero, 0, IntPtr.Zero);
+            int ret = FFmpeg.av_open_input_file(out fileContext, str, IntPtr.Zero, 0, IntPtr.Zero);
+            Marshal.FreeHGlobal(str);
             if (ret < 0)
                 throw new InvalidOperationException("can not open input file");
             ret = FFmpeg.av_find_stream_info(fileContext);
@@ -121,10 +136,10 @@ namespace Multimedia
             set { audioRender = value; }
         }
 
-        public IPipe VideoRender
+        public IVideoRender VideoRender
         {
-            get { return videoRender; }
-            set { videoRender = value; }
+            get { return videoRender as IVideoRender; }
+            set { videoRender = (IPipe)value; }
         }
 
         // user can get out reader / av decoder / demux
@@ -147,12 +162,12 @@ namespace Multimedia
             get { return demux; }
         }
 
-        public IPipe AudioDecoder
+        public IDecoder AudioDecoder
         {
             get { return audioDecoder; }
         }
 
-        public IPipe VideoDecoder
+        public IDecoder VideoDecoder
         {
             get { return videoDecoder; }
         }

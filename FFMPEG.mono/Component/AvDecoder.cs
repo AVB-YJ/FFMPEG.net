@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using SharpFFmpeg;
 using System.Threading;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace Multimedia
 {
-    public class AvDecoder : BaseComponent, IPipe
+    public class AvDecoder : BaseComponent, IPipe, IDecoder
     {
         private NativeWrapper<FFmpeg.AVStream> pStream = null;
         private NativeWrapper<FFmpeg.AVCodecContext> pCodecCtx = null;
@@ -67,6 +69,9 @@ namespace Multimedia
 
         private void DoThreadWork()
         {
+            int videoFailCount = 0;
+            //int audioFailCount = 0;
+
             while (true)
             {
                 if (!threadWorking)
@@ -75,22 +80,69 @@ namespace Multimedia
                 if (queue.Dequeue(out packet) == false)
                     return;
 
-                NativeWrapper<FFmpeg.AVFrame> frame = new NativeWrapper<FFmpeg.AVFrame>();
                 // decode
                 if (pCodecCtx.Handle.codec_type == FFmpeg.CodecType.CODEC_TYPE_AUDIO)
                 {
-                    int size = 0;
-                    FFmpeg.avcodec_decode_audio(pCodecCtx.Ptr, frame.Ptr, out size, packet.Handle.data, packet.Handle.size); 
+                    int size = FFmpeg.AVCODEC_MAX_AUDIO_FRAME_SIZE;
+                    IntPtr buf = Marshal.AllocHGlobal(FFmpeg.AVCODEC_MAX_AUDIO_FRAME_SIZE);
+                    int ret = FFmpeg.avcodec_decode_audio2(pCodecCtx.Ptr, buf, out size, packet.Handle.data, packet.Handle.size);
+                    if (ret < 0)
+                    {
+                        break;
+                    }
+                    AudioFrame frame= new AudioFrame();
+                    frame.sample = buf;
+                    frame.size = size;
+                    frame.rate = pCodecCtx.Handle.sample_rate;
+                    frame.bit = pCodecCtx.Handle.bits_per_sample;
+                    frame.channel = pCodecCtx.Handle.channels;
+                    PushToNext(frame);
+                    Marshal.FreeHGlobal(buf);
 
                 }
                 else if (pCodecCtx.Handle.codec_type == FFmpeg.CodecType.CODEC_TYPE_VIDEO)
                 {
-                    int finish = 0; ;
-                    FFmpeg.avcodec_decode_video(pCodecCtx.Ptr, frame.Ptr, ref finish, packet.Handle.data, packet.Handle.size);
+                    NativeWrapper<FFmpeg.AVFrame> frame = new NativeWrapper<FFmpeg.AVFrame>(FFmpeg.avcodec_alloc_frame());
 
+                    int finish = 0; ;
+                    int ret = FFmpeg.avcodec_decode_video(pCodecCtx.Ptr, frame.Ptr, ref finish, packet.Handle.data, packet.Handle.size);
+                    if (ret < 0)
+                    {
+                        FFmpeg.av_free(frame.Ptr);
+                        break;
+                    }
+
+                    // ugly quick fix
+                    if (finish == 0)
+                    {
+                        if (videoFailCount != 0)
+                        {
+                            FFmpeg.av_free(frame.Ptr);
+                            break;
+                        }
+                        else
+                        {
+                            videoFailCount++;
+                            FFmpeg.av_free(frame.Ptr);
+                            continue;
+                        }
+                    }
+
+                    VideoFrame nextObj = new VideoFrame();
+                    nextObj.ffmpegFrame = frame;
+                    nextObj.format = (int)pCodecCtx.Handle.pix_fmt;
+                    nextObj.width = pCodecCtx.Handle.width;
+                    nextObj.height = pCodecCtx.Handle.height;
+                    PushToNext(nextObj);
+                    FFmpeg.av_free(frame.Ptr);
                 }
 
-                PushToNext(frame);
+                
+                
+
+                
+                Marshal.FreeHGlobal(packet.Ptr);
+                
             }
         }
 
@@ -99,10 +151,9 @@ namespace Multimedia
         {
             threadWorking = false;
             queue.Close();
+            StopNext();
             workingThread.Join();
             workingThread = null;
-
-            StopNext();
             return true;
         }
 
@@ -114,7 +165,8 @@ namespace Multimedia
 
         public bool ConnectTo(IPipe pipe)
         {
-            throw new NotImplementedException();
+            this.AddPipe(pipe);
+            return true;
         }
 
 
@@ -124,5 +176,17 @@ namespace Multimedia
         }
 
 
+
+        public int BufferDepth
+        {
+            get
+            {
+                return queue.Size;
+            }
+            set
+            {
+                queue.Size = value;
+            }
+        }
     }
 }

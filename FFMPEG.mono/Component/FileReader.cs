@@ -4,6 +4,7 @@ using System.Text;
 using SharpFFmpeg;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 namespace Multimedia
 {
     public class FileReader : BaseComponent, IPipe
@@ -13,8 +14,6 @@ namespace Multimedia
         {
             this.pFormatCtx = pFormatCtx;
         }
-
-
 
 
         #region IPipe Members
@@ -51,8 +50,10 @@ namespace Multimedia
                     return;
                 IntPtr pPacket = Marshal.AllocHGlobal(Marshal.SizeOf(new FFmpeg.AVPacket()));
                 NativeWrapper<FFmpeg.AVPacket> hPacket = new NativeWrapper<FFmpeg.AVPacket>(pPacket);
-                if (FFmpeg.av_read_frame(pFormatCtx.Ptr, hPacket.Ptr) < 0)
-                    continue;
+                if (FFmpeg.av_read_frame(pFormatCtx.Ptr, hPacket.Ptr) != 0)
+                {
+                    break;
+                }
                 PushToNext(hPacket);
             }
         }
@@ -60,15 +61,15 @@ namespace Multimedia
         public bool Stop()
         {
             threadWorking = false;
+            StopNext();
             workingThread.Join();
             workingThread = null;
-            StopNext();
             return true;
         }
 
         public bool Close()
         {
-            throw new NotImplementedException();
+            return Stop();
         }
 
         public bool Flush()

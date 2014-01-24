@@ -19,11 +19,38 @@
  */
 
 using System;
+using System.Runtime.InteropServices;
+using System.Security;
 
 namespace SharpFFmpeg
 {
-	public class SWScale
-	{
-	}
+    public partial class FFmpeg
+    {
+        public const string SWS = "swscale-0.dll";
+
+        public static readonly int SWS_FAST_BILINEAR = 1;
+        public static readonly int SWS_BILINEAR = 2;
+        public static readonly int SWS_BICUBIC = 4;
+        public static readonly int SWS_X = 8;
+        public static readonly int SWS_POINT = 0x10;
+        public static readonly int SWS_AREA = 0x20;
+        public static readonly int SWS_BICUBLIN = 0x40;
+        public static readonly int SWS_GAUSS = 0x80;
+        public static readonly int SWS_SINC = 0x100;
+        public static readonly int SWS_LANCZOS = 0x200;
+        public static readonly int SWS_SPLINE = 0x400;
+
+        [DllImport(SWS), SuppressUnmanagedCodeSecurity]
+        public static extern IntPtr
+            sws_getContext(int srcW, int srcH, int srcFormat,
+                            int dstW, int dstH, int dstFormat,
+                            int flags,
+                            IntPtr srcFilter, IntPtr dstFilter, IntPtr rparam);
+
+        [DllImport(SWS), SuppressUnmanagedCodeSecurity]
+        public static extern int 
+            sws_scale(IntPtr context, IntPtr[] src, int[] srcStride, int srcSliceY,
+              int srcSliceH, IntPtr[] dst, int[] dstStride);
+    }
 }
 

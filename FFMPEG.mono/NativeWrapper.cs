@@ -38,6 +38,8 @@ namespace Multimedia
                 this.ptr = value;
             }
         }
+
+
     }
 }
 

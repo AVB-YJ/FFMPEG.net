@@ -16,12 +16,28 @@ namespace MediaTest
         {
             InitializeComponent();
         }
-
+        private FFmpegBase b = null;
         private void button1_Click(object sender, EventArgs e)
         {
-            FFmpegBase b = new FFmpegBase();
+            b = new FFmpegBase(panelShow.Handle);
             b.RenderFile(@"C:\Users\Public\Videos\Sample Videos\Wildlife.wmv");
             b.Play();
         }
+
+        private bool closing = false;
+
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            closing = true;
+            b.Stop();
+        }
+
+
     }
 }
