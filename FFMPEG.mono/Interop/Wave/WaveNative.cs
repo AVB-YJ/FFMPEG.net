@@ -59,10 +59,14 @@ namespace WaveLib
 		public const int MM_WIM_DATA = 0x3C0;
 
 		public const int CALLBACK_FUNCTION = 0x00030000;    // dwCallback is a FARPROC 
+        public const int CALLBACK_NULL = 0x00000000;
 
 		public const int TIME_MS = 0x0001;  // time in milliseconds 
 		public const int TIME_SAMPLES = 0x0002;  // number of wave samples 
 		public const int TIME_BYTES = 0x0004;  // current byte offset 
+
+        public const int WAVERR_BASE = 32;
+        public const int WAVERR_STILLPLAYING = 33;
 
 		// callbacks
 		public delegate void WaveDelegate(IntPtr hdrvr, int uMsg, int dwUser, ref WaveHdr wavhdr, int dwParam2);

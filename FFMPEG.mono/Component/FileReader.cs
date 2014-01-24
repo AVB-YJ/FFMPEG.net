@@ -9,8 +9,8 @@ namespace Multimedia
 {
     public class FileReader : BaseComponent, IPipe
     {
-        private NativeWrapper<FFmpeg.AVFormatContext> pFormatCtx;
-        public FileReader(NativeWrapper<FFmpeg.AVFormatContext> pFormatCtx)
+        private NativeWrapper<NativeMethods.AVFormatContext> pFormatCtx;
+        public FileReader(NativeWrapper<NativeMethods.AVFormatContext> pFormatCtx)
         {
             this.pFormatCtx = pFormatCtx;
         }
@@ -48,9 +48,9 @@ namespace Multimedia
             {
                 if( !threadWorking )
                     return;
-                IntPtr pPacket = Marshal.AllocHGlobal(Marshal.SizeOf(new FFmpeg.AVPacket()));
-                NativeWrapper<FFmpeg.AVPacket> hPacket = new NativeWrapper<FFmpeg.AVPacket>(pPacket);
-                if (FFmpeg.av_read_frame(pFormatCtx.Ptr, hPacket.Ptr) != 0)
+                IntPtr pPacket = Marshal.AllocHGlobal(Marshal.SizeOf(new NativeMethods.AVPacket()));
+                NativeWrapper<NativeMethods.AVPacket> hPacket = new NativeWrapper<NativeMethods.AVPacket>(pPacket);
+                if (NativeMethods.av_read_frame(pFormatCtx.Ptr, hPacket.Ptr) != 0)
                 {
                     break;
                 }
@@ -69,7 +69,15 @@ namespace Multimedia
 
         public bool Close()
         {
-            return Stop();
+             Stop();
+
+            if (pFormatCtx != null)
+            {
+                NativeMethods.av_close_input_file(pFormatCtx.Ptr);
+                pFormatCtx = null;
+            }
+
+            return true;
         }
 
         public bool Flush()

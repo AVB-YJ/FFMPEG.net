@@ -69,11 +69,7 @@
     <Compile Include="Interop\AVIO.cs" />
     <Compile Include="Interop\AVUtil.cs" />
     <Compile Include="Interop\SWScale.cs" />
-    <Compile Include="Interop\Wave\FifoStream.cs" />
-    <Compile Include="Interop\Wave\WaveIn.cs" />
     <Compile Include="Interop\Wave\WaveNative.cs" />
-    <Compile Include="Interop\Wave\WaveOut.cs" />
-    <Compile Include="Interop\Wave\WaveStream.cs" />
     <Compile Include="IPipe.cs" />
     <Compile Include="IVideoRender.cs" />
     <Compile Include="NativeWrapper.cs" />

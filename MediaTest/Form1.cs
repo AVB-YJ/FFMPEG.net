@@ -19,8 +19,10 @@ namespace MediaTest
         private FFmpegBase b = null;
         private void button1_Click(object sender, EventArgs e)
         {
-            b = new FFmpegBase(panelShow.Handle);
-            b.RenderFile(@"C:\Users\Public\Videos\Sample Videos\Wildlife.wmv");
+            //b = new FFmpegBase(panelShow.Handle);
+            //b.RenderFile(@"C:\Users\Public\Videos\Sample Videos\Wildlife.wmv");
+            b = new FFmpegBase();
+            b.RenderFile(@"C:\Users\Public\Videos\Sample Videos\Nightwish.mp3");
             b.Play();
         }
 
@@ -35,7 +37,8 @@ namespace MediaTest
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             closing = true;
-            b.Stop();
+            if (b != null)
+                b.Stop();
         }
 
 

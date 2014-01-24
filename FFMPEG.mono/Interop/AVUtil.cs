@@ -24,7 +24,7 @@ using System.Security;
 
 namespace SharpFFmpeg
 {
-    public partial class FFmpeg
+    public partial class NativeMethods
     {
         public const string AVUTIL = "avutil-49.dll";
 
@@ -162,5 +162,7 @@ namespace SharpFFmpeg
 
         [DllImport(AVUTIL), SuppressUnmanagedCodeSecurity]
         public static extern void av_free(IntPtr ptr);
+
+
     }
 }

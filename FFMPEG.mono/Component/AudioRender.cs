@@ -4,6 +4,9 @@ using System.Text;
 using SharpFFmpeg;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Threading;
+using WaveLib;
 
 namespace Multimedia
 {
@@ -36,61 +39,98 @@ namespace Multimedia
         }
 
         #region windows only
-        private WaveLib.WaveOutPlayer m_Player = null;
-        private WaveLib.FifoStream m_Fifo = new WaveLib.FifoStream();
-        private byte[] m_PlayBuffer;
-        private byte[] m_RecBuffer;
+        private IntPtr waveOut = IntPtr.Zero;
+        BaseComponent.SizeQueue<AudioFrame> queue = new BaseComponent.SizeQueue<AudioFrame>(50);
+        Thread[] threads = new Thread[5];
+        private bool threadWorking = false;
         private void PlayUsingWaveOut(AudioFrame frame)
         {
+            //return;
+
+            int ret;
             int size = frame.size;
             IntPtr data = frame.sample;
-            if (m_Player == null)
-            {
-                int rate = frame.rate == 0 ? 44100 : frame.rate;
-                int bit = frame.bit == 0 ? 16 : frame.bit;
-                int channel = frame.channel == 0 ? 2 : frame.channel;
+            int rate = frame.rate == 0 ? 44100 : frame.rate;
+            int bit = frame.bit == 0 ? 16 : frame.bit;
+            int channel = frame.channel == 0 ? 2 : frame.channel;
+            if (waveOut == IntPtr.Zero){
                 WaveLib.WaveFormat fmt = new WaveLib.WaveFormat(rate, bit, channel);
-                m_Player = new WaveLib.WaveOutPlayer(-1, fmt, 16384, 3, new WaveLib.BufferFillEventHandler(Filler));
-
+                ret = WaveNative.waveOutOpen(out waveOut, -1, fmt, null, 0, WaveNative.CALLBACK_NULL);
+                if (ret != WaveNative.MMSYSERR_NOERROR)
+                    throw new Exception("can not open wave device");
             }
 
-            if (m_RecBuffer == null || m_RecBuffer.Length < size)
-                m_RecBuffer = new byte[size];
-            Marshal.Copy(data, m_RecBuffer, 0, size);
-            m_Fifo.Write(m_RecBuffer, 0, m_RecBuffer.Length);
+            queue.Enqueue(frame);
+            //ret = WriteWaveOut(frame);
         }
 
-        private void Filler(IntPtr data, int size)
+        private int WriteWaveOut(AudioFrame frame)
         {
-            if (m_PlayBuffer == null || m_PlayBuffer.Length < size)
-                m_PlayBuffer = new byte[size];
-            if (m_Fifo.Length >= size)
-                m_Fifo.Read(m_PlayBuffer, 0, size);
-            else
-                for (int i = 0; i < m_PlayBuffer.Length; i++)
-                    m_PlayBuffer[i] = 0;
-            Marshal.Copy(m_PlayBuffer, 0, data, size);
+            int ret;
+            WaveNative.WaveHdr m_Header = new WaveNative.WaveHdr(); ;
+            GCHandle m_HeaderHandle = GCHandle.Alloc(m_Header, GCHandleType.Pinned);
+            m_Header.dwUser = (IntPtr)GCHandle.Alloc(this);
+            m_Header.lpData = frame.sample;
+            m_Header.dwBufferLength = frame.size;
+            ret = WaveNative.waveOutPrepareHeader(waveOut, ref m_Header, Marshal.SizeOf(m_Header));
+            if (ret != WaveNative.MMSYSERR_NOERROR)
+                throw new Exception("can not open wave device");
+
+            lock (queue)
+            {
+                ret = WaveNative.waveOutWrite(waveOut, ref m_Header, Marshal.SizeOf(m_Header));
+            }
+            if (ret != WaveNative.MMSYSERR_NOERROR)
+                throw new Exception("can not open wave device");
+
+            while (WaveNative.waveOutUnprepareHeader(waveOut, ref m_Header, Marshal.SizeOf(m_Header)) == WaveNative.WAVERR_STILLPLAYING)
+            {
+                Thread.Sleep(10);
+            }
+
+            m_HeaderHandle.Free();
+            return ret;
+        }
+
+        private void WaveoutThread()
+        {
+            while (threadWorking)
+            {
+                AudioFrame frame;
+                if (!queue.Dequeue(out frame))
+                    break;
+
+                WriteWaveOut(frame);
+            }
         }
         #endregion
 
         public bool Start()
         {
+            for (int i = 0; i < threads.Length; i++ )
+            {
+                threads[i] = new Thread(new ThreadStart(WaveoutThread));
+                threads[i].Start();
+            }
+            threadWorking = true;
             return true;
             //throw new NotImplementedException();
         }
 
         private void _Stop()
         {
-            if (m_Player != null)
-                try
-                {
-                    m_Player.Dispose();
-                }
-                finally
-                {
-                    m_Player = null;
-                }
-            m_Fifo.Flush(); // clear all pending data
+            threadWorking = false;
+            queue.Close();
+            foreach(var thread in threads)
+            {
+                thread.Join();
+            }
+
+            if (waveOut != IntPtr.Zero)
+            {
+                WaveNative.waveOutClose(waveOut);
+                waveOut = IntPtr.Zero;
+            }
         }
 
 

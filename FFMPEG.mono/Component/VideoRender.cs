@@ -12,12 +12,16 @@ namespace Multimedia
     {
         private IntPtr videoWindow = IntPtr.Zero;
         private Graphics videoGraphics;
+        private Rectangle videoWindowSize = new Rectangle();
         #region IPipe Members
 
         public bool ConnectTo(IPipe pipe)
         {
             throw new InvalidOperationException("Render should be the last one!");
         }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr GetWindowRect(IntPtr hwnd, ref Rectangle lpRect);
 
         public bool OnReceiveData(object packet)
         {
@@ -26,7 +30,7 @@ namespace Multimedia
             if (videoWindow != IntPtr.Zero)
             {
                 Bitmap pic = ConvertToBitmap(frame);
-                videoGraphics.DrawImage(pic, new Point(0, 0));
+                videoGraphics.DrawImage(pic, 0, 0, videoWindowSize.Width, videoWindowSize.Height);
             }
             return true;
         }
@@ -65,6 +69,7 @@ namespace Multimedia
             {
                 videoWindow = value;
                 videoGraphics = Graphics.FromHwnd(videoWindow);
+                GetWindowRect(videoWindow, ref videoWindowSize);
             }
         }
 
@@ -75,24 +80,24 @@ namespace Multimedia
 
         private Bitmap ConvertToBitmap(VideoFrame This)
 		{
-            var frame = ((NativeWrapper<FFmpeg.AVFrame>)This.ffmpegFrame).Handle;
+            var frame = ((NativeWrapper<NativeMethods.AVFrame>)This.ffmpegFrame).Handle;
 			//FFmpeg.AVFrame final = gcnew AvFrame(PIX_FMT_BGR24, this->size);
-            NativeWrapper<FFmpeg.AVFrame> final = new NativeWrapper<FFmpeg.AVFrame>(FFmpeg.avcodec_alloc_frame());
+            NativeWrapper<NativeMethods.AVFrame> final = new NativeWrapper<NativeMethods.AVFrame>(NativeMethods.avcodec_alloc_frame());
 
-            int dst_fmt = (int)FFmpeg.PixelFormat.PIX_FMT_BGR24;
+            int dst_fmt = (int)NativeMethods.PixelFormat.PIX_FMT_BGR24;
 
-			int count = FFmpeg.avpicture_get_size(dst_fmt, This.width, This.height);
+			int count = NativeMethods.avpicture_get_size(dst_fmt, This.width, This.height);
 
             IntPtr bufferArr = Marshal.AllocHGlobal(count);
 
-            FFmpeg.avpicture_fill(final.Ptr, bufferArr, dst_fmt, This.width, This.height);
+            NativeMethods.avpicture_fill(final.Ptr, bufferArr, dst_fmt, This.width, This.height);
 
-            IntPtr swsContext = FFmpeg.sws_getContext(This.width, This.height, (int)This.format,
-                This.width, This.height, dst_fmt, FFmpeg.SWS_BICUBIC, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+            IntPtr swsContext = NativeMethods.sws_getContext(This.width, This.height, (int)This.format,
+                This.width, This.height, dst_fmt, NativeMethods.SWS_BICUBIC, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 			if(swsContext == IntPtr.Zero)
 				throw new Exception();
             
-            FFmpeg.sws_scale(swsContext, frame.data, frame.linesize, 0, This.height, final.Handle.data, final.Handle.linesize);
+            NativeMethods.sws_scale(swsContext, frame.data, frame.linesize, 0, This.height, final.Handle.data, final.Handle.linesize);
 
 			Stream str = new MemoryStream();
 			BinaryWriter writer = new BinaryWriter(str);
@@ -122,7 +127,7 @@ namespace Multimedia
 			writer.Seek(0,  SeekOrigin.Begin);
 
 			Bitmap bitmap = new Bitmap(str);
-            FFmpeg.av_free(final.Ptr);
+            NativeMethods.av_free(final.Ptr);
             Marshal.FreeHGlobal(bufferArr);
             //writer.Close();
 			return bitmap;

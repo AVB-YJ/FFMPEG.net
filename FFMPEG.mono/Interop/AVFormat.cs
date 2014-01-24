@@ -24,7 +24,7 @@ using System.Security;
 
 namespace SharpFFmpeg
 {
-    public partial class FFmpeg
+    public partial class NativeMethods
     {
         public const string AVFORMAT = "avformat-51.dll";
 

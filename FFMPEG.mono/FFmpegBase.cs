@@ -8,11 +8,11 @@ namespace Multimedia
 {
     public class FFmpegBase
     {
-        private NativeWrapper<FFmpeg.AVFormatContext> pFormatCtx = null;
+        private NativeWrapper<NativeMethods.AVFormatContext> pFormatCtx = null;
 
         private AvDecoder audioDecoder = null;
         private AvDecoder videoDecoder = null;
-        private FileReader fileReader = null;
+        private FileReader reader = null;
         private Demux demux = null;
         private IPipe audioRender = null;
         private IPipe videoRender = null;
@@ -23,19 +23,19 @@ namespace Multimedia
 
         public FFmpegBase()
         {
-            FFmpeg.av_register_all();
+            NativeMethods.av_register_all();
         }
 
         public FFmpegBase(IntPtr videoHandle)
         {
-            FFmpeg.av_register_all();
+            NativeMethods.av_register_all();
             this.videohandle = videoHandle;
         }
 
         public void Close()
         {
-            if (fileReader != null)
-                fileReader.Close();
+            if (reader != null)
+                reader.Close();
             if (demux != null)
                 demux.Close();
             if (audioDecoder != null)
@@ -46,11 +46,40 @@ namespace Multimedia
                 audioRender.Close();
             if (videoRender != null)
                 videoRender.Close();
-            if (pFormatCtx != null)
+
+        }
+
+        public bool Render()
+        {
+            if (reader == null)
+                throw new Exception("No reader pip!");
+
+            if (demux == null)
+                throw new Exception("No demux pip!");
+
+            if (videoDecoder == null && audioDecoder == null)
             {
-                FFmpeg.av_close_input_file(pFormatCtx.Ptr);
-                pFormatCtx = null;
+                throw new Exception("No decoder pip!");
             }
+
+            reader.ConnectTo(demux);
+
+            if (videoDecoder != null)
+            {
+                demux.ConnectTo(videoDecoder);
+                if (videoRender != null)
+                    videoDecoder.ConnectTo(videoRender);
+            }
+
+            if (audioDecoder != null)
+            {
+                demux.ConnectTo(audioDecoder);
+                if (audioRender != null)
+                    audioDecoder.ConnectTo(audioRender);
+            }
+
+            return true;
+
         }
 
         public void RenderFile(string fileName)
@@ -58,20 +87,29 @@ namespace Multimedia
 
             GeneratePipesFromFile(fileName);
 
-            if( audioRender == null ) // use default render
+            if( audioRender == null && audioDecoder != null) // use default render
                 audioRender = new AudioRender();
-            if (videoRender == null) // use default render
+            if (videoRender == null && videoDecoder != null) // use default render
             {
                 videoRender = new VideoRender();
                 (videoRender as VideoRender).VideoWindow = videohandle;
             }
 
             //connect pipe
-            fileReader.ConnectTo(demux);
-            demux.ConnectTo(audioDecoder);
-            demux.ConnectTo(videoDecoder);
-            audioDecoder.ConnectTo(audioRender);
-            videoDecoder.ConnectTo(videoRender);
+            reader.ConnectTo(demux);
+
+            if (videoDecoder != null)
+            {
+                demux.ConnectTo(videoDecoder);
+                if (videoRender != null)
+                    videoDecoder.ConnectTo(videoRender);
+            }
+            if (audioDecoder != null)
+            {
+                demux.ConnectTo(audioDecoder);
+                if (audioRender != null)
+                    audioDecoder.ConnectTo(audioRender);
+            }
 
         }
 
@@ -80,48 +118,48 @@ namespace Multimedia
             
             IntPtr str = Marshal.StringToHGlobalAnsi(fileName);
             IntPtr fileContext = IntPtr.Zero;
-            int ret = FFmpeg.av_open_input_file(out fileContext, str, IntPtr.Zero, 0, IntPtr.Zero);
+            int ret = NativeMethods.av_open_input_file(out fileContext, str, IntPtr.Zero, 0, IntPtr.Zero);
             Marshal.FreeHGlobal(str);
             if (ret < 0)
                 throw new InvalidOperationException("can not open input file");
-            ret = FFmpeg.av_find_stream_info(fileContext);
+            ret = NativeMethods.av_find_stream_info(fileContext);
             if (ret < 0)
                 throw new InvalidOperationException("can not find stream info");
-            pFormatCtx = new NativeWrapper<FFmpeg.AVFormatContext>(fileContext);
+            pFormatCtx = new NativeWrapper<NativeMethods.AVFormatContext>(fileContext);
 
-            FFmpeg.AVFormatContext context = pFormatCtx.Handle;
+            NativeMethods.AVFormatContext context = pFormatCtx.Handle;
             for (int index = 0; index < context.nb_streams; index++)
             {
-                NativeWrapper<FFmpeg.AVStream> stream = new NativeWrapper<FFmpeg.AVStream>(context.streams[index]);
-                NativeWrapper<FFmpeg.AVCodecContext> codec = new NativeWrapper<FFmpeg.AVCodecContext>(stream.Handle.codec);
-                FFmpeg.AVCodecContext codecContext = codec.Handle;
-                if (codecContext.codec_type == FFmpeg.CodecType.CODEC_TYPE_AUDIO)
+                NativeWrapper<NativeMethods.AVStream> stream = new NativeWrapper<NativeMethods.AVStream>(context.streams[index]);
+                NativeWrapper<NativeMethods.AVCodecContext> codec = new NativeWrapper<NativeMethods.AVCodecContext>(stream.Handle.codec);
+                NativeMethods.AVCodecContext codecContext = codec.Handle;
+                if (codecContext.codec_type == NativeMethods.CodecType.CODEC_TYPE_AUDIO)
                 {
                     audioDecoder = new AvDecoder(stream, codec, index);
                 }
-                else if (codecContext.codec_type == FFmpeg.CodecType.CODEC_TYPE_VIDEO)
+                else if (codecContext.codec_type == NativeMethods.CodecType.CODEC_TYPE_VIDEO)
                 {
                     videoDecoder = new AvDecoder(stream, codec, index);
 
                 }
             }
-            fileReader = new FileReader(pFormatCtx);
+            reader = new FileReader(pFormatCtx);
             demux = new Demux(pFormatCtx);
         }
 
         public void Play()
         {
-            fileReader.Start();
+            reader.Start();
         }
 
         public void Pause()
         {
-            fileReader.Stop();
+            reader.Stop();
         }
 
         public void Stop()
         {
-            fileReader.Stop();
+            reader.Stop();
             // then go back
             demux.Seek(0);
         }
@@ -152,9 +190,9 @@ namespace Multimedia
             GeneratePipesFromFile(file);
         }
 
-        public IPipe FileReader
+        public IPipe Reader
         {
-            get { return fileReader; }
+            get { return reader; }
         }
 
         public IPipe Demux
