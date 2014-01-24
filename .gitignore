@@ -1,0 +1,8 @@
+/MediaTest/*.user
+
+/FFMPEG.mono/obj/*
+/FFMPEG.mono/bin/*
+/*.suo
+
+/MediaTest/obj/*
+/MediaTest/bin/*

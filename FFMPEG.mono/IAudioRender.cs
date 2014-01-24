@@ -12,6 +12,7 @@ namespace Multimedia
         public int rate;
         public int bit;
         public int channel;
+        public byte[] managedData;
     }
 
 

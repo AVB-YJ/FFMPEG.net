@@ -41,7 +41,7 @@ namespace Multimedia
         #region windows only
         private IntPtr waveOut = IntPtr.Zero;
         BaseComponent.SizeQueue<AudioFrame> queue = new BaseComponent.SizeQueue<AudioFrame>(50);
-        Thread[] threads = new Thread[5];
+        Thread[] threads = new Thread[1];
         private bool threadWorking = false;
         private void PlayUsingWaveOut(AudioFrame frame)
         {
@@ -60,18 +60,20 @@ namespace Multimedia
                     throw new Exception("can not open wave device");
             }
 
+            frame.managedData = new byte[frame.size];
+            Marshal.Copy(frame.sample, frame.managedData, 0, frame.size);
             queue.Enqueue(frame);
             //ret = WriteWaveOut(frame);
         }
 
-        private int WriteWaveOut(AudioFrame frame)
+        private int WriteWaveOut(IntPtr buf, int size)
         {
             int ret;
             WaveNative.WaveHdr m_Header = new WaveNative.WaveHdr(); ;
             GCHandle m_HeaderHandle = GCHandle.Alloc(m_Header, GCHandleType.Pinned);
             m_Header.dwUser = (IntPtr)GCHandle.Alloc(this);
-            m_Header.lpData = frame.sample;
-            m_Header.dwBufferLength = frame.size;
+            m_Header.lpData = buf;
+            m_Header.dwBufferLength = size;
             ret = WaveNative.waveOutPrepareHeader(waveOut, ref m_Header, Marshal.SizeOf(m_Header));
             if (ret != WaveNative.MMSYSERR_NOERROR)
                 throw new Exception("can not open wave device");
@@ -94,13 +96,35 @@ namespace Multimedia
 
         private void WaveoutThread()
         {
+            //int buffedSize = 0;
+            List<byte> list = new List<byte>();
+            int currentIndex = 0;
             while (threadWorking)
             {
                 AudioFrame frame;
                 if (!queue.Dequeue(out frame))
                     break;
 
-                WriteWaveOut(frame);
+                if (currentIndex + frame.size < 196001)
+                {
+                    list.AddRange(frame.managedData);
+                    currentIndex += frame.size;
+                }
+                else
+                {
+                    int len = currentIndex;
+                    IntPtr buf = Marshal.AllocHGlobal(currentIndex);
+                    Marshal.Copy(list.ToArray(), 0, buf, currentIndex);
+                    list.Clear();
+                    currentIndex = 0;
+
+                    list.AddRange(frame.managedData);
+                    currentIndex += frame.size;
+
+                    WriteWaveOut(buf, len);
+                    Marshal.FreeHGlobal(buf);
+                }
+                //WriteWaveOut(frame);
             }
         }
         #endregion

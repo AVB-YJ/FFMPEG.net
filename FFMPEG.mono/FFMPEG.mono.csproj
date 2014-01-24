@@ -37,7 +37,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;WIN32</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -64,15 +64,18 @@
     <Compile Include="FFmpegBase.cs" />
     <Compile Include="IAudioRender.cs" />
     <Compile Include="IDemux.cs" />
-    <Compile Include="Interop\AVFormat.cs" />
-    <Compile Include="Interop\AVCodec.cs" />
-    <Compile Include="Interop\AVIO.cs" />
-    <Compile Include="Interop\AVUtil.cs" />
-    <Compile Include="Interop\SWScale.cs" />
+    <Compile Include="Interop\ffmpeg51\AVFormat.cs" />
+    <Compile Include="Interop\ffmpeg51\AVCodec.cs" />
+    <Compile Include="Interop\ffmpeg51\AVIO.cs" />
+    <Compile Include="Interop\ffmpeg51\AVUtil.cs" />
+    <Compile Include="Interop\ffmpeg51\SWScale.cs" />
     <Compile Include="Interop\Wave\WaveNative.cs" />
     <Compile Include="IPipe.cs" />
     <Compile Include="IVideoRender.cs" />
     <Compile Include="NativeWrapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interop\ffmpeg55\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

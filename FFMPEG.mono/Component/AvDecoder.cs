@@ -10,9 +10,9 @@ namespace Multimedia
 {
     public class AvDecoder : BaseComponent, IPipe, IDecoder
     {
-        private NativeWrapper<NativeMethods.AVStream> pStream = null;
-        private NativeWrapper<NativeMethods.AVCodecContext> pCodecCtx = null;
-        private NativeWrapper<NativeMethods.AVCodec> pCodec = null;
+        private NativeWrapper<NativeMethods51.AVStream> pStream = null;
+        private NativeWrapper<NativeMethods51.AVCodecContext> pCodecCtx = null;
+        private NativeWrapper<NativeMethods51.AVCodec> pCodec = null;
         private int streamIndex = 0;
         public int StreamIndex
         {
@@ -22,36 +22,36 @@ namespace Multimedia
             }
         }
 
-        public AvDecoder(NativeWrapper<NativeMethods.AVStream> stream, NativeWrapper<NativeMethods.AVCodecContext> codecCtx, int index)
+        public AvDecoder(NativeWrapper<NativeMethods51.AVStream> stream, NativeWrapper<NativeMethods51.AVCodecContext> codecCtx, int index)
         {
             streamIndex = index;
             pStream = stream;
             pCodecCtx = codecCtx;
-            NativeMethods.AVCodecContext codecContext = codecCtx.Handle;
-            IntPtr decoder = NativeMethods.avcodec_find_decoder(codecContext.codec_id);
+            NativeMethods51.AVCodecContext codecContext = codecCtx.Handle;
+            IntPtr decoder = NativeMethods51.avcodec_find_decoder(codecContext.codec_id);
             if (decoder != IntPtr.Zero)
             {
-                pCodec = new NativeWrapper<NativeMethods.AVCodec>(decoder);
-                if ((pCodec.Handle.capabilities & NativeMethods.CODEC_FLAG_TRUNCATED) != 0)
+                pCodec = new NativeWrapper<NativeMethods51.AVCodec>(decoder);
+                if ((pCodec.Handle.capabilities & NativeMethods51.CODEC_FLAG_TRUNCATED) != 0)
                 {
-                    codecContext.flags |= NativeMethods.CODEC_FLAG_TRUNCATED;
+                    codecContext.flags |= NativeMethods51.CODEC_FLAG_TRUNCATED;
                     pCodecCtx.Handle = codecContext;
                 }
             }
             else
                 throw new InvalidOperationException("no such decoder");
 
-            int ret = NativeMethods.avcodec_open(pCodecCtx.Ptr, pCodec.Ptr);
+            int ret = NativeMethods51.avcodec_open(pCodecCtx.Ptr, pCodec.Ptr);
             if (ret < 0)
                 throw new InvalidOperationException("no such decoder");
         }
 
 
 
-        private SizeQueue<NativeWrapper<NativeMethods.AVPacket>> queue = new SizeQueue<NativeWrapper<NativeMethods.AVPacket>>(200);
+        private SizeQueue<NativeWrapper<NativeMethods51.AVPacket>> queue = new SizeQueue<NativeWrapper<NativeMethods51.AVPacket>>(200);
         public bool OnReceiveData(object packet)
         {
-            return queue.Enqueue(packet as NativeWrapper<NativeMethods.AVPacket>);
+            return queue.Enqueue(packet as NativeWrapper<NativeMethods51.AVPacket>);
         }
 
 
@@ -76,16 +76,16 @@ namespace Multimedia
             {
                 if (!threadWorking)
                     return;
-                NativeWrapper<NativeMethods.AVPacket> packet = null;
+                NativeWrapper<NativeMethods51.AVPacket> packet = null;
                 if (queue.Dequeue(out packet) == false)
                     return;
 
                 // decode
-                if (pCodecCtx.Handle.codec_type == NativeMethods.CodecType.CODEC_TYPE_AUDIO)
+                if (pCodecCtx.Handle.codec_type == NativeMethods51.CodecType.CODEC_TYPE_AUDIO)
                 {
-                    int size = NativeMethods.AVCODEC_MAX_AUDIO_FRAME_SIZE;
-                    IntPtr buf = Marshal.AllocHGlobal(NativeMethods.AVCODEC_MAX_AUDIO_FRAME_SIZE);
-                    int ret = NativeMethods.avcodec_decode_audio2(pCodecCtx.Ptr, buf, out size, packet.Handle.data, packet.Handle.size);
+                    int size = NativeMethods51.AVCODEC_MAX_AUDIO_FRAME_SIZE;
+                    IntPtr buf = Marshal.AllocHGlobal(NativeMethods51.AVCODEC_MAX_AUDIO_FRAME_SIZE);
+                    int ret = NativeMethods51.avcodec_decode_audio2(pCodecCtx.Ptr, buf, out size, packet.Handle.data, packet.Handle.size);
                     if (size == 0)
                     {
                         if (ret < 0)
@@ -103,15 +103,15 @@ namespace Multimedia
                     Marshal.FreeHGlobal(buf);
 
                 }
-                else if (pCodecCtx.Handle.codec_type == NativeMethods.CodecType.CODEC_TYPE_VIDEO)
+                else if (pCodecCtx.Handle.codec_type == NativeMethods51.CodecType.CODEC_TYPE_VIDEO)
                 {
-                    NativeWrapper<NativeMethods.AVFrame> frame = new NativeWrapper<NativeMethods.AVFrame>(NativeMethods.avcodec_alloc_frame());
+                    NativeWrapper<NativeMethods51.AVFrame> frame = new NativeWrapper<NativeMethods51.AVFrame>(NativeMethods51.avcodec_alloc_frame());
 
                     int finish = 0; ;
-                    int ret = NativeMethods.avcodec_decode_video(pCodecCtx.Ptr, frame.Ptr, ref finish, packet.Handle.data, packet.Handle.size);
+                    int ret = NativeMethods51.avcodec_decode_video(pCodecCtx.Ptr, frame.Ptr, ref finish, packet.Handle.data, packet.Handle.size);
                     if (ret < 0)
                     {
-                        NativeMethods.av_free(frame.Ptr);
+                        NativeMethods51.av_free(frame.Ptr);
                         break;
                     }
 
@@ -120,13 +120,13 @@ namespace Multimedia
                     {
                         if (videoFailCount != 0)
                         {
-                            NativeMethods.av_free(frame.Ptr);
+                            NativeMethods51.av_free(frame.Ptr);
                             break;
                         }
                         else
                         {
                             videoFailCount++;
-                            NativeMethods.av_free(frame.Ptr);
+                            NativeMethods51.av_free(frame.Ptr);
                             continue;
                         }
                     }
@@ -137,7 +137,7 @@ namespace Multimedia
                     nextObj.width = pCodecCtx.Handle.width;
                     nextObj.height = pCodecCtx.Handle.height;
                     PushToNext(nextObj);
-                    NativeMethods.av_free(frame.Ptr);
+                    NativeMethods51.av_free(frame.Ptr);
                 }
 
                 
@@ -163,7 +163,7 @@ namespace Multimedia
         public bool Close()
         {
             if (pCodecCtx != null)
-                NativeMethods.avcodec_close(pCodecCtx.Ptr);
+                NativeMethods51.avcodec_close(pCodecCtx.Ptr);
             return true;
         }
 
