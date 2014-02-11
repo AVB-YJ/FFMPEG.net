@@ -8,7 +8,7 @@ namespace Multimedia
 {
     public class FFmpegBase
     {
-        private NativeWrapper<NativeMethods51.AVFormatContext> pFormatCtx = null;
+        private NativeWrapper<NativeMethods55.AVFormatContext> pFormatCtx = null;
 
         private AvDecoder audioDecoder = null;
         private AvDecoder videoDecoder = null;
@@ -23,12 +23,12 @@ namespace Multimedia
 
         public FFmpegBase()
         {
-            NativeMethods51.av_register_all();
+            NativeMethods55.av_register_all();
         }
 
         public FFmpegBase(IntPtr videoHandle)
         {
-            NativeMethods51.av_register_all();
+            NativeMethods55.av_register_all();
             this.videohandle = videoHandle;
         }
 
@@ -116,29 +116,29 @@ namespace Multimedia
         private void GeneratePipesFromFile(string fileName)
         {
             
-            IntPtr str = Marshal.StringToHGlobalAnsi(fileName);
+            
             IntPtr fileContext = IntPtr.Zero;
-            int ret = NativeMethods51.av_open_input_file(out fileContext, str, IntPtr.Zero, 0, IntPtr.Zero);
+            int ret = NativeMethods55.avformat_open_input(out fileContext, fileName, IntPtr.Zero, IntPtr.Zero);
             //int ret = NativeMethods.avformat_open_input(out fileContext, str, IntPtr.Zero, 0);
-            Marshal.FreeHGlobal(str);
+
             if (ret < 0)
                 throw new InvalidOperationException("can not open input file");
-            ret = NativeMethods51.av_find_stream_info(fileContext);
+            ret = NativeMethods55.av_find_stream_info(fileContext);
             if (ret < 0)
                 throw new InvalidOperationException("can not find stream info");
-            pFormatCtx = new NativeWrapper<NativeMethods51.AVFormatContext>(fileContext);
+            pFormatCtx = new NativeWrapper<NativeMethods55.AVFormatContext>(fileContext);
 
-            NativeMethods51.AVFormatContext context = pFormatCtx.Handle;
+            NativeMethods55.AVFormatContext context = pFormatCtx.Handle;
             for (int index = 0; index < context.nb_streams; index++)
             {
-                NativeWrapper<NativeMethods51.AVStream> stream = new NativeWrapper<NativeMethods51.AVStream>(context.streams[index]);
-                NativeWrapper<NativeMethods51.AVCodecContext> codec = new NativeWrapper<NativeMethods51.AVCodecContext>(stream.Handle.codec);
-                NativeMethods51.AVCodecContext codecContext = codec.Handle;
-                if (codecContext.codec_type == NativeMethods51.CodecType.CODEC_TYPE_AUDIO)
+                NativeWrapper<NativeMethods55.AVStream> stream = new NativeWrapper<NativeMethods55.AVStream>(context.Streams[index]);
+                NativeWrapper<NativeMethods55.AVCodecContext> codec = new NativeWrapper<NativeMethods55.AVCodecContext>(stream.Handle.codec);
+                NativeMethods55.AVCodecContext codecContext = codec.Handle;
+                if (codecContext.codec_type == NativeMethods55.AVMediaType.AVMEDIA_TYPE_AUDIO)
                 {
                     audioDecoder = new AvDecoder(stream, codec, index);
                 }
-                else if (codecContext.codec_type == NativeMethods51.CodecType.CODEC_TYPE_VIDEO)
+                else if (codecContext.codec_type == NativeMethods55.AVMediaType.AVMEDIA_TYPE_VIDEO)
                 {
                     videoDecoder = new AvDecoder(stream, codec, index);
 
@@ -164,7 +164,7 @@ namespace Multimedia
             get
             {
                 if (pFormatCtx != null)
-                    return pFormatCtx.Handle.cur_pkt.pos;
+                    return pFormatCtx.Handle.offset;
                 else
                     return 0;
             }

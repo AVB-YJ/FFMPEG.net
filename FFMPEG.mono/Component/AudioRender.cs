@@ -26,7 +26,7 @@ namespace Multimedia
 
         public bool OnReceiveData(object packet)
         {
-            // FIXME
+
             AudioFrame frame = (AudioFrame)packet;
 
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
@@ -105,7 +105,7 @@ namespace Multimedia
                 if (!queue.Dequeue(out frame))
                     break;
 
-                if (currentIndex + frame.size < 196001)
+                if (currentIndex + frame.size < 65536 * 10)
                 {
                     list.AddRange(frame.managedData);
                     currentIndex += frame.size;

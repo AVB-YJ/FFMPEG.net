@@ -69,13 +69,28 @@
     <Compile Include="Interop\ffmpeg51\AVIO.cs" />
     <Compile Include="Interop\ffmpeg51\AVUtil.cs" />
     <Compile Include="Interop\ffmpeg51\SWScale.cs" />
+    <Compile Include="Interop\ffmpeg55\libavcodec\avcodec.cs" />
+    <Compile Include="Interop\ffmpeg55\libavformat\avformat.cs" />
+    <Compile Include="Interop\ffmpeg55\libavformat\avio.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\avconfig.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\avutil.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\buffer.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\common.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\dict.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\frame.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\intfloat.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\log.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\mathematics.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\mem.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\pixfmt.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\rational.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\samplefmt.cs" />
+    <Compile Include="Interop\ffmpeg55\libswscale\swscale.cs" />
     <Compile Include="Interop\Wave\WaveNative.cs" />
     <Compile Include="IPipe.cs" />
     <Compile Include="IVideoRender.cs" />
     <Compile Include="NativeWrapper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interop\ffmpeg55\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

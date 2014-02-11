@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFMPEG.mono", "FFMPEG.mono\FFMPEG.mono.csproj", "{93F2BF01-5719-4BE8-B31E-F8C3FBC0342B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaTest", "MediaTest\MediaTest.csproj", "{453CCBE0-1D57-4FAA-9445-5642854A0AE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translator", "Translator\Translator.csproj", "{A9ACA968-0FF3-4444-BE74-891A3FCE7815}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +31,12 @@ Global
 		{453CCBE0-1D57-4FAA-9445-5642854A0AE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{453CCBE0-1D57-4FAA-9445-5642854A0AE7}.Release|x86.ActiveCfg = Release|x86
 		{453CCBE0-1D57-4FAA-9445-5642854A0AE7}.Release|x86.Build.0 = Release|x86
+		{A9ACA968-0FF3-4444-BE74-891A3FCE7815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9ACA968-0FF3-4444-BE74-891A3FCE7815}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9ACA968-0FF3-4444-BE74-891A3FCE7815}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A9ACA968-0FF3-4444-BE74-891A3FCE7815}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9ACA968-0FF3-4444-BE74-891A3FCE7815}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9ACA968-0FF3-4444-BE74-891A3FCE7815}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

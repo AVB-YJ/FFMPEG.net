@@ -80,24 +80,24 @@ namespace Multimedia
 
         private Bitmap ConvertToBitmap(VideoFrame This)
 		{
-            var frame = ((NativeWrapper<NativeMethods51.AVFrame>)This.ffmpegFrame).Handle;
+            var frame = ((NativeWrapper<NativeMethods55.AVFrame>)This.ffmpegFrame).Handle;
 			//FFmpeg.AVFrame final = gcnew AvFrame(PIX_FMT_BGR24, this->size);
-            NativeWrapper<NativeMethods51.AVFrame> final = new NativeWrapper<NativeMethods51.AVFrame>(NativeMethods51.avcodec_alloc_frame());
+            NativeWrapper<NativeMethods55.AVFrame> final = new NativeWrapper<NativeMethods55.AVFrame>(NativeMethods55.avcodec_alloc_frame());
 
-            int dst_fmt = (int)NativeMethods51.PixelFormat.PIX_FMT_BGR24;
+            var dst_fmt = NativeMethods55.AVPixelFormat.AV_PIX_FMT_BGR24;
 
-			int count = NativeMethods51.avpicture_get_size(dst_fmt, This.width, This.height);
+			int count = NativeMethods55.avpicture_get_size(dst_fmt, This.width, This.height);
 
             IntPtr bufferArr = Marshal.AllocHGlobal(count);
 
-            NativeMethods51.avpicture_fill(final.Ptr, bufferArr, dst_fmt, This.width, This.height);
+            NativeMethods55.avpicture_fill(final.Ptr, bufferArr, dst_fmt, This.width, This.height);
 
-            IntPtr swsContext = NativeMethods51.sws_getContext(This.width, This.height, (int)This.format,
-                This.width, This.height, dst_fmt, NativeMethods51.SWS_BICUBIC, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+            IntPtr swsContext = NativeMethods55.sws_getContext(This.width, This.height, (NativeMethods55.AVPixelFormat)This.format,
+                This.width, This.height, dst_fmt, NativeMethods55.SWS_BICUBIC, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 			if(swsContext == IntPtr.Zero)
 				throw new Exception();
             
-            NativeMethods51.sws_scale(swsContext, frame.data, frame.linesize, 0, This.height, final.Handle.data, final.Handle.linesize);
+            NativeMethods55.sws_scale(swsContext, frame.data, frame.linesize, 0, This.height, final.Handle.data, final.Handle.linesize);
 
 			Stream str = new MemoryStream();
 			BinaryWriter writer = new BinaryWriter(str);
@@ -127,7 +127,7 @@ namespace Multimedia
 			writer.Seek(0,  SeekOrigin.Begin);
 
 			Bitmap bitmap = new Bitmap(str);
-            NativeMethods51.av_free(final.Ptr);
+            NativeMethods55.av_free(final.Ptr);
             Marshal.FreeHGlobal(bufferArr);
             //writer.Close();
 			return bitmap;

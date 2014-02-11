@@ -1,4 +1,4 @@
-/MediaTest/*.user
+*.user
 
 /FFMPEG.mono/obj/*
 /FFMPEG.mono/bin/*
@@ -6,3 +6,6 @@
 
 /MediaTest/obj/*
 /MediaTest/bin/*
+/Translator/bin/*
+/Translator/obj/*
+/Translator/out/*
