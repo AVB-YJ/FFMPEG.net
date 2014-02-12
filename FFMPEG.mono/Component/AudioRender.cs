@@ -10,6 +10,8 @@ using WaveLib;
 
 namespace Multimedia
 {
+
+
     public class AudioRender : IPipe
     {
 
@@ -19,20 +21,95 @@ namespace Multimedia
 
         public bool ConnectTo(IPipe pipe)
         {
-            // throw new InvalidOperationException("Render should be the last one!");
-            // FIXME
             return true;
+        }
+
+        private void ConvertAudioSample(AudioFrame input, out AudioFrame output)
+        {
+            output = new AudioFrame();
+            output.channel = input.channel;
+            output.rate = input.rate;
+            output.bit = 16;
+            output.nb_samples = input.nb_samples;
+            output.fmt = (int)(NativeMethods55.AVSampleFormat.AV_SAMPLE_FMT_S16);
+            output.sample = Marshal.AllocHGlobal(NativeMethods55.AVCODEC_MAX_AUDIO_FRAME_SIZE*2+16);
+            int bytePerSample = NativeMethods55.av_get_bytes_per_sample((NativeMethods55.AVSampleFormat)output.fmt);
+            output.size = output.nb_samples * bytePerSample;
+
+            if (input.fmt == (int)NativeMethods55.AVSampleFormat.AV_SAMPLE_FMT_FLTP)
+            {
+                System.Single val = new System.Single();
+                if (input.channel == 1)
+                {
+                    for (int i = 0; i < input.nb_samples; i++)
+                    {
+                        IntPtr address =  new IntPtr(input.sample.ToInt64() + i * Marshal.SizeOf(val));
+                        val = (System.Single)Marshal.PtrToStructure(address, typeof(System.Single));
+                        if (val < -1.0)
+                            val = -1.0f;
+                        else if (val > 1.0)
+                            val = 1.0f;
+                        Int16 target = (Int16)( val * 32767.0f);
+
+                        IntPtr address2 = new IntPtr(input.sample.ToInt64() + i * Marshal.SizeOf(target));
+                        Marshal.WriteInt16(address2, target);
+                    }
+                }
+                else if (input.channel == 2)
+                {
+                    for (int i = 0; i < input.nb_samples; i++)
+                    {
+                        // channel 1
+                        IntPtr address = new IntPtr(input.sample.ToInt64() + i * Marshal.SizeOf(val));
+                        val = (System.Single) Marshal.PtrToStructure(address, typeof(System.Single));
+                        if (val < -1.0)
+                            val = -1.0f;
+                        else if (val > 1.0)
+                            val = 1.0f;
+                        Int16 target = (Int16)(val * 32767.0f);
+
+                        IntPtr address2 = new IntPtr(input.sample.ToInt64() + (i*2) * Marshal.SizeOf(target));
+                        Marshal.WriteInt16(address2, target);
+
+                        // channel 2
+                        address = new IntPtr(input.sample.ToInt64() + (i+1) * Marshal.SizeOf(val));
+                        val = (System.Single)Marshal.PtrToStructure(address, typeof(System.Single));
+                        if (val < -1.0)
+                            val = -1.0f;
+                        else if (val > 1.0)
+                            val = 1.0f;
+                        target = (Int16)(val * 32767.0f);
+
+                        address2 = new IntPtr(input.sample.ToInt64() + (i * 2 + 1) * Marshal.SizeOf(target));
+                        Marshal.WriteInt16(address2, target);
+                    }
+                }
+            }
+            else
+            {
+                // FIXME
+                // add convert from other format to AV_SAMPLE_FMT_S16
+                Marshal.FreeHGlobal(output.sample);
+                output = null;
+            }
         }
 
         public bool OnReceiveData(object packet)
         {
 
             AudioFrame frame = (AudioFrame)packet;
+            AudioFrame o;
+            ConvertAudioSample(frame, out o);
+            if (o == null)
+                return true;
 
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
                 PlayUsingWaveOut(frame);
             }
+
+            //NativeMethods55.av_free(o.sample);
+            Marshal.FreeHGlobal(o.sample);
 
             return true;
             //throw new NotImplementedException();
@@ -41,12 +118,10 @@ namespace Multimedia
         #region windows only
         private IntPtr waveOut = IntPtr.Zero;
         BaseComponent.SizeQueue<AudioFrame> queue = new BaseComponent.SizeQueue<AudioFrame>(50);
-        Thread[] threads = new Thread[1];
+        Thread threads = null;
         private bool threadWorking = false;
         private void PlayUsingWaveOut(AudioFrame frame)
         {
-            //return;
-
             int ret;
             int size = frame.size;
             IntPtr data = frame.sample;
@@ -59,6 +134,7 @@ namespace Multimedia
                 if (ret != WaveNative.MMSYSERR_NOERROR)
                     throw new Exception("can not open wave device");
             }
+
 
             frame.managedData = new byte[frame.size];
             Marshal.Copy(frame.sample, frame.managedData, 0, frame.size);
@@ -90,6 +166,7 @@ namespace Multimedia
                 Thread.Sleep(10);
             }
 
+            ((GCHandle)m_Header.dwUser).Free();
             m_HeaderHandle.Free();
             return ret;
         }
@@ -131,11 +208,9 @@ namespace Multimedia
 
         public bool Start()
         {
-            for (int i = 0; i < threads.Length; i++ )
-            {
-                threads[i] = new Thread(new ThreadStart(WaveoutThread));
-                threads[i].Start();
-            }
+
+            threads = new Thread(new ThreadStart(WaveoutThread));
+            threads.Start();
             threadWorking = true;
             return true;
             //throw new NotImplementedException();
@@ -145,10 +220,7 @@ namespace Multimedia
         {
             threadWorking = false;
             queue.Close();
-            foreach(var thread in threads)
-            {
-                thread.Join();
-            }
+            threads.Join();
 
             if (waveOut != IntPtr.Zero)
             {

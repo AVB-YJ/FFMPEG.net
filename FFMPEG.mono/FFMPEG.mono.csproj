@@ -82,9 +82,11 @@
     <Compile Include="Interop\ffmpeg55\libavutil\log.cs" />
     <Compile Include="Interop\ffmpeg55\libavutil\mathematics.cs" />
     <Compile Include="Interop\ffmpeg55\libavutil\mem.cs" />
+    <Compile Include="Interop\ffmpeg55\libavutil\opt.cs" />
     <Compile Include="Interop\ffmpeg55\libavutil\pixfmt.cs" />
     <Compile Include="Interop\ffmpeg55\libavutil\rational.cs" />
     <Compile Include="Interop\ffmpeg55\libavutil\samplefmt.cs" />
+    <Compile Include="Interop\ffmpeg55\libswresample\swresample.cs" />
     <Compile Include="Interop\ffmpeg55\libswscale\swscale.cs" />
     <Compile Include="Interop\Wave\WaveNative.cs" />
     <Compile Include="IPipe.cs" />

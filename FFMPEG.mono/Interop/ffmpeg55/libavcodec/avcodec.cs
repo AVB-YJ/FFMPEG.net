@@ -20,6 +20,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Runtime;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -2623,7 +2624,29 @@ public struct AVCodec{
 
 	public IntPtr/* System.Int32*  */ supported_samplerates;
 
-	public IntPtr/* AVSampleFormat*  */ sample_fmts;
+	private IntPtr/* AVSampleFormat*  */ sample_fmts;
+    public List<AVSampleFormat> Sample_fmts
+    {
+        get
+        {
+            if (sample_fmts == IntPtr.Zero)
+                return new List<AVSampleFormat>();
+
+            List<AVSampleFormat> ret = new List<AVSampleFormat>();
+            int index = 0;
+
+            while (true)
+            {
+                IntPtr address = new IntPtr(sample_fmts.ToInt64() + index * 4);
+                Int32 fmt = Marshal.ReadInt32(address);
+                if (fmt == -1)
+                    break;
+
+                ret.Add((AVSampleFormat)fmt);
+            }
+            return ret;
+        }
+    }
 
 	public IntPtr/* System.UInt64*  */ channel_layouts;
 

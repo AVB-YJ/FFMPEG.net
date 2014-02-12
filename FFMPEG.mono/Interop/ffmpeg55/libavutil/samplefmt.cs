@@ -116,7 +116,7 @@ public static extern System.Int32 av_samples_fill_arrays(
 [DllImport(SAMPLEFMT), SuppressUnmanagedCodeSecurity]
 public static extern System.Int32 av_samples_alloc(
 	IntPtr/* IntPtr*  */ audio_data, 
-	IntPtr/* System.Int32*  */ linesize, 
+	out int/* System.Int32*  */ linesize, 
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 nb_channels, 
 	[MarshalAs(UnmanagedType.I4)]
@@ -127,8 +127,8 @@ public static extern System.Int32 av_samples_alloc(
 
 [DllImport(SAMPLEFMT), SuppressUnmanagedCodeSecurity]
 public static extern System.Int32 av_samples_alloc_array_and_samples(
-	IntPtr/* IntPtr*  */ audio_data, 
-	IntPtr/* System.Int32*  */ linesize, 
+	out IntPtr/* IntPtr*  */ audio_data, 
+	out int/* System.Int32*  */ linesize, 
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 nb_channels, 
 	[MarshalAs(UnmanagedType.I4)]

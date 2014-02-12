@@ -46,7 +46,7 @@ namespace MediaTest
         private void button2_Click(object sender, EventArgs e)
         {
             b = new FFmpegBase();
-            b.RenderFile(@"C:\Users\Public\Music\Sample Music\Kalimba.mp3");
+            b.RenderFile(@"C:\Users\Public\Music\Sample Music\1.mp3");
             b.Play();
         }
 

@@ -12,6 +12,8 @@ namespace Multimedia
         public int rate;
         public int bit;
         public int channel;
+        public int fmt;
+        public int nb_samples;
         public byte[] managedData;
     }
 

@@ -67,6 +67,10 @@ namespace Multimedia
             return true;
         }
 
+
+
+
+
         private void DoThreadWork()
         {
             int videoFailCount = 0;
@@ -83,25 +87,30 @@ namespace Multimedia
                 // decode
                 if (pCodecCtx.Handle.codec_type == NativeMethods55.AVMediaType.AVMEDIA_TYPE_AUDIO)
                 {
-                    int size = NativeMethods55.AVCODEC_MAX_AUDIO_FRAME_SIZE;
-                    IntPtr buf = Marshal.AllocHGlobal(NativeMethods55.AVCODEC_MAX_AUDIO_FRAME_SIZE);
-                    int ret = NativeMethods55.avcodec_decode_audio3(pCodecCtx.Ptr, buf, out size, packet.Ptr);
-                    if (size == 0)
+                    int size = 0;
+                    NativeWrapper<NativeMethods55.AVFrame> tframe =
+                        new NativeWrapper<NativeMethods55.AVFrame>(NativeMethods55.avcodec_alloc_frame());
+                    int ret = NativeMethods55.avcodec_decode_audio4(pCodecCtx.Ptr, 
+                        tframe.Ptr, out size, packet.Ptr);
+                    if (ret <= 0)
                     {
-                        Marshal.FreeHGlobal(buf);
-                        if (ret < 0)
-                            break;
-                        else
-                            continue;
+                        NativeMethods55.avcodec_free_frame(tframe.Ptr);
+                        continue;
+
                     }
-                    AudioFrame frame= new AudioFrame();
-                    frame.sample = buf;
-                    frame.size = size;
+
+
+                    AudioFrame frame = new AudioFrame();
+                    frame.fmt = (int)pCodecCtx.Handle.sample_fmt;
+                    frame.sample = tframe.Handle.data[0];
+                    frame.size = tframe.Handle.linesize[0];
                     frame.rate = pCodecCtx.Handle.sample_rate;
                     frame.bit = pCodecCtx.Handle.bits_per_coded_sample;
                     frame.channel = pCodecCtx.Handle.channels;
+                    frame.nb_samples = tframe.Handle.nb_samples;
                     PushToNext(frame);
-                    Marshal.FreeHGlobal(buf);
+
+                    NativeMethods55.av_free(tframe.Ptr);
 
                 }
                 else if (pCodecCtx.Handle.codec_type == NativeMethods55.AVMediaType.AVMEDIA_TYPE_VIDEO)

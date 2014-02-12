@@ -37,7 +37,22 @@ public static readonly uint FF_LAMBDA_MAX = (256*128-1);
 public static readonly uint FF_QUALITY_SCALE = FF_LAMBDA_SCALE;
 public static readonly ulong AV_NOPTS_VALUE = (0x8000000000000000);
 public static readonly uint AV_TIME_BASE = 1000000;
-//public static readonly uint AV_TIME_BASE_Q = (AVRational){1, AV_TIME_BASE};
+
+public static readonly uint AVERROR_BSF_NOT_FOUND = 0xb9acbd08; ///< Bitstream filter not found
+public static readonly uint AVERROR_DECODER_NOT_FOUND = 0xbcbabb08; ///< Decoder not found
+public static readonly uint AVERROR_DEMUXER_NOT_FOUND = 0xb2babb08; ///< Demuxer not found
+public static readonly uint AVERROR_ENCODER_NOT_FOUND = 0xbcb1ba08; ///< Encoder not found
+public static readonly uint AVERROR_EOF = 0xdfb9b0bb; ///< End of file
+public static readonly uint AVERROR_EXIT = 0xabb6a7bb; ///< Immediate exit was requested; the called function should not be restarted
+public static readonly uint AVERROR_FILTER_NOT_FOUND =0xb3b6b908; ///< Filter not found
+public static readonly uint AVERROR_INVALIDDATA =0xbebbb1b7; ///< Invalid data found when processing input
+public static readonly uint AVERROR_MUXER_NOT_FOUND =0xa7aab208; ///< Muxer not found
+public static readonly uint AVERROR_OPTION_NOT_FOUND =0xabafb008; ///< Option not found
+public static readonly uint AVERROR_PATCHWELCOME =0xbaa8beb0; ///< Not yet implemented in Libav, patches welcome
+public static readonly uint AVERROR_PROTOCOL_NOT_FOUND =0xb0adaf08 ;///< Protocol not found
+public static readonly uint AVERROR_STREAM_NOT_FOUND =0xadabac08 ;///< Stream not found
+public static readonly uint AVERROR_BUG =0xdfb8aabe ;///< Bug detected, please report the issue
+public static readonly uint AVERROR_UNKNOWN = 0xb1b4b1ab;///< Unknown error, typically from an external library//public static readonly uint AV_TIME_BASE_Q = (AVRational){1, AV_TIME_BASE};
 public enum AVMediaType
 {
 	AVMEDIA_TYPE_UNKNOWN = -1,
