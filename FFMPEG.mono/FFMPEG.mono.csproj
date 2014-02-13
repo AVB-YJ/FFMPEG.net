@@ -55,15 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Component\AudioRender.cs" />
-    <Compile Include="Component\AvDecoder.cs" />
-    <Compile Include="Component\BaseComponent.cs" />
-    <Compile Include="Component\Demux.cs" />
-    <Compile Include="Component\FileReader.cs" />
-    <Compile Include="Component\VideoRender.cs" />
-    <Compile Include="FFmpegBase.cs" />
-    <Compile Include="IAudioRender.cs" />
-    <Compile Include="IDemux.cs" />
+    <Compile Include="AVStream\AudioStream.cs" />
+    <Compile Include="AVStream\AVStream.cs" />
+    <Compile Include="AVStream\UnimplStream.cs" />
+    <Compile Include="AVStream\VideoStream.cs" />
     <Compile Include="Interop\ffmpeg51\AVFormat.cs" />
     <Compile Include="Interop\ffmpeg51\AVCodec.cs" />
     <Compile Include="Interop\ffmpeg51\AVIO.cs" />
@@ -88,9 +83,6 @@
     <Compile Include="Interop\ffmpeg55\libavutil\samplefmt.cs" />
     <Compile Include="Interop\ffmpeg55\libswresample\swresample.cs" />
     <Compile Include="Interop\ffmpeg55\libswscale\swscale.cs" />
-    <Compile Include="Interop\Wave\WaveNative.cs" />
-    <Compile Include="IPipe.cs" />
-    <Compile Include="IVideoRender.cs" />
     <Compile Include="NativeWrapper.cs" />
   </ItemGroup>
   <ItemGroup />

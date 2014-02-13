@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 namespace Multimedia
 {
-    public class NativeWrapper<T> 
+    internal class NativeWrapper<T> 
     {
         private T handle;
         private IntPtr ptr;
