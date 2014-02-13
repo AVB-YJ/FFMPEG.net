@@ -24,17 +24,8 @@ namespace Multimedia
             return true;
         }
 
-        private void ConvertAudioSample(AudioFrame input, out AudioFrame output)
+        private void ConvertAudioSample(AudioFrame input)
         {
-            output = new AudioFrame();
-            output.channel = input.channel;
-            output.rate = input.rate;
-            output.bit = 16;
-            output.nb_samples = input.nb_samples;
-            output.fmt = (int)(NativeMethods55.AVSampleFormat.AV_SAMPLE_FMT_S16);
-            output.sample = Marshal.AllocHGlobal(NativeMethods55.AVCODEC_MAX_AUDIO_FRAME_SIZE*2+16);
-            int bytePerSample = NativeMethods55.av_get_bytes_per_sample((NativeMethods55.AVSampleFormat)output.fmt);
-            output.size = output.nb_samples * bytePerSample;
 
             if (input.fmt == (int)NativeMethods55.AVSampleFormat.AV_SAMPLE_FMT_FLTP)
             {
@@ -89,8 +80,7 @@ namespace Multimedia
             {
                 // FIXME
                 // add convert from other format to AV_SAMPLE_FMT_S16
-                Marshal.FreeHGlobal(output.sample);
-                output = null;
+
             }
         }
 
@@ -98,10 +88,8 @@ namespace Multimedia
         {
 
             AudioFrame frame = (AudioFrame)packet;
-            AudioFrame o;
-            ConvertAudioSample(frame, out o);
-            if (o == null)
-                return true;
+            ConvertAudioSample(frame);
+
 
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
@@ -109,7 +97,7 @@ namespace Multimedia
             }
 
             //NativeMethods55.av_free(o.sample);
-            Marshal.FreeHGlobal(o.sample);
+            //Marshal.FreeHGlobal(o.sample);
 
             return true;
             //throw new NotImplementedException();
