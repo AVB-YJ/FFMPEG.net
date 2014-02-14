@@ -106,7 +106,7 @@ namespace Multimedia
         #region windows only
         private IntPtr waveOut = IntPtr.Zero;
         BaseComponent.SizeQueue<AudioFrame> queue = new BaseComponent.SizeQueue<AudioFrame>(50);
-        Thread threads = null;
+        Thread[] threads = new Thread[1];
         private bool threadWorking = false;
         private void PlayUsingWaveOut(AudioFrame frame)
         {
@@ -151,7 +151,7 @@ namespace Multimedia
 
             while (WaveNative.waveOutUnprepareHeader(waveOut, ref m_Header, Marshal.SizeOf(m_Header)) == WaveNative.WAVERR_STILLPLAYING)
             {
-                Thread.Sleep(10);
+                Thread.Sleep(5);
             }
 
             ((GCHandle)m_Header.dwUser).Free();
@@ -170,7 +170,7 @@ namespace Multimedia
                 if (!queue.Dequeue(out frame))
                     break;
 
-                if (currentIndex + frame.size < 65536 * 10)
+                if (currentIndex + frame.size < frame.size * 2)
                 {
                     list.AddRange(frame.managedData);
                     currentIndex += frame.size;
@@ -197,8 +197,12 @@ namespace Multimedia
         public bool Start()
         {
 
-            threads = new Thread(new ThreadStart(WaveoutThread));
-            threads.Start();
+            for (int i = 0; i < threads.Length; i++)
+            {
+                threads[i] = new Thread(new ThreadStart(WaveoutThread));
+                threads[i].Start();
+            }
+            
             threadWorking = true;
             return true;
             //throw new NotImplementedException();
@@ -208,7 +212,8 @@ namespace Multimedia
         {
             threadWorking = false;
             queue.Close();
-            threads.Join();
+            foreach (var thread in threads)
+                thread.Join();
 
             if (waveOut != IntPtr.Zero)
             {

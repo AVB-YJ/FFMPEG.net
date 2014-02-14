@@ -69,7 +69,7 @@ namespace WaveLib
         public const int WAVERR_STILLPLAYING = 33;
 
 		// callbacks
-		public delegate void WaveDelegate(IntPtr hdrvr, int uMsg, int dwUser, ref WaveHdr wavhdr, int dwParam2);
+        public delegate void WaveDelegate(IntPtr hdrvr, int uMsg, IntPtr dwUser, ref WaveHdr wavhdr, int dwParam2);
 
 		// structs 
 

@@ -29,8 +29,8 @@ namespace Multimedia
 
             if (videoWindow != IntPtr.Zero)
             {
-                Bitmap pic = ConvertToBitmap(frame);
-                videoGraphics.DrawImage(pic, 0, 0, videoWindowSize.Width, videoWindowSize.Height);
+                ConvertToBitmapAndDraw(frame);
+                
             }
             return true;
         }
@@ -78,7 +78,7 @@ namespace Multimedia
         #endregion
 
 
-        private Bitmap ConvertToBitmap(VideoFrame This)
+        private void ConvertToBitmapAndDraw(VideoFrame This)
 		{
             var frame = ((NativeWrapper<NativeMethods55.AVFrame>)This.ffmpegFrame).Handle;
 			//FFmpeg.AVFrame final = gcnew AvFrame(PIX_FMT_BGR24, this->size);
@@ -130,7 +130,9 @@ namespace Multimedia
             NativeMethods55.av_free(final.Ptr);
             Marshal.FreeHGlobal(bufferArr);
             //writer.Close();
-			return bitmap;
+
+            videoGraphics.DrawImage(bitmap, 0, 0, videoWindowSize.Width, videoWindowSize.Height);
+            writer.Close();
 		}
 
 
