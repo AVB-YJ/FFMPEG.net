@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string LOG = "avutil-52.dll";
-
+		#if WIN32
+		public const string LOG = "avutil-52.dll";
+		#else
+		public const string LOG = "avutil";
+		#endif
 
 public static readonly int AV_LOG_QUIET = -8;
 public static readonly uint AV_LOG_PANIC = 0;

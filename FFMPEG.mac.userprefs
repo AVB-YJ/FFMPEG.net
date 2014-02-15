@@ -1,0 +1,37 @@
+﻿<Properties MonoDevelop.MonoMac.LastXamMacNagTime="2014/2/15 8:43:02">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="FFMPEG.mono/FFmpegBase.cs">
+    <Files>
+      <File FileName="FFMPEG.mono/Interop/ffmpeg55/libavcodec/version.cs" Line="36" Column="95" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg55/libavformat/version.cs" Line="36" Column="97" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg55/libavutil/error.cs" Line="33" Column="29" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg55/libswresample/version.cs" Line="36" Column="101" />
+      <File FileName="FFMPEG.mono/Component/AudioRender.cs" Line="8" Column="24" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg55/libavcodec/avcodec.cs" Line="27" Column="22" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg55/libavformat/avformat.cs" Line="33" Column="43" />
+      <File FileName="FFMPEG.mono/FFmpegBase.cs" Line="26" Column="1" />
+      <File FileName="FFMPEG.mono/FFMPEG.mac.dll.config" Line="1" Column="1" />
+      <File FileName="mp3test/Program.cs" Line="7" Column="7" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="FFMPEG.mac" expanded="True">
+            <Node name="Interop" expanded="True">
+              <Node name="ffmpeg55" expanded="True">
+                <Node name="libavformat" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
+          <Node name="mp3test.mac" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/zhengender/Project/FFMPEG.net/mp3test/Program.cs" line="16" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string MATHEMATICS = "avutil-52.dll";
-
+		#if WIN32
+		public const string MATHEMATICS = "avutil-52.dll";
+		#else
+		public const string MATHEMATICS = "avutil";
+		#endif
 
 public static readonly double M_E = 2.7182818284590452354;
 public static readonly double M_LN2 = 0.69314718055994530942;

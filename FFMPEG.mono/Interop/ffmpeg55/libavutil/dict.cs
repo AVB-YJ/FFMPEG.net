@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string DICT = "avutil-52.dll";
-
+		#if WIN32
+		public const string DICT = "avutil-52.dll";
+		#else
+		public const string DICT = "avutil";
+		#endif
 
 public static readonly uint AV_DICT_MATCH_CASE = 1;
 public static readonly uint AV_DICT_IGNORE_SUFFIX = 2;

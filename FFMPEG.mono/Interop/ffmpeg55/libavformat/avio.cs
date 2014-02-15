@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55
     {
+		#if WIN32
         public const string AVIO = "avformat-55.dll";
-
+		#else
+		public const string AVIO = "avformat";
+		#endif
 
         public static readonly uint AVIO_SEEKABLE_NORMAL = 0x0001;
         public static readonly uint AVSEEK_SIZE = 0x10000;

@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string SAMPLEFMT = "avutil-52.dll";
-
+		#if WIN32
+		public const string SAMPLEFMT = "avutil-52.dll";
+		#else
+		public const string SAMPLEFMT = "avutil";
+		#endif
 
 public enum AVSampleFormat
 {

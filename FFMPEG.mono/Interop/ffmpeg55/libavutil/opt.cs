@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string OPT = "avutil-52.dll";
-
+		#if WIN32
+		public const string OPT = "avutil-52.dll";
+		#else
+		public const string OPT = "avutil";
+		#endif
 
 public static readonly uint AV_OPT_FLAG_ENCODING_PARAM = 1;
 public static readonly uint AV_OPT_FLAG_DECODING_PARAM = 2;

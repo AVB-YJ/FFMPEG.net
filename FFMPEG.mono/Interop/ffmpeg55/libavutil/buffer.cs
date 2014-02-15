@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string BUFFER = "avutil-52.dll";
-
+		#if WIN32
+		public const string BUFFER = "avutil-52.dll";
+		#else
+		public const string BUFFER = "avutil";
+		#endif
 
 public static readonly uint AV_BUFFER_FLAG_READONLY = (1 << 0);
 [DllImport(BUFFER), SuppressUnmanagedCodeSecurity]

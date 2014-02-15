@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string COMMON = "avutil-52.dll";
-
+		#if WIN32
+		public const string COMMON = "avutil-52.dll";
+		#else
+		public const string COMMON = "avutil";
+		#endif
 
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]

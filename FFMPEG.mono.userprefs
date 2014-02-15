@@ -1,32 +1,12 @@
-<<<<<<< HEAD
-﻿<Properties GitUserInfo="UsingGIT">
+﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="FFMPEG.mono\Interop\AVCodec.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="mp3test/Program.cs">
     <Files>
-      <File FileName="FFMPEG.mono\Interop\AVCodec.cs" Line="22" Column="29" />
+      <File FileName="mp3test/Program.cs" Line="1" Column="7" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-=======
-﻿<Properties GitUserInfo="UsingGIT">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="FFMPEG.mono\Interop\AVCodec.cs">
-    <Files>
-      <File FileName="FFMPEG.mono\AvCodec.cs" Line="23" Column="21" />
-      <File FileName="FFMPEG.mono\Interop\AVFormat.cs" Line="35" Column="1" />
-      <File FileName="FFMPEG.mono\Interop\AVCodec.cs" Line="20" Column="1" />
-      <File FileName="FFMPEG.mono\Interop\AVIO.cs" Line="1" Column="1" />
-      <File FileName="FFMPEG.mono\Interop\AVUtil.cs" Line="1" Column="1" />
-      <File FileName="FFMPEG.mono\Interop\SWScale.cs" Line="1" Column="1" />
-      <File FileName="FFMPEG.mono\AssemblyInfo.cs" Line="1" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
->>>>>>> 247c1aecb7dead97a0437cb8ffb67073e171f8c8
 </Properties>

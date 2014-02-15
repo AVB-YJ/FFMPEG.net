@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string RATIONAL = "avutil-52.dll";
-
+		#if WIN32
+		public const string RATIONAL = "avutil-52.dll";
+		#else
+		public const string RATIONAL = "avutil";
+		#endif
 
 [DllImport(RATIONAL), SuppressUnmanagedCodeSecurity]
 public static extern AVRational av_make_q(

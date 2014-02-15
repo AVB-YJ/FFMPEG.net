@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
+		#if WIN32
 public const string AVCONFIG = "avutil-52.dll";
-
+		#else
+		public const string AVCONFIG = "avutil";
+		#endif
 
 public static readonly uint AV_HAVE_BIGENDIAN = 0;
 public static readonly uint AV_HAVE_FAST_UNALIGNED = 1;

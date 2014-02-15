@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string PIXFMT = "avutil-52.dll";
-
+		#if WIN32
+		public const string PIXFMT = "avutil-52.dll";
+		#else
+		public const string PIXFMT = "avutil";
+		#endif
 
 public static readonly uint AVPALETTE_SIZE = 1024;
 public static readonly uint AVPALETTE_COUNT = 256;

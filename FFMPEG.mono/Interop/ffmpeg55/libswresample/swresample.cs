@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
+		#if WIN32
 public const string SWRESAMPLE = "swresample-0.dll";
-
+		#else
+		public const string SWRESAMPLE = "swresample";
+		#endif
 
 public static readonly uint SWR_CH_MAX = 32;
 public static readonly uint SWR_FLAG_RESAMPLE = 1;

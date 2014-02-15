@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
+		#if WIN32
 public const string SWSCALE = "swscale-2.dll";
-
+		#else
+		public const string SWSCALE = "swscale";
+		#endif
 
 public static readonly int SWS_FAST_BILINEAR = 1;
 public static readonly int SWS_BILINEAR = 2;

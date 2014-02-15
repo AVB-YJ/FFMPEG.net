@@ -28,7 +28,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
+		#if WIN32
 public const string AVCODEC = "avcodec-55.dll";
+		#else
+		public const string AVCODEC = "avcodec";
+		#endif
 
 public static readonly int AVCODEC_MAX_AUDIO_FRAME_SIZE = 192000;
 public static readonly uint AV_CODEC_ID_H265 = (uint)AVCodecID.AV_CODEC_ID_HEVC;

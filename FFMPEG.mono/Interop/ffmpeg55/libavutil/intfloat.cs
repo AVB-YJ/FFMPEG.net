@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string INTFLOAT = "avutil-52.dll";
-
+		#if WIN32
+		public const string INTFLOAT = "avutil-52.dll";
+		#else
+		public const string INTFLOAT = "avutil";
+		#endif
 
 [DllImport(INTFLOAT), SuppressUnmanagedCodeSecurity]
 public static extern float av_int2float(

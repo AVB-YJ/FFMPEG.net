@@ -27,8 +27,12 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string FRAME = "avutil-52.dll";
 
+		#if WIN32
+		public const string FRAME = "avutil-52.dll";
+		#else
+		public const string FRAME = "avutil";
+		#endif
 
 public static readonly uint AVCOL_SPC_YCGCO = (uint)AVColorSpace.AVCOL_SPC_YCOCG;
 public static readonly uint AV_NUM_DATA_POINTERS = 8;

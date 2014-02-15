@@ -1,9 +1,10 @@
-﻿using Multimedia;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Multimedia;
 
 namespace mp3test
 {
@@ -11,8 +12,8 @@ namespace mp3test
     {
         static void Main(string[] args)
         {
-            var b = new FFmpegBase();
-            b.RenderFile(@"C:\Users\Public\Music\Sample Music\1.mp3");
+			var b = new FFmpegBase();
+            b.RenderFile(@"1.mp3");
             b.Play();
             Console.ReadLine();
         }

@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
+		#if WIN32
 public const string AVUTIL = "avutil-52.dll";
-
+		#else
+		public const string AVUTIL = "avutil";
+		#endif
 
 public static readonly uint FF_LAMBDA_SHIFT = 7;
 public static readonly uint FF_LAMBDA_SCALE = 128;

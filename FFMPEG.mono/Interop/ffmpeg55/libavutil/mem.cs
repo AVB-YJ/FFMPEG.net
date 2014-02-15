@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
-public const string MEM = "avutil-52.dll";
-
+		#if WIN32
+		public const string MEM = "avutil-52.dll";
+		#else
+		public const string MEM = "avutil";
+		#endif
 
 [DllImport(MEM), SuppressUnmanagedCodeSecurity]
 public static extern IntPtr/* void*  */ av_malloc(

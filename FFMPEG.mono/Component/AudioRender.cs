@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Threading;
 using WaveLib;
 
+
 namespace Multimedia
 {
 
@@ -102,7 +103,6 @@ namespace Multimedia
             return true;
             //throw new NotImplementedException();
         }
-
         #region windows only
         private IntPtr waveOut = IntPtr.Zero;
         BaseComponent.SizeQueue<AudioFrame> queue = new BaseComponent.SizeQueue<AudioFrame>(50);

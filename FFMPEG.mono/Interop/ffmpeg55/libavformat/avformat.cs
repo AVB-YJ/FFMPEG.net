@@ -27,8 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class NativeMethods55 
 {
+		#if WIN32
 public const string AVFORMAT = "avformat-55.dll";
-
+		#else
+		public const string AVFORMAT = "avformat";
+		#endif
 
 public static readonly uint AVPROBE_SCORE_RETRY = (AVPROBE_SCORE_MAX/4);
 public static readonly uint AVPROBE_SCORE_STREAM_RETRY = (AVPROBE_SCORE_MAX/4-1);
