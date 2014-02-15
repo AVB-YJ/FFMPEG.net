@@ -67,9 +67,13 @@ namespace Multimedia
             }
             set
             {
+				if (value != IntPtr.Zero)
+				{
                 videoWindow = value;
                 videoGraphics = Graphics.FromHwnd(videoWindow);
-                GetWindowRect(videoWindow, ref videoWindowSize);
+				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                	GetWindowRect(videoWindow, ref videoWindowSize);
+				}
             }
         }
 

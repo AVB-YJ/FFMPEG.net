@@ -29,6 +29,7 @@ namespace SharpFFmpeg
 #if WIN32
         public const string AVUTIL = "avutil-49.dll";
 #else
+		public const string AVUTIL = "avutil";
 #endif
 
         public delegate int Read_PacketCallback(IntPtr opaque, IntPtr buf, int buf_size);

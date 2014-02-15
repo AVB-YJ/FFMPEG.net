@@ -1,0 +1,43 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="FFMPEG.mono/Component/AudioRender.cs">
+    <Files>
+      <File FileName="FFMPEG.mono/IVideoRender.cs" Line="11" Column="6" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg51/AVCodec.cs" Line="23" Column="1" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg51/AVFormat.cs" Line="39" Column="1" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg51/AVIO.cs" Line="1" Column="1" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg51/AVUtil.cs" Line="32" Column="39" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg51/SWScale.cs" Line="32" Column="37" />
+      <File FileName="mp3test/Program.cs" Line="34" Column="43" />
+      <File FileName="FFMPEG.mono/FFmpegBase.cs" Line="98" Column="1" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg55/libavformat/avformat.cs" Line="33" Column="43" />
+      <File FileName="FFMPEG.mono/Component/AvDecoder.cs" Line="32" Column="1" />
+      <File FileName="FFMPEG.mono/Interop/ffmpeg55/libavcodec/avcodec.cs" Line="1435" Column="7" />
+      <File FileName="FFMPEG.mono/Component/BaseComponent.cs" Line="66" Column="1" />
+      <File FileName="FFMPEG.mono/Component/AudioRender.cs" Line="127" Column="11" />
+      <File FileName="FFMPEG.mono/Component/VideoRender.cs" Line="70" Column="1" />
+      <File FileName="FFMPEG.mono/Interop/asound/asound.cs" Line="214" Column="37" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="FFMPEG.linux" expanded="True" selected="True">
+            <Node name="Component" expanded="True" />
+            <Node name="Interop" expanded="True">
+              <Node name="asound" expanded="True" />
+              <Node name="ffmpeg51" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/home/apa/project/FFMPEG.net/FFMPEG.mono/Component/VideoRender.cs" line="87" />
+      <Breakpoint file="/home/apa/project/FFMPEG.net/MediaTest.linux/MainWindow.cs" line="19" />
+      <Breakpoint file="/home/apa/project/FFMPEG.net/FFMPEG.mono/Component/AudioRender.cs" line="127" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

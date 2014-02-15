@@ -29,6 +29,7 @@ namespace SharpFFmpeg
 #if WIN32
         public const string AVCODEC = "avcodec-51.dll";
 #else
+		public const string AVCODEC = "avcodec";
 #endif
         /// <summary>
         /// 

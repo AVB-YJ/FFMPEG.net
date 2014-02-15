@@ -29,6 +29,7 @@ namespace SharpFFmpeg
 #if WIN32
         public const string SWS = "swscale-0.dll";
 #else
+		public const string SWS = "swscale";
 #endif
 
         public static readonly int SWS_FAST_BILINEAR = 1;

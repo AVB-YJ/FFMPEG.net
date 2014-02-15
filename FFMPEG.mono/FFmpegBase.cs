@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SharpFFmpeg;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace Multimedia
 {
@@ -24,11 +25,13 @@ namespace Multimedia
         public FFmpegBase()
         {
             NativeMethods55.av_register_all();
+			NativeMethods55.avcodec_register_all();
         }
 
         public FFmpegBase(IntPtr videoHandle)
         {
             NativeMethods55.av_register_all();
+			NativeMethods55.avcodec_register_all();
             this.videohandle = videoHandle;
         }
 
@@ -116,9 +119,10 @@ namespace Multimedia
         private void GeneratePipesFromFile(string fileName)
         {
             
-            
+			FileInfo info = new FileInfo(fileName);
+			string file = info.FullName;
             IntPtr fileContext = IntPtr.Zero;
-            int ret = NativeMethods55.avformat_open_input(out fileContext, fileName, IntPtr.Zero, IntPtr.Zero);
+            int ret = NativeMethods55.avformat_open_input(out fileContext, file, IntPtr.Zero, IntPtr.Zero);
             //int ret = NativeMethods.avformat_open_input(out fileContext, str, IntPtr.Zero, 0);
 
             if (ret < 0)

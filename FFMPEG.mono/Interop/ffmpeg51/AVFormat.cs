@@ -29,6 +29,7 @@ namespace SharpFFmpeg
 #if WIN32
         public const string AVFORMAT = "avformat-51.dll";
 #else
+		public const string AVFORMAT = "avformat";
 #endif
 
         /// <summary>

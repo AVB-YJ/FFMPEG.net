@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Threading;
 using WaveLib;
+using ASoundLIb;
+
 
 
 namespace Multimedia
@@ -85,17 +87,18 @@ namespace Multimedia
             }
         }
 
-        public bool OnReceiveData(object packet)
-        {
+        public bool OnReceiveData (object packet)
+		{
 
-            AudioFrame frame = (AudioFrame)packet;
-            ConvertAudioSample(frame);
+			AudioFrame frame = (AudioFrame)packet;
+			ConvertAudioSample (frame);
 
 
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-            {
-                PlayUsingWaveOut(frame);
-            }
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+				PlayUsingWaveOut (frame);
+			} else if (Environment.OSVersion.Platform == PlatformID.Unix) {
+				PlayUsingASound(frame);
+			}
 
             //NativeMethods55.av_free(o.sample);
             //Marshal.FreeHGlobal(o.sample);
@@ -103,6 +106,48 @@ namespace Multimedia
             return true;
             //throw new NotImplementedException();
         }
+
+		#region linux only
+
+		private IntPtr pcm = IntPtr.Zero;
+
+		void PlayUsingASound (AudioFrame frame)
+		{
+			int ret = 0;
+			if (pcm == IntPtr.Zero) {
+				int dir;
+				int rate = frame.rate == 0 ? 44100 : frame.rate;
+			
+				int channel = frame.channel == 0 ? 2 : frame.channel;
+
+				string device = "hw:0,0";
+				ret = Asound.snd_pcm_open (out pcm, device, 
+				                    Asound.snd_pcm_stream_t.SND_PCM_STREAM_PLAYBACK,
+				                    0);
+				if (ret < 0) {
+					string err = Asound._snd_strerror(ret);
+					pcm = IntPtr.Zero;
+					return;
+				}
+				IntPtr param = Asound.snd_pcm_hw_params_alloca ();
+				ret = Asound.snd_pcm_hw_params_any (pcm, param);
+				ret = Asound.snd_pcm_hw_params_set_access (pcm, param, Asound.snd_pcm_access_t.SND_PCM_ACCESS_RW_INTERLEAVED);
+				ret = Asound.snd_pcm_hw_params_set_format (pcm, param, Asound.snd_pcm_format_t.SND_PCM_FORMAT_S16_LE);     //16位格式，可以根据不同格式设置格式
+				ret = Asound.snd_pcm_hw_params_set_channels (pcm, param, channel);     //1代表单声道，如果改成2就变成双声道
+				int val = rate;
+				ret = Asound.snd_pcm_hw_params_set_rate_near (pcm, param, ref val, out dir);
+				ulong frames = (ulong)frame.nb_samples;
+				ret = Asound.snd_pcm_hw_params_set_period_size_near (pcm, param, ref frames, out dir);
+				ret = Asound.snd_pcm_hw_params (pcm, param);
+				Asound.snd_pcm_params_free(param);
+			}
+			if (pcm == IntPtr.Zero)
+				return;
+
+			long r = Asound.snd_pcm_writei(pcm,frame.sample,(ulong)frame.size);
+		}
+		#endregion
+
         #region windows only
         private IntPtr waveOut = IntPtr.Zero;
         BaseComponent.SizeQueue<AudioFrame> queue = new BaseComponent.SizeQueue<AudioFrame>(50);
