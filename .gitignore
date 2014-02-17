@@ -4,10 +4,10 @@
 /FFMPEG.mono/bin/*
 /*.suo
 
-/MediaTest/obj/*
-/MediaTest/bin/*
-/Translator/bin/*
-/Translator/obj/*
-/Translator/out/*
-/mp3test/obj/*
-/mp3test/bin/*
+t/MediaTest/obj/*
+t/MediaTest/bin/*
+t/Translator/bin/*
+t/Translator/obj/*
+t/Translator/out/*
+t/mp3test/obj/*
+t/mp3test/bin/*
