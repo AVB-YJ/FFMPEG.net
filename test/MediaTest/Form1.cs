@@ -45,9 +45,7 @@ namespace MediaTest
 
         private void button2_Click(object sender, EventArgs e)
         {
-            b = new FFmpegBase();
-            b.RenderFile(@"C:\Users\Public\Music\Sample Music\1.mp3");
-            b.Play();
+
         }
 
         private void progressBar_MouseClick(object sender, MouseEventArgs e)

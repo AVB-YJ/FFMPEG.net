@@ -2,16 +2,16 @@ using System;
 using System.Runtime.InteropServices;
 namespace Multimedia
 {
-    public class NativeWrapper<T> 
+    public class Native<T> 
     {
         private T handle;
         private IntPtr ptr;
 
-        internal NativeWrapper()
+        internal Native()
         {
         }
 
-        internal NativeWrapper (IntPtr ptr)
+        internal Native (IntPtr ptr)
         {
             this.ptr = ptr;
         }

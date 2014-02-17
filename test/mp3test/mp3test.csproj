@@ -49,6 +49,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FFMPEG.mono\FFMPEG.mono.csproj">
+      <Project>{93f2bf01-5719-4be8-b31e-f8c3fbc0342b}</Project>
+      <Name>FFMPEG.mono</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -57,10 +63,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <ProjectReference Include="..\FFMPEG.mono\FFMPEG.mac.csproj">
-      <Project>{91AE524E-1A98-437B-80F2-1E1462221EE2}</Project>
-      <Name>FFMPEG.mac</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

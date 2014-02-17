@@ -9,7 +9,7 @@ namespace Multimedia
 {
     public class FFmpegBase
     {
-        private NativeWrapper<NativeMethods55.AVFormatContext> pFormatCtx = null;
+        private Native<AV.AVFormatContext> pFormatCtx = null;
 
         private AvDecoder audioDecoder = null;
         private AvDecoder videoDecoder = null;
@@ -24,14 +24,14 @@ namespace Multimedia
 
         public FFmpegBase()
         {
-            NativeMethods55.av_register_all();
-			NativeMethods55.avcodec_register_all();
+            AV.av_register_all();
+			AV.avcodec_register_all();
         }
 
         public FFmpegBase(IntPtr videoHandle)
         {
-            NativeMethods55.av_register_all();
-			NativeMethods55.avcodec_register_all();
+            AV.av_register_all();
+			AV.avcodec_register_all();
             this.videohandle = videoHandle;
         }
 
@@ -88,7 +88,10 @@ namespace Multimedia
         public void RenderFile(string fileName)
         {
 
-            GeneratePipesFromFile(fileName);
+            FileInfo info = new FileInfo(fileName);
+            string file = info.FullName;
+
+            GeneratePipesFromFile(file);
 
             if( audioRender == null && audioDecoder != null) // use default render
                 audioRender = new AudioRender();
@@ -122,27 +125,27 @@ namespace Multimedia
 			FileInfo info = new FileInfo(fileName);
 			//string file = info.FullName;
             IntPtr fileContext = IntPtr.Zero;
-            int ret = NativeMethods55.avformat_open_input(out fileContext, fileName, IntPtr.Zero, IntPtr.Zero);
+            int ret = AV.avformat_open_input(out fileContext, fileName, IntPtr.Zero, IntPtr.Zero);
             //int ret = NativeMethods.avformat_open_input(out fileContext, str, IntPtr.Zero, 0);
 
             if (ret < 0)
                 throw new InvalidOperationException("can not open input file");
-            ret = NativeMethods55.av_find_stream_info(fileContext);
+            ret = AV.av_find_stream_info(fileContext);
             if (ret < 0)
                 throw new InvalidOperationException("can not find stream info");
-            pFormatCtx = new NativeWrapper<NativeMethods55.AVFormatContext>(fileContext);
+            pFormatCtx = new Native<AV.AVFormatContext>(fileContext);
 
-            NativeMethods55.AVFormatContext context = pFormatCtx.Handle;
+            AV.AVFormatContext context = pFormatCtx.Handle;
             for (int index = 0; index < context.nb_streams; index++)
             {
-                NativeWrapper<NativeMethods55.AVStream> stream = new NativeWrapper<NativeMethods55.AVStream>(context.Streams[index]);
-                NativeWrapper<NativeMethods55.AVCodecContext> codec = new NativeWrapper<NativeMethods55.AVCodecContext>(stream.Handle.codec);
-                NativeMethods55.AVCodecContext codecContext = codec.Handle;
-                if (codecContext.codec_type == NativeMethods55.AVMediaType.AVMEDIA_TYPE_AUDIO)
+                Native<AV.AVStream> stream = new Native<AV.AVStream>(context.Streams[index]);
+                Native<AV.AVCodecContext> codec = new Native<AV.AVCodecContext>(stream.Handle.codec);
+                AV.AVCodecContext codecContext = codec.Handle;
+                if (codecContext.codec_type == AV.AVMediaType.AVMEDIA_TYPE_AUDIO)
                 {
                     audioDecoder = new AvDecoder(stream, codec, index);
                 }
-                else if (codecContext.codec_type == NativeMethods55.AVMediaType.AVMEDIA_TYPE_VIDEO)
+                else if (codecContext.codec_type == AV.AVMediaType.AVMEDIA_TYPE_VIDEO)
                 {
                     videoDecoder = new AvDecoder(stream, codec, index);
 
@@ -172,6 +175,15 @@ namespace Multimedia
                 else
                     return 0;
             }
+            //set
+            //{
+            //    if (pFormatCtx != null)
+            //    {
+            //        AV.av_seek_frame(pFormatCtx.Ptr)
+            //    }
+            //    else
+            //        throw new Exception("Can not seek to position {0}", value);
+            //}
         }
 
         public void Play()
