@@ -120,20 +120,25 @@ namespace Multimedia
 			
 				int channel = frame.channel == 0 ? 2 : frame.channel;
 
-				string device = "hw:0,0";
+				string device = "default";
 				ret = Asound.snd_pcm_open (out pcm, device, 
 				                    Asound.snd_pcm_stream_t.SND_PCM_STREAM_PLAYBACK,
 				                    0);
 				if (ret < 0) {
 					string err = Asound._snd_strerror(ret);
+					Console.WriteLine(err);
 					pcm = IntPtr.Zero;
 					return;
+				}
+				else
+				{
+					Console.WriteLine("open audio device ok, pcm is {0}", pcm);
 				}
 				IntPtr param = Asound.snd_pcm_hw_params_alloca ();
 				ret = Asound.snd_pcm_hw_params_any (pcm, param);
 				ret = Asound.snd_pcm_hw_params_set_access (pcm, param, Asound.snd_pcm_access_t.SND_PCM_ACCESS_RW_INTERLEAVED);
-				ret = Asound.snd_pcm_hw_params_set_format (pcm, param, Asound.snd_pcm_format_t.SND_PCM_FORMAT_S16_LE);     //16位格式，可以根据不同格式设置格式
-				ret = Asound.snd_pcm_hw_params_set_channels (pcm, param, channel);     //1代表单声道，如果改成2就变成双声道
+				ret = Asound.snd_pcm_hw_params_set_format (pcm, param, Asound.snd_pcm_format_t.SND_PCM_FORMAT_S16_LE);
+				ret = Asound.snd_pcm_hw_params_set_channels (pcm, param, channel);
 				int val = rate;
 				ret = Asound.snd_pcm_hw_params_set_rate_near (pcm, param, ref val, out dir);
 				ulong frames = (ulong)frame.nb_samples;
@@ -144,7 +149,8 @@ namespace Multimedia
 			if (pcm == IntPtr.Zero)
 				return;
 
-			long r = Asound.snd_pcm_writei(pcm,frame.sample,(ulong)frame.size);
+			long r = Asound.snd_pcm_writei(pcm,frame.sample,(ulong)frame.nb_samples);
+			Console.WriteLine("snd_pcm_writei {0}:{1}, return {2}", frame.sample, frame.nb_samples, r);
 		}
 		#endregion
 

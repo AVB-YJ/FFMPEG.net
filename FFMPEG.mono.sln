@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFMPEG.mono", "FFMPEG.mono\FFMPEG.mono.csproj", "{93F2BF01-5719-4BE8-B31E-F8C3FBC0342B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaTest", "MediaTest\MediaTest.csproj", "{453CCBE0-1D57-4FAA-9445-5642854A0AE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaTest", "test\MediaTest\MediaTest.csproj", "{453CCBE0-1D57-4FAA-9445-5642854A0AE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mp3test", "mp3test\mp3test.csproj", "{E0269A4C-C03C-442D-81A1-A969DD841C02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mp3test", "test\mp3test\mp3test.csproj", "{E0269A4C-C03C-442D-81A1-A969DD841C02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

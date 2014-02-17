@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFMPEG.linux", "FFMPEG.mono\FFMPEG.linux.csproj", "{31E0B7AC-4704-47FD-92EC-4D0F5694979C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mp3test.linux", "mp3test\mp3test.linux.csproj", "{E0269A4C-C03C-442D-81A1-A969DD841C02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mp3test.linux", "test\mp3test\mp3test.linux.csproj", "{E0269A4C-C03C-442D-81A1-A969DD841C02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

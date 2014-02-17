@@ -120,9 +120,9 @@ namespace Multimedia
         {
             
 			FileInfo info = new FileInfo(fileName);
-			string file = info.FullName;
+			//string file = info.FullName;
             IntPtr fileContext = IntPtr.Zero;
-            int ret = NativeMethods55.avformat_open_input(out fileContext, file, IntPtr.Zero, IntPtr.Zero);
+            int ret = NativeMethods55.avformat_open_input(out fileContext, fileName, IntPtr.Zero, IntPtr.Zero);
             //int ret = NativeMethods.avformat_open_input(out fileContext, str, IntPtr.Zero, 0);
 
             if (ret < 0)
