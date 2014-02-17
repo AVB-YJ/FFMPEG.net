@@ -13,3 +13,6 @@ test/mp3test/obj/*
 test/mp3test/bin/*
 
 .DS_Store
+
+*.out
+tags
