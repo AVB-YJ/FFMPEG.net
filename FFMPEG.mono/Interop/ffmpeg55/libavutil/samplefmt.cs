@@ -25,7 +25,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 namespace SharpFFmpeg
 {
-    public partial class NativeMethods55 
+    public partial class AV 
 {
 		#if WIN32
 		public const string SAMPLEFMT = "avutil-52.dll";

@@ -14,12 +14,12 @@ namespace mp3test
     {
 		static void TestCodec ()
 		{
-			NativeMethods55.avcodec_register_all();
+			AV.avcodec_register_all();
 
-			System.Type type = typeof(NativeMethods55.AVCodecID);
+			System.Type type = typeof(AV.AVCodecID);
 			foreach (string name in type.GetEnumNames()) {
-				NativeMethods55.AVCodecID v = (NativeMethods55.AVCodecID)Enum.Parse(type, name);
-				IntPtr codec = NativeMethods55.avcodec_find_decoder(v);
+				AV.AVCodecID v = (AV.AVCodecID)Enum.Parse(type, name);
+				IntPtr codec = AV.avcodec_find_decoder(v);
 				string enabled = (codec == IntPtr.Zero) ? "disable" : "enable";
 				//if (codec == IntPtr.Zero)
 					Console.WriteLine("{0}: {1}", name, enabled);
@@ -49,7 +49,7 @@ namespace mp3test
 			TestAsound();
 //			return;
 			var b = new FFmpegBase();
-            b.RenderFile(@"/home/ejzheng/1.mp3");
+            b.RenderFile(@"~/1.mp3");
             b.Play();
             Console.ReadLine();
             

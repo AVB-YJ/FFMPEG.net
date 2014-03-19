@@ -34,7 +34,7 @@ namespace Multimedia
         private void ConvertAudioSample(AudioFrame input)
         {
 
-            if (input.fmt == (int)NativeMethods55.AVSampleFormat.AV_SAMPLE_FMT_FLTP)
+            if (input.fmt == (int)AV.AVSampleFormat.AV_SAMPLE_FMT_FLTP)
             {
                 System.Single val = new System.Single();
                 if (input.channel == 1)
@@ -104,7 +104,7 @@ namespace Multimedia
 				PlayUsingASound(frame);
 			}
 
-            //NativeMethods55.av_free(o.sample);
+            //AV.av_free(o.sample);
             //Marshal.FreeHGlobal(o.sample);
 
             return true;
@@ -160,7 +160,12 @@ namespace Multimedia
 
         #region windows only
         private IntPtr waveOut = IntPtr.Zero;
-        BaseComponent.SizeQueue<AudioFrame> queue = new BaseComponent.SizeQueue<AudioFrame>(50);
+        BaseComponent.SizeQueue<AudioFrame> queue = new BaseComponent.SizeQueue<AudioFrame>(50,
+            new BaseComponent.FreeQueueItemDelegate<AudioFrame>(item =>
+            {
+                return;
+            }
+                ));
         Thread[] threads = new Thread[1];
         private bool threadWorking = false;
         private void PlayUsingWaveOut(AudioFrame frame)
@@ -275,6 +280,12 @@ namespace Multimedia
                 WaveNative.waveOutClose(waveOut);
                 waveOut = IntPtr.Zero;
             }
+
+            if (pcm != IntPtr.Zero)
+            {
+                Asound.snd_pcm_close(pcm);
+                pcm = IntPtr.Zero;
+            }
         }
 
 
@@ -287,12 +298,14 @@ namespace Multimedia
 
         public bool Close()
         {
+            Stop();
             return true;
             //throw new NotImplementedException();
         }
 
         public bool Flush()
         {
+            queue.Flush();
             return true;
             //throw new NotImplementedException();
         }

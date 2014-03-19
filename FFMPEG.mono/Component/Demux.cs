@@ -8,8 +8,8 @@ namespace Multimedia
     public class Demux : BaseComponent, IPipe
     {
 
-        private NativeWrapper<NativeMethods55.AVFormatContext> pFormatCtx;
-        public Demux(NativeWrapper<NativeMethods55.AVFormatContext> ctx)
+        private Native<AV.AVFormatContext> pFormatCtx;
+        public Demux(Native<AV.AVFormatContext> ctx)
         {
             this.pFormatCtx = ctx;
         }
@@ -18,7 +18,7 @@ namespace Multimedia
         {
             foreach (var streamIndex in router.Keys)
             {
-                NativeMethods55.av_seek_frame(pFormatCtx.Ptr, streamIndex, location, NativeMethods55.AVSEEK_FLAG_ANY);
+                AV.av_seek_frame(pFormatCtx.Ptr, streamIndex, location, AV.AVSEEK_FLAG_ANY);
 
             }
         }
@@ -35,10 +35,10 @@ namespace Multimedia
         private Dictionary<int, IPipe> router = new Dictionary<int, IPipe>();
         public bool OnReceiveData(object obj)
         {
-            NativeWrapper<NativeMethods55.AVPacket> packet = obj as NativeWrapper<NativeMethods55.AVPacket>;
+            Native<AV.AVPacket> packet = obj as Native<AV.AVPacket>;
             if (packet == null)
                 return false;
-            NativeMethods55.AVPacket handle = packet.Handle;
+            AV.AVPacket handle = packet.Handle;
             IPipe pipe = null;
             lock (router)
             {
@@ -81,20 +81,25 @@ namespace Multimedia
         public bool Stop()
         {
             StopNext();
-
+            router.Clear();
             return true;
         }
 
         public bool Close()
         {
-            return Stop();
+            Stop();
+
+            CloseNext();
+            router.Clear();
+            return true;
         }
 
 
 
         public bool Flush()
         {
-            throw new NotImplementedException();
+            FlushNext();
+            return true;
         }
 
         #endregion

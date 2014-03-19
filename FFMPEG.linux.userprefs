@@ -1,6 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="test/MediaTest/Form1.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="FFMPEG.mono/Interop/ffmpeg55/libavcodec/avcodec.cs">
     <Files>
       <File FileName="FFMPEG.mono/IVideoRender.cs" Line="11" Column="6" />
       <File FileName="FFMPEG.mono/Interop/ffmpeg51/AVCodec.cs" Line="23" Column="1" />
@@ -31,11 +31,14 @@
             <Node name="Interop" expanded="True">
               <Node name="asound" expanded="True" />
               <Node name="ffmpeg51" expanded="True" />
+              <Node name="ffmpeg55" expanded="True">
+                <Node name="libavcodec" expanded="True">
+                  <Node name="avcodec.cs" selected="True" />
+                </Node>
+              </Node>
             </Node>
           </Node>
-          <Node name="gtksharptest" expanded="True">
-            <Node name="Form1.cs" selected="True" />
-          </Node>
+          <Node name="gtksharptest" expanded="True" />
         </State>
       </Pad>
     </Pads>

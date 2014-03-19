@@ -19,6 +19,7 @@
  */
 
 
+using Multimedia;
 using System;
 using System.Collections.Generic;
 using System.Runtime;
@@ -26,7 +27,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 namespace SharpFFmpeg
 {
-    public partial class NativeMethods55 
+    public partial class AV 
 {
 		#if WIN32
 public const string AVCODEC = "avcodec-55.dll";
@@ -1199,8 +1200,9 @@ public enum AVLockOp
 }
 
 [DllImport(AVCODEC), SuppressUnmanagedCodeSecurity]
-public static extern AVRational av_codec_get_pkt_timebase(
+public  static extern AVRational av_codec_get_pkt_timebase(
 	IntPtr/* AVCodecContext*  */ avctx);
+
 
 [DllImport(AVCODEC), SuppressUnmanagedCodeSecurity]
 public static extern void av_codec_set_pkt_timebase(
@@ -2628,12 +2630,12 @@ public struct AVCodec{
 
 	public IntPtr/* System.Int32*  */ supported_samplerates;
 
-	private IntPtr/* AVSampleFormat*  */ sample_fmts;
-    public List<AVSampleFormat> Sample_fmts
+	private IntPtr/* AVSampleFormat*  */ _sample_fmts;
+    public List<AVSampleFormat> sample_fmts
     {
         get
         {
-            if (sample_fmts == IntPtr.Zero)
+            if (_sample_fmts == IntPtr.Zero)
                 return new List<AVSampleFormat>();
 
             List<AVSampleFormat> ret = new List<AVSampleFormat>();
@@ -2641,7 +2643,7 @@ public struct AVCodec{
 
             while (true)
             {
-                IntPtr address = new IntPtr(sample_fmts.ToInt64() + index * 4);
+                IntPtr address = new IntPtr(_sample_fmts.ToInt64() + index * 4);
                 Int32 fmt = Marshal.ReadInt32(address);
                 if (fmt == -1)
                     break;

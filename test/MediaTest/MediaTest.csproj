@@ -101,8 +101,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FFMPEG.mono\FFMPEG.mono.csproj">
-      <Project>{93F2BF01-5719-4BE8-B31E-F8C3FBC0342B}</Project>
+    <ProjectReference Include="..\..\FFMPEG.mono\FFMPEG.mono.csproj">
+      <Project>{93f2bf01-5719-4be8-b31e-f8c3fbc0342b}</Project>
       <Name>FFMPEG.mono</Name>
     </ProjectReference>
   </ItemGroup>

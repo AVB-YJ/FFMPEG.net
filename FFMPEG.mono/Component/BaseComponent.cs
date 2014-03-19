@@ -59,11 +59,45 @@ namespace Multimedia
             }
         }
 
+        internal void FlushNext()
+        {
+            List<IPipe> list = null;
+            lock (nextComponents)
+            {
+                list = new List<IPipe>(nextComponents);
+            }
+            foreach (IPipe pipe in list)
+            {
+                pipe.Flush();
+            }
+        }
+
+        internal void CloseNext()
+        {
+            List<IPipe> list = null;
+            lock (nextComponents)
+            {
+                list = new List<IPipe>(nextComponents);
+            }
+            foreach (IPipe pipe in list)
+            {
+                pipe.Close();
+            }
+        }
+
+        public delegate void FreeQueueItemDelegate<T>(T item);
+
         public class SizeQueue<T>
         {
+            private FreeQueueItemDelegate<T> FreeItemDelegate;
+
             private readonly Queue<T> queue = new Queue<T>();
             private  int maxSize;
-            public SizeQueue(int maxSize) { this.maxSize = maxSize; }
+            public SizeQueue(int maxSize, FreeQueueItemDelegate<T> FreeItemDelegate) 
+            { 
+                this.maxSize = maxSize;
+                this.FreeItemDelegate = FreeItemDelegate;
+            }
             private bool closing = false;
             public int Size
             {
@@ -108,6 +142,20 @@ namespace Multimedia
                     return true;
                 }
             }
+
+            public bool Flush()
+            {
+                lock (queue)
+                {
+                    foreach (var item in queue)
+                        FreeItemDelegate(item);
+
+                    queue.Clear();
+                }
+                return true;
+
+            }
+
             public bool Dequeue(out T val)
             {
                 lock (queue)
