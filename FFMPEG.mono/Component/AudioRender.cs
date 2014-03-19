@@ -8,7 +8,11 @@ using System.Diagnostics;
 using System.Threading;
 using WaveLib;
 using ASoundLIb;
+#if WIN32
 
+#else
+using Gdk;
+#endif
 
 
 namespace Multimedia

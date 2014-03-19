@@ -1,4 +1,5 @@
 *.user
+*.pidb
 
 /FFMPEG.mono/obj/*
 /FFMPEG.mono/bin/*
@@ -11,6 +12,8 @@ test/Translator/obj/*
 test/Translator/out/*
 test/mp3test/obj/*
 test/mp3test/bin/*
+test/gtksharptest/bin/*
+test/gtksharptest/obj/*
 
 .DS_Store
 

@@ -10,8 +10,10 @@ namespace Multimedia
 {
     public class VideoRender : BaseComponent, IPipe, IVideoRender
     {
+
         private IntPtr videoWindow = IntPtr.Zero;
         private Graphics videoGraphics;
+
         private Rectangle videoWindowSize = new Rectangle();
         #region IPipe Members
 
@@ -69,11 +71,21 @@ namespace Multimedia
             {
 				if (value != IntPtr.Zero)
 				{
-                videoWindow = value;
-                videoGraphics = Graphics.FromHwnd(videoWindow);
-				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                	GetWindowRect(videoWindow, ref videoWindowSize);
+
+                	videoWindow = value;
+                	videoGraphics = Graphics.FromHwnd(videoWindow);
+					if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+					{
+                		GetWindowRect(videoWindow, ref videoWindowSize);
+					}
+					else
+					{
+						videoWindowSize.Width= (int)videoGraphics.VisibleClipBounds.Width;
+						videoWindowSize.Height = (int)videoGraphics.VisibleClipBounds.Height;
+					}
+				
 				}
+
             }
         }
 
@@ -131,11 +143,12 @@ namespace Multimedia
 			writer.Seek(0,  SeekOrigin.Begin);
 
 			Bitmap bitmap = new Bitmap(str);
-            NativeMethods55.av_free(final.Ptr);
-            Marshal.FreeHGlobal(bufferArr);
             //writer.Close();
 
             videoGraphics.DrawImage(bitmap, 0, 0, videoWindowSize.Width, videoWindowSize.Height);
+
+			NativeMethods55.av_free(final.Ptr);
+            Marshal.FreeHGlobal(bufferArr);
             writer.Close();
 		}
 

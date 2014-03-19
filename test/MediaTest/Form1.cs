@@ -22,7 +22,7 @@ namespace MediaTest
         private void button1_Click(object sender, EventArgs e)
         {
             b = new FFmpegBase(panelShow.Handle);
-            b.RenderFile(@"C:\Users\Public\Videos\Sample Videos\Wildlife.wmv");
+            b.RenderFile(@"/home/user/Wildlife.wmv");
             b.Play();
 
         }
