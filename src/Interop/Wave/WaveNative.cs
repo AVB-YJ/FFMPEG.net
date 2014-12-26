@@ -45,7 +45,7 @@ namespace WaveLib
 		}
 	}
 
-	internal class WaveNative
+	public class WaveNative
 	{
 		// consts
 		public const int MMSYSERR_NOERROR = 0; // no error

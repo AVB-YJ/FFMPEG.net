@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 20012 Crazyender
  *
  * This file is part of FFmpeg.mono
@@ -25,7 +25,7 @@ using System.Runtime.CompilerServices;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("PlayerCore")]
+[assembly: AssemblyTitle("FFMPEG.mono")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]

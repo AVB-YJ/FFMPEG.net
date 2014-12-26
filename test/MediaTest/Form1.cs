@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Multimedia;
+using System.IO;
 
 namespace MediaTest
 {
@@ -15,6 +16,9 @@ namespace MediaTest
         public Form1()
         {
             InitializeComponent();
+            string myExeDir = (new FileInfo(System.Reflection.Assembly.GetEntryAssembly().Location)).Directory.FullName;
+            Environment.CurrentDirectory = myExeDir;
+
         }
 
 
@@ -22,7 +26,7 @@ namespace MediaTest
         private void button1_Click(object sender, EventArgs e)
         {
             b = new FFmpegBase(panelShow.Handle);
-            b.RenderFile(@"/home/user/Wildlife.wmv");
+            b.RenderFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\Wildlife.wmv");
             b.Play();
 
         }
