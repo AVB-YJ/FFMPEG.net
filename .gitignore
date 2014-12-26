@@ -1,10 +1,13 @@
 *.user
 *.pidb
-
-/FFMPEG.mono/obj/*
-/FFMPEG.mono/bin/*
 /*.suo
-
+.DS_Store
+*.out
+tags
+src/Interop/obj/*
+src/solutions/bin/*
+test/PlayerCore/obj/*
+test/PlayerCore/bin/*
 test/MediaTest/obj/*
 test/MediaTest/bin/*
 test/Translator/bin/*
@@ -14,8 +17,3 @@ test/mp3test/obj/*
 test/mp3test/bin/*
 test/gtksharptest/bin/*
 test/gtksharptest/obj/*
-
-.DS_Store
-
-*.out
-tags
