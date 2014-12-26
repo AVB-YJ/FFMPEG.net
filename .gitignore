@@ -1,6 +1,6 @@
 *.user
 *.pidb
-/*.suo
+*.suo
 .DS_Store
 *.out
 tags
@@ -17,3 +17,4 @@ test/mp3test/obj/*
 test/mp3test/bin/*
 test/gtksharptest/bin/*
 test/gtksharptest/obj/*
+test/solutions/bin/*

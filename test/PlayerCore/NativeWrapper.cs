@@ -7,16 +7,16 @@ namespace Multimedia
         private T handle;
         private IntPtr ptr;
 
-        internal Native()
+        public Native()
         {
         }
 
-        internal Native (IntPtr ptr)
+        public Native(IntPtr ptr)
         {
             this.ptr = ptr;
         }
 
-        internal T Handle
+        public T Handle
         {
             get
             {
@@ -30,7 +30,7 @@ namespace Multimedia
                 Marshal.StructureToPtr(handle, ptr, true);
             }
         }
-        internal IntPtr Ptr
+        public IntPtr Ptr
         {
             get{return ptr;}
             set

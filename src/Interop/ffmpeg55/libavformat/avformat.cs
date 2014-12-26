@@ -337,6 +337,7 @@ public static extern System.Int32 avformat_open_input(
     [Out]out IntPtr pFormatContext, 
 	[MarshalAs(UnmanagedType.LPStr)]
 	string filename, 
+    //IntPtr  fileName,
 	IntPtr/* AVInputFormat*  */ fmt, 
 	IntPtr/* IntPtr*  */ options);
 

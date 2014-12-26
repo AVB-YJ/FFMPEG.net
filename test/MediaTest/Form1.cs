@@ -8,9 +8,14 @@ using System.Text;
 using System.Windows.Forms;
 using Multimedia;
 using System.IO;
+using SharpFFmpeg;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace MediaTest
 {
+    public delegate void UpdateUI(Bitmap img);
+
     public partial class Form1 : Form
     {
         public Form1()
@@ -25,8 +30,10 @@ namespace MediaTest
         private FFmpegBase b = null;
         private void button1_Click(object sender, EventArgs e)
         {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.ShowDialog();
             b = new FFmpegBase(panelShow.Handle);
-            b.RenderFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\Wildlife.wmv");
+            b.RenderFile(dialog.FileName);
             b.Play();
 
         }
@@ -47,8 +54,41 @@ namespace MediaTest
 
         }
 
+        private void DrawImage(Bitmap img)
+        {
+            var videoGraphics = Graphics.FromHwnd(panelShow.Handle);
+            videoGraphics.DrawImage(img, panelShow.Width, panelShow.Height);
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.ShowDialog();
+            string file = dialog.FileName;
+            Thread t = new Thread(new ThreadStart(() => {
+                var stream = FFMpegBase.Instance.GetAVStream(file);
+                IAVFrame frame = null;
+                while ((frame = stream.GetNext()) != null)
+                {
+                    if (frame.FrameType == AVFrameType.Video)
+                    {
+                        SharpFFmpeg.VideoFrame video = (SharpFFmpeg.VideoFrame)frame;
+                        frame.Decode();
+                        Bitmap img = video.Image;
+                        if (InvokeRequired)
+                        {
+                            Invoke(new UpdateUI((i) => DrawImage(i)), new object[] { img });
+                        }
+                        else
+                        {
+                            DrawImage(img);
+                        }
+                    }
+                    frame.Close();
+                }
+                GC.Collect();
+            }));
+            t.Start();
 
         }
 

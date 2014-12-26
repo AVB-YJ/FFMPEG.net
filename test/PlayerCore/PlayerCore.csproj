@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>PlayerCore</RootNamespace>
     <AssemblyName>PlayerCore</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
