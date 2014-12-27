@@ -74,11 +74,11 @@ namespace Multimedia
 
                 	videoWindow = value;
                 	videoGraphics = Graphics.FromHwnd(videoWindow);
-					if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-					{
-                		GetWindowRect(videoWindow, ref videoWindowSize);
-					}
-					else
+                    //if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                    //{
+                    //    GetWindowRect(videoWindow, ref videoWindowSize);
+                    //}
+                    //else
 					{
 						videoWindowSize.Width= (int)videoGraphics.VisibleClipBounds.Width;
 						videoWindowSize.Height = (int)videoGraphics.VisibleClipBounds.Height;

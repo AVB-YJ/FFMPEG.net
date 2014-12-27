@@ -117,17 +117,18 @@ namespace SharpFFmpeg
             get
             {
                 WaveDataType d = new WaveDataType();
-                d.bit = codecCtx.bits_per_coded_sample;
+                d.bit = codecCtx.bits_per_coded_sample == 0 ? 16 : codecCtx.bits_per_coded_sample;
                 d.channel = codecCtx.channels;
                 d.fmt = codecCtx.sample_fmt;
                 d.nb_samples = avFrame.nb_samples;
                 d.size = avFrame.linesize[0];
-                ConvertAudioSample(d, avFrame.data[0]);
+                d.rate = codecCtx.bit_rate;
+                ConvertAudioSample(ref d, avFrame.data[0]);
                 return d;
             }
         }
 
-        private void ConvertAudioSample(WaveDataType input, IntPtr sample)
+        private void ConvertAudioSample(ref WaveDataType input, IntPtr sample)
         {
 
             if (input.fmt == AV.AVSampleFormat.AV_SAMPLE_FMT_FLTP)

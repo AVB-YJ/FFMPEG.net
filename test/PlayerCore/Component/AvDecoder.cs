@@ -130,22 +130,6 @@ namespace Multimedia
                         break;
                     }
 
-                    // ugly quick fix
-                    if (finish == 0)
-                    {
-                        if (videoFailCount != 0)
-                        {
-                            AV.av_free(frame.Ptr);
-                            break;
-                        }
-                        else
-                        {
-                            videoFailCount++;
-                            AV.av_free(frame.Ptr);
-                            continue;
-                        }
-                    }
-
                     VideoFrame nextObj = new VideoFrame();
                     nextObj.ffmpegFrame = frame;
                     nextObj.format = (int)pCodecCtx.Handle.pix_fmt;

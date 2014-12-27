@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SizeQueue.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -110,6 +111,10 @@
     <ProjectReference Include="..\..\src\Interop\ffmpeg.mono.csproj">
       <Project>{c9d144bf-9ec7-468c-9004-032d9456703a}</Project>
       <Name>ffmpeg.mono</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlayerCore\PlayerCore.csproj">
+      <Project>{93f2bf01-5719-4be8-b31e-f8c3fbc0342b}</Project>
+      <Name>PlayerCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

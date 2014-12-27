@@ -166,7 +166,7 @@ namespace Multimedia
                 return;
             }
                 ));
-        Thread[] threads = new Thread[1];
+        Thread[] threads = new Thread[2];
         private bool threadWorking = false;
         private void PlayUsingWaveOut(AudioFrame frame)
         {
