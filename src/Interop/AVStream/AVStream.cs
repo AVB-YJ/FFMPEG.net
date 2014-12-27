@@ -16,6 +16,7 @@ namespace SharpFFmpeg
     public interface IAVStream
     {
         IAVFrame GetNext();
+        void Close();
     }
 
     public class FFMpegBase : IFFMpeg
@@ -56,6 +57,10 @@ namespace SharpFFmpeg
             if (ret < 0)
                 throw new InvalidOperationException("can not open input file");
 
+            ret = AV.av_find_stream_info(fileContext);
+            if (ret < 0)
+                throw new InvalidOperationException("can not find stream info");
+
             return new AVStream(fileContext);
 
         }
@@ -93,7 +98,7 @@ namespace SharpFFmpeg
         public void Close()
         {
             if (rawFormatCtx != null)
-                AV.avformat_close_input(rawFormatCtx);
+                AV.avformat_free_context(rawFormatCtx);
 
             foreach (var decoder in decoderTable)
             {
@@ -109,6 +114,7 @@ namespace SharpFFmpeg
             if (AV.av_read_frame(rawFormatCtx, pPacket) != 0)
             {
                 Marshal.FreeHGlobal(pPacket);
+                pPacket = IntPtr.Zero;
                 return null;
             }
 
@@ -118,6 +124,7 @@ namespace SharpFFmpeg
                 ! mediaTypeTable.ContainsKey(packet.stream_index))
             {
                 Marshal.FreeHGlobal(pPacket);
+                pPacket = IntPtr.Zero;
                 return null;
             }
 

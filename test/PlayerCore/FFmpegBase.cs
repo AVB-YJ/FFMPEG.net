@@ -126,7 +126,7 @@ namespace Multimedia
 			//string file = info.FullName;
             IntPtr fileContext = IntPtr.Zero;
             int ret = AV.avformat_open_input(out fileContext, fileName, IntPtr.Zero, IntPtr.Zero);
-            //int ret = NativeMethods.avformat_open_input(out fileContext, str, IntPtr.Zero, 0);
+            
 
             if (ret < 0)
                 throw new InvalidOperationException("can not open input file");

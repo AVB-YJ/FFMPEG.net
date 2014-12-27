@@ -1,12 +1,11 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Multimedia;
 using SharpFFmpeg;
 using ASoundLIb;
+using System.IO;
 
 namespace mp3test
 {
@@ -21,8 +20,7 @@ namespace mp3test
 				AV.AVCodecID v = (AV.AVCodecID)Enum.Parse(type, name);
 				IntPtr codec = AV.avcodec_find_decoder(v);
 				string enabled = (codec == IntPtr.Zero) ? "disable" : "enable";
-				//if (codec == IntPtr.Zero)
-					Console.WriteLine("{0}: {1}", name, enabled);
+                Console.WriteLine("{0}: {1}", name, enabled);
 			}
 		}
 
@@ -44,14 +42,13 @@ namespace mp3test
 
         static void Main(string[] args)
         {
+            string myExeDir = (new FileInfo(System.Reflection.Assembly.GetEntryAssembly().Location)).Directory.FullName;
+            Environment.CurrentDirectory = myExeDir;
+
 			TestCodec();
-			//return;
-			TestAsound();
-//			return;
-			var b = new FFmpegBase();
-            b.RenderFile(@"~/1.mp3");
-            b.Play();
-            Console.ReadLine();
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+			    TestAsound();
+           Console.ReadLine();
             
         }
     }

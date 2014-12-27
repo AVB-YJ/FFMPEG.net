@@ -21,7 +21,15 @@ namespace Multimedia
             get
             {
                 if (ptr != IntPtr.Zero)
-                    handle = (T)Marshal.PtrToStructure(ptr, typeof(T));
+                {
+                    try
+                    {
+                        handle = (T)Marshal.PtrToStructure(ptr, typeof(T));
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
                 return handle;
             }
             set

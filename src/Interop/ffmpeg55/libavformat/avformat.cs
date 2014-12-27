@@ -337,7 +337,6 @@ public static extern System.Int32 avformat_open_input(
     [Out]out IntPtr pFormatContext, 
 	[MarshalAs(UnmanagedType.LPStr)]
 	string filename, 
-    //IntPtr  fileName,
 	IntPtr/* AVInputFormat*  */ fmt, 
 	IntPtr/* IntPtr*  */ options);
 
@@ -857,11 +856,11 @@ public struct AVFormatContext{
 
 	public IntPtr/* void*  */ opaque;
 
-	[MarshalAs(UnmanagedType.FunctionPtr)]
-	public avformat_func_6 control_message_cb;
+	//[MarshalAs(UnmanagedType.FunctionPtr)]
+	//public avformat_func_6 control_message_cb;
 
-	[MarshalAs(UnmanagedType.I8)]
-	public System.Int64 output_ts_offset;
+	//[MarshalAs(UnmanagedType.I8)]
+	//public System.Int64 output_ts_offset;
 
 };
 

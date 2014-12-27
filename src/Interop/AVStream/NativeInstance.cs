@@ -19,9 +19,13 @@ namespace SharpFFmpeg
         internal T Get()
         {
 
-            T handle = default(T);
+            T handle;
             if (ptr != IntPtr.Zero)
+            {
+
                 handle = (T)Marshal.PtrToStructure(ptr, typeof(T));
+
+            }
             else
                 throw new Exception("Can not get data from null pointer");
             return handle;

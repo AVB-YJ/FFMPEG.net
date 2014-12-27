@@ -67,7 +67,7 @@ namespace SharpFFmpeg
             Marshal.FreeHGlobal(Packet);
 
             if (rawData != IntPtr.Zero)
-                AV.av_frame_free(rawData);
+                AV.av_free(rawData);
         }
     }
 
@@ -192,6 +192,16 @@ namespace SharpFFmpeg
 
     }
 
+    public struct VideoFrameType
+    {
+        public int width;
+        public int height;
+        public AV.AVPixelFormat SourceFormat;
+        public AV.AVPixelFormat DestFormat;
+        public int linesize;
+        public byte[] managedData;
+    };
+
     public class VideoFrame : AVFrameAbs
     {
 
@@ -223,15 +233,17 @@ namespace SharpFFmpeg
             return rawData;
         }
 
-        public Bitmap Image
+        public VideoFrameType ImgData
         {
             get
             {
-                return ConvertToBitmap();
+                VideoFrameType t = new VideoFrameType();
+                ConvertToBitmap(ref t);
+                return t;
             }
         }
 
-        private Bitmap ConvertToBitmap()
+        private void ConvertToBitmap(ref VideoFrameType t)
         {
             var frame = avFrame;
             //FFmpeg.AVFrame final = gcnew AvFrame(PIX_FMT_BGR24, this->size);
@@ -251,44 +263,24 @@ namespace SharpFFmpeg
             if (swsContext == IntPtr.Zero)
                 throw new Exception();
 
+            finalFrame = new NativeGetter<AV.AVFrame>(final).Get();
             AV.sws_scale(swsContext, frame.data, frame.linesize, 0, codecCtx.height, finalFrame.data, finalFrame.linesize);
 
-            Stream str = new MemoryStream();
-            BinaryWriter writer = new BinaryWriter(str);
-            // LITTLE ENDIAN!!
-            writer.Write(new byte[] { 0x42, 0x4D });
-            writer.Write((int)(count + 0x36));
-            writer.Write((int)0);
-            writer.Write((int)0x36);
-            writer.Write((int)40);
-            writer.Write((int)codecCtx.width);
-            writer.Write((int)codecCtx.height);
-            writer.Write((short)1);
-            writer.Write((short)24);
-            writer.Write((int)0);
-            writer.Write((int)count);
-            writer.Write((int)3780);
-            writer.Write((int)3780);
-            writer.Write((int)0);
-            writer.Write((int)0);
+            new NativeSetter<AV.AVFrame>(final).Set(finalFrame);
             // Array::Reverse(bufferArr);
 
             byte[] buffer = new byte[count];
             Marshal.Copy(bufferArr, buffer, 0, count);
-            for (int y = codecCtx.height - 1; y >= 0; y--)
-                writer.Write(buffer, y * finalFrame.linesize[0], codecCtx.width * 3);
-            writer.Flush();
-            writer.Seek(0, SeekOrigin.Begin);
-
-            Bitmap bitmap = new Bitmap(str);
             AV.av_free(final);
             Marshal.FreeHGlobal(bufferArr);
 
-            //videoGraphics.DrawImage(bitmap, 0, 0, videoWindowSize.Width, videoWindowSize.Height);
 
-            writer.Close();
-
-            return bitmap;
+            t.width = codecCtx.width;
+            t.height = codecCtx.height;
+            t.SourceFormat = codecCtx.pix_fmt;
+            t.DestFormat = dst_fmt;
+            t.managedData = buffer;
+            t.linesize = finalFrame.linesize[0];
         }
     }
 }
