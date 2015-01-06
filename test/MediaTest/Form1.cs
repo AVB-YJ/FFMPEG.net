@@ -189,7 +189,7 @@ namespace MediaTest
             return ret;
         }
 
-        private FFmpegBase playerBase = null;
+        private PlayerBase playerBase = null;
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -197,7 +197,7 @@ namespace MediaTest
             dialog.ShowDialog();
             string file = dialog.FileName;
 
-            playerBase = new FFmpegBase(panelShow.Handle);
+            playerBase = new PlayerBase(panelShow.Handle);
             playerBase.RenderFile(file);
             playerBase.Play();
         }

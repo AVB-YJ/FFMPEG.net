@@ -8,19 +8,13 @@ namespace Multimedia
     public class Demux : BaseComponent, IPipe
     {
 
-        private Native<AV.AVFormatContext> pFormatCtx;
-        public Demux(Native<AV.AVFormatContext> ctx)
+        public Demux()
         {
-            this.pFormatCtx = ctx;
+            InitPerfLog("[Demux]");
         }
 
         public void Seek(long location)
         {
-            foreach (var streamIndex in router.Keys)
-            {
-                AV.av_seek_frame(pFormatCtx.Ptr, streamIndex, location, AV.AVSEEK_FLAG_ANY);
-
-            }
         }
 
 
@@ -32,18 +26,17 @@ namespace Multimedia
             return true;
         }
 
-        private Dictionary<int, IPipe> router = new Dictionary<int, IPipe>();
+        private Dictionary<AVFrameType, IPipe> router = new Dictionary<AVFrameType, IPipe>();
         public bool OnReceiveData(object obj)
         {
-            Native<AV.AVPacket> packet = obj as Native<AV.AVPacket>;
+            IAVFrame packet = (IAVFrame)obj;
             if (packet == null)
                 return false;
-            AV.AVPacket handle = packet.Handle;
             IPipe pipe = null;
             lock (router)
             {
-                if (router.ContainsKey(handle.stream_index))
-                    pipe = router[handle.stream_index];
+                if (router.ContainsKey(packet.FrameType))
+                    pipe = router[packet.FrameType];
             }
             if (pipe == null)
             {
@@ -59,14 +52,15 @@ namespace Multimedia
                         continue;
                     lock (router)
                     {
-                        router.Add(decoder.StreamIndex, p);
+                        router.Add(decoder.FrameType, p);
                     }
-                    if (decoder.StreamIndex == handle.stream_index)
+                    if (decoder.FrameType == packet.FrameType)
                         pipe = p;
                 }
             }
             if (pipe == null)
                 return false;
+            RecordLog();
             pipe.OnReceiveData(obj);
             
             return true;

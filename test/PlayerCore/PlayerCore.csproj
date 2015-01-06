@@ -66,7 +66,7 @@
     <Compile Include="Component\Demux.cs" />
     <Compile Include="Component\FileReader.cs" />
     <Compile Include="Component\VideoRender.cs" />
-    <Compile Include="FFmpegBase.cs" />
+    <Compile Include="PlayerBase.cs" />
     <Compile Include="IAudioRender.cs" />
     <Compile Include="IDemux.cs" />
     <Compile Include="IPipe.cs" />

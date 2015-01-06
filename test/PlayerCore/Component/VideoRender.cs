@@ -96,61 +96,33 @@ namespace Multimedia
 
         private void ConvertToBitmapAndDraw(VideoFrame This)
 		{
-            var frame = ((Native<AV.AVFrame>)This.ffmpegFrame).Handle;
-			//FFmpeg.AVFrame final = gcnew AvFrame(PIX_FMT_BGR24, this->size);
-            Native<AV.AVFrame> final = new Native<AV.AVFrame>(AV.avcodec_alloc_frame());
-
-            var dst_fmt = AV.AVPixelFormat.AV_PIX_FMT_BGR24;
-
-			int count = AV.avpicture_get_size(dst_fmt, This.width, This.height);
-
-            IntPtr bufferArr = Marshal.AllocHGlobal(count);
-
-            AV.avpicture_fill(final.Ptr, bufferArr, dst_fmt, This.width, This.height);
-
-            IntPtr swsContext = AV.sws_getContext(This.width, This.height, (AV.AVPixelFormat)This.format,
-                This.width, This.height, dst_fmt, AV.SWS_BICUBIC, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
-			if(swsContext == IntPtr.Zero)
-				throw new Exception();
-            
-            AV.sws_scale(swsContext, frame.data, frame.linesize, 0, This.height, final.Handle.data, final.Handle.linesize);
-
-			Stream str = new MemoryStream();
-			BinaryWriter writer = new BinaryWriter(str);
-			// LITTLE ENDIAN!!
-			writer.Write(new byte[] { 0x42, 0x4D });
-			writer.Write((int)(count + 0x36));
-			writer.Write((int)0);
-			writer.Write((int)0x36);
-			writer.Write((int)40);
-			writer.Write((int)This.width);
-			writer.Write((int)This.height);
-			writer.Write((short)1);
+            var type = This.ImgData;
+            Stream str = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(str);
+            // LITTLE ENDIAN!!
+            writer.Write(new byte[] { 0x42, 0x4D });
+            writer.Write((int)(type.managedData.Length + 0x36));
+            writer.Write((int)0);
+            writer.Write((int)0x36);
+            writer.Write((int)40);
+            writer.Write((int)type.width);
+            writer.Write((int)type.height);
+            writer.Write((short)1);
             writer.Write((short)24);
-			writer.Write((int)0);
-			writer.Write((int)count);
-			writer.Write((int)3780);
-			writer.Write((int)3780);
-			writer.Write((int)0);
-			writer.Write((int)0);
-			// Array::Reverse(bufferArr);
-
-            byte[] buffer = new byte[count];
-            Marshal.Copy(bufferArr, buffer, 0, count);
-			for(int y = This.height - 1; y >= 0; y--)
-				writer.Write(buffer, y * final.Handle.linesize[0], This.width * 3);
-			writer.Flush();
-			writer.Seek(0,  SeekOrigin.Begin);
-
-			Bitmap bitmap = new Bitmap(str);
-            AV.av_free(final.Ptr);
-            Marshal.FreeHGlobal(bufferArr);
-            //writer.Close();
-
+            writer.Write((int)0);
+            writer.Write((int)type.managedData.Length);
+            writer.Write((int)3780);
+            writer.Write((int)3780);
+            writer.Write((int)0);
+            writer.Write((int)0);
+            for (int y = type.height - 1; y >= 0; y--)
+                writer.Write(type.managedData, y * type.linesize, type.width * 3);
+            writer.Flush();
+            writer.Seek(0, SeekOrigin.Begin);
+            Bitmap bitmap = new Bitmap(str);
             videoGraphics.DrawImage(bitmap, 0, 0, videoWindowSize.Width, videoWindowSize.Height);
-
             writer.Close();
-		}
+        }
 
 
 

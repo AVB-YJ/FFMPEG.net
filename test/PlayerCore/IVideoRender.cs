@@ -7,14 +7,6 @@ using System.Text;
 
 namespace Multimedia
 {
-    public class VideoFrame
-    {
-        public object ffmpegFrame;
-        public int format;
-        public int width;
-        public int height;
-    }
-
 
     public interface IVideoRender
     {

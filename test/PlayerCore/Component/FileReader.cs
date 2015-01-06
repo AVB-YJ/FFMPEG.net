@@ -9,10 +9,13 @@ namespace Multimedia
 {
     public class FileReader : BaseComponent, IPipe
     {
-        private Native<AV.AVFormatContext> pFormatCtx;
-        public FileReader(Native<AV.AVFormatContext> pFormatCtx)
+        private IFFMpeg ffmpeg;
+        private string fileName;
+        private IAVStream stream = null;
+        public FileReader(IFFMpeg ffmpeg, string fileName)
         {
-            this.pFormatCtx = pFormatCtx;
+            this.ffmpeg = ffmpeg;
+            this.fileName = fileName;
         }
 
 
@@ -34,6 +37,7 @@ namespace Multimedia
         private bool threadWorking = false;
         public bool Start()
         {
+            stream = ffmpeg.GetAVStream(fileName);
             StartNext();
             workingThread = new Thread(new ThreadStart(() => DoThreadWork()));
             threadWorking = true;
@@ -48,13 +52,8 @@ namespace Multimedia
             {
                 if( !threadWorking )
                     return;
-                IntPtr pPacket = Marshal.AllocHGlobal(Marshal.SizeOf(new AV.AVPacket()));
-                Native<AV.AVPacket> hPacket = new Native<AV.AVPacket>(pPacket);
-                if (AV.av_read_frame(pFormatCtx.Ptr, hPacket.Ptr) != 0)
-                {
-                    break;
-                }
-                PushToNext(hPacket);
+                IAVFrame frame = stream.GetNext();
+                PushToNext(frame);
             }
         }
 
@@ -64,18 +63,13 @@ namespace Multimedia
             StopNext();
             workingThread.Join();
             workingThread = null;
+            stream.Close();
             return true;
         }
 
         public bool Close()
         {
              Stop();
-
-            if (pFormatCtx != null)
-            {
-                AV.av_close_input_file(pFormatCtx.Ptr);
-                pFormatCtx = null;
-            }
 
             CloseNext();
 

@@ -84,6 +84,13 @@ namespace SharpFFmpeg
                 IntPtr codec = AV.avcodec_find_decoder(codecContext.codec_id);
                 if (codec != IntPtr.Zero)
                 {
+                    var codecHandle = new NativeGetter<AV.AVCodec>(codec).Get();
+                    if ((codecHandle.capabilities & AV.CODEC_FLAG_TRUNCATED) != 0)
+                    {
+                        codecContext.flags |= AV.CODEC_FLAG_TRUNCATED;
+                        new NativeSetter<AV.AVCodecContext>(stream.codec).Set(codecContext);
+                    }
+
                     int ret = AV.avcodec_open2(stream.codec, codec, IntPtr.Zero);
                     if (ret < 0)
                         throw new Exception("Can not open codec for type " + codecContext.codec_type.ToString());

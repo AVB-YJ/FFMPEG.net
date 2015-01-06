@@ -7,9 +7,8 @@ using System.IO;
 
 namespace Multimedia
 {
-    public class FFmpegBase
+    public class PlayerBase
     {
-        private Native<AV.AVFormatContext> pFormatCtx = null;
 
         private AvDecoder audioDecoder = null;
         private AvDecoder videoDecoder = null;
@@ -19,19 +18,17 @@ namespace Multimedia
         private IPipe videoRender = null;
         private IntPtr videohandle = IntPtr.Zero;
 
-
+        private IFFMpeg ffmpegBase = null;
  
 
-        public FFmpegBase()
+        public PlayerBase()
         {
-            AV.av_register_all();
-			AV.avcodec_register_all();
+            ffmpegBase = FFMpegBase.Instance;
         }
 
-        public FFmpegBase(IntPtr videoHandle)
+        public PlayerBase(IntPtr videoHandle)
         {
-            AV.av_register_all();
-			AV.avcodec_register_all();
+            ffmpegBase = FFMpegBase.Instance;
             this.videohandle = videoHandle;
         }
 
@@ -49,6 +46,8 @@ namespace Multimedia
                 audioRender.Close();
             if (videoRender != null)
                 videoRender.Close();
+
+            
 
         }
 
@@ -121,47 +120,17 @@ namespace Multimedia
 
         private void GeneratePipesFromFile(string fileName)
         {
-            
-			FileInfo info = new FileInfo(fileName);
-			//string file = info.FullName;
-            IntPtr fileContext = IntPtr.Zero;
-            int ret = AV.avformat_open_input(out fileContext, fileName, IntPtr.Zero, IntPtr.Zero);
-            
-
-            if (ret < 0)
-                throw new InvalidOperationException("can not open input file");
-            ret = AV.av_find_stream_info(fileContext);
-            if (ret < 0)
-                throw new InvalidOperationException("can not find stream info");
-            pFormatCtx = new Native<AV.AVFormatContext>(fileContext);
-
-            AV.AVFormatContext context = pFormatCtx.Handle;
-            for (int index = 0; index < context.nb_streams; index++)
-            {
-                Native<AV.AVStream> stream = new Native<AV.AVStream>(context.Streams[index]);
-                Native<AV.AVCodecContext> codec = new Native<AV.AVCodecContext>(stream.Handle.codec);
-                AV.AVCodecContext codecContext = codec.Handle;
-                if (codecContext.codec_type == AV.AVMediaType.AVMEDIA_TYPE_AUDIO)
-                {
-                    audioDecoder = new AvDecoder(stream, codec, index);
-                }
-                else if (codecContext.codec_type == AV.AVMediaType.AVMEDIA_TYPE_VIDEO)
-                {
-                    videoDecoder = new AvDecoder(stream, codec, index);
-
-                }
-            }
-            reader = new FileReader(pFormatCtx);
-            demux = new Demux(pFormatCtx);
+            audioDecoder = new AvDecoder(AVFrameType.Audio);
+            videoDecoder = new AvDecoder(AVFrameType.Video);
+            reader = new FileReader(ffmpegBase, fileName);
+            demux = new Demux();
         }
 
         public long Duration
         {
             get
             {
-                if (pFormatCtx != null)
-                    return pFormatCtx.Handle.duration;
-                else
+                
                     return 0;
             }
         }
@@ -170,9 +139,6 @@ namespace Multimedia
         {
             get
             {
-                if (pFormatCtx != null)
-                    return pFormatCtx.Handle.offset;
-                else
                     return 0;
             }
             //set

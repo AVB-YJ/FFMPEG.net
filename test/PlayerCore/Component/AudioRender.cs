@@ -19,10 +19,13 @@ namespace Multimedia
 {
 
 
-    public class AudioRender : IPipe
+    public class AudioRender : BaseComponent, IPipe
     {
 
-
+        public AudioRender()
+        {
+            InitPerfLog("[Render Audio]");
+        }
 
         #region IPipe Members
 
@@ -31,71 +34,11 @@ namespace Multimedia
             return true;
         }
 
-        private void ConvertAudioSample(AudioFrame input)
-        {
-
-            if (input.fmt == (int)AV.AVSampleFormat.AV_SAMPLE_FMT_FLTP)
-            {
-                System.Single val = new System.Single();
-                if (input.channel == 1)
-                {
-                    for (int i = 0; i < input.nb_samples; i++)
-                    {
-                        IntPtr address =  new IntPtr(input.sample.ToInt64() + i * Marshal.SizeOf(val));
-                        val = (System.Single)Marshal.PtrToStructure(address, typeof(System.Single));
-                        if (val < -1.0)
-                            val = -1.0f;
-                        else if (val > 1.0)
-                            val = 1.0f;
-                        Int16 target = (Int16)( val * 32767.0f);
-
-                        IntPtr address2 = new IntPtr(input.sample.ToInt64() + i * Marshal.SizeOf(target));
-                        Marshal.WriteInt16(address2, target);
-                    }
-                }
-                else if (input.channel == 2)
-                {
-                    for (int i = 0; i < input.nb_samples; i++)
-                    {
-                        // channel 1
-                        IntPtr address = new IntPtr(input.sample.ToInt64() + i * Marshal.SizeOf(val));
-                        val = (System.Single) Marshal.PtrToStructure(address, typeof(System.Single));
-                        if (val < -1.0)
-                            val = -1.0f;
-                        else if (val > 1.0)
-                            val = 1.0f;
-                        Int16 target = (Int16)(val * 32767.0f);
-
-                        IntPtr address2 = new IntPtr(input.sample.ToInt64() + (i*2) * Marshal.SizeOf(target));
-                        Marshal.WriteInt16(address2, target);
-
-                        // channel 2
-                        address = new IntPtr(input.sample.ToInt64() + (i+1) * Marshal.SizeOf(val));
-                        val = (System.Single)Marshal.PtrToStructure(address, typeof(System.Single));
-                        if (val < -1.0)
-                            val = -1.0f;
-                        else if (val > 1.0)
-                            val = 1.0f;
-                        target = (Int16)(val * 32767.0f);
-
-                        address2 = new IntPtr(input.sample.ToInt64() + (i * 2 + 1) * Marshal.SizeOf(target));
-                        Marshal.WriteInt16(address2, target);
-                    }
-                }
-            }
-            else
-            {
-                // FIXME
-                // add convert from other format to AV_SAMPLE_FMT_S16
-
-            }
-        }
 
         public bool OnReceiveData (object packet)
 		{
-
+            RecordLog();
 			AudioFrame frame = (AudioFrame)packet;
-			ConvertAudioSample (frame);
 
 
 			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
@@ -117,12 +60,13 @@ namespace Multimedia
 
 		void PlayUsingASound (AudioFrame frame)
 		{
+            var type = frame.WaveDate;
 			int ret = 0;
 			if (pcm == IntPtr.Zero) {
 				int dir;
-				int rate = frame.rate == 0 ? 44100 : frame.rate;
-			
-				int channel = frame.channel == 0 ? 2 : frame.channel;
+                int rate = type.rate == 0 ? 44100 : type.rate;
+
+                int channel = type.channel == 0 ? 2 : type.channel;
 
 				string device = "default";
 				ret = Asound.snd_pcm_open (out pcm, device, 
@@ -145,7 +89,7 @@ namespace Multimedia
 				ret = Asound.snd_pcm_hw_params_set_channels (pcm, param, channel);
 				int val = rate;
 				ret = Asound.snd_pcm_hw_params_set_rate_near (pcm, param, ref val, out dir);
-				ulong frames = (ulong)frame.nb_samples;
+                ulong frames = (ulong)type.nb_samples;
 				ret = Asound.snd_pcm_hw_params_set_period_size_near (pcm, param, ref frames, out dir);
 				ret = Asound.snd_pcm_hw_params (pcm, param);
 				Asound.snd_pcm_params_free(param);
@@ -153,15 +97,15 @@ namespace Multimedia
 			if (pcm == IntPtr.Zero)
 				return;
 
-			long r = Asound.snd_pcm_writei(pcm,frame.sample,(ulong)frame.nb_samples);
-			Console.WriteLine("snd_pcm_writei {0}:{1}, return {2}", frame.sample, frame.nb_samples, r);
+            //long r = Asound.snd_pcm_writei(pcm, type, (ulong)type.nb_samples);
+            //Console.WriteLine("snd_pcm_writei {0}:{1}, return {2}", type.sample, type.nb_samples, r);
 		}
 		#endregion
 
         #region windows only
         private IntPtr waveOut = IntPtr.Zero;
-        BaseComponent.SizeQueue<AudioFrame> queue = new BaseComponent.SizeQueue<AudioFrame>(50,
-            new BaseComponent.FreeQueueItemDelegate<AudioFrame>(item =>
+        BaseComponent.SizeQueue<WaveDataType> queue = new BaseComponent.SizeQueue<WaveDataType>(50,
+            new BaseComponent.FreeQueueItemDelegate<WaveDataType>(item =>
             {
                 return;
             }
@@ -170,12 +114,12 @@ namespace Multimedia
         private bool threadWorking = false;
         private void PlayUsingWaveOut(AudioFrame frame)
         {
+            var type = frame.WaveDate;
             int ret;
-            int size = frame.size;
-            IntPtr data = frame.sample;
-            int rate = frame.rate == 0 ? 44100 : frame.rate;
-            int bit = frame.bit == 0 ? 16 : frame.bit;
-            int channel = frame.channel == 0 ? 2 : frame.channel;
+            int size = type.size;
+            int rate = type.rate == 0 ? 44100 : type.rate;
+            int bit = type.bit == 0 ? 16 : type.bit;
+            int channel = type.channel == 0 ? 2 : type.channel;
             if (waveOut == IntPtr.Zero){
                 WaveLib.WaveFormat fmt = new WaveLib.WaveFormat(rate, bit, channel);
                 ret = WaveNative.waveOutOpen(out waveOut, -1, fmt, null, 0, WaveNative.CALLBACK_NULL);
@@ -184,9 +128,7 @@ namespace Multimedia
             }
 
 
-            frame.managedData = new byte[frame.size];
-            Marshal.Copy(frame.sample, frame.managedData, 0, frame.size);
-            queue.Enqueue(frame);
+            queue.Enqueue(type);
             //ret = WriteWaveOut(frame);
         }
 
@@ -226,7 +168,7 @@ namespace Multimedia
             int currentIndex = 0;
             while (threadWorking)
             {
-                AudioFrame frame;
+                WaveDataType frame;
                 if (!queue.Dequeue(out frame))
                     break;
 
