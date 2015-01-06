@@ -24,6 +24,7 @@ namespace Multimedia
 
         public AvDecoder(Native<AV.AVStream> stream, Native<AV.AVCodecContext> codecCtx, int index)
         {
+            InitPerfLog("[decoder " + codecCtx.Handle.codec_type.ToString() + "]");
             streamIndex = index;
             pStream = stream;
             pCodecCtx = codecCtx;

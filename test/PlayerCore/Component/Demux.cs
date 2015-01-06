@@ -11,6 +11,7 @@ namespace Multimedia
         private Native<AV.AVFormatContext> pFormatCtx;
         public Demux(Native<AV.AVFormatContext> ctx)
         {
+            InitPerfLog("[demux]");
             this.pFormatCtx = ctx;
         }
 
@@ -67,6 +68,8 @@ namespace Multimedia
             }
             if (pipe == null)
                 return false;
+
+            RecordLog();
             pipe.OnReceiveData(obj);
             
             return true;

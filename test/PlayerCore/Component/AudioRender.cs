@@ -19,10 +19,13 @@ namespace Multimedia
 {
 
 
-    public class AudioRender : IPipe
+    public class AudioRender : BaseComponent, IPipe
     {
 
-
+        public AudioRender()
+        {
+            InitPerfLog("[Render Audio]");
+        }
 
         #region IPipe Members
 
@@ -93,7 +96,7 @@ namespace Multimedia
 
         public bool OnReceiveData (object packet)
 		{
-
+            RecordLog();
 			AudioFrame frame = (AudioFrame)packet;
 			ConvertAudioSample (frame);
 

@@ -3,12 +3,47 @@ using System.Collections.Generic;
 using System.Text;
 using SharpFFmpeg;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Multimedia
 {
 
     public class BaseComponent
     {
+        private string componentName = string.Empty;
+        private DateTime lastRecordTime = DateTime.Now;
+        private int count = 0;
+        private bool needsLog = false;
+
+        public BaseComponent()
+        {
+
+        }
+
+        internal void InitPerfLog(string name)
+        {
+            componentName = name;
+            lastRecordTime = DateTime.Now;
+            count = 0;
+            needsLog = true;
+        }
+
+        internal void RecordLog()
+        {
+            DateTime now = DateTime.Now;
+            count++;
+            TimeSpan span = now - lastRecordTime;
+            if (span.TotalSeconds >= 2)
+            {
+                Debug.WriteLine("[" + Thread.CurrentThread.ManagedThreadId.ToString() + "]" +
+                    componentName +
+                    ": push out " + count.ToString() +
+                    " packets during " + span.TotalSeconds.ToString() +
+                    " seconds");
+                count = 0;
+                lastRecordTime = now;
+            }
+        }
 
         internal List<IPipe> nextComponents = new List<IPipe>();
 
@@ -22,6 +57,7 @@ namespace Multimedia
 
         internal void PushToNext(object obj)
         {
+            RecordLog();
             List<IPipe> list = null;
             lock (nextComponents)
             {
