@@ -104,13 +104,14 @@ namespace SharpFFmpeg
 
         public void Close()
         {
-            if (rawFormatCtx != null)
-                AV.avformat_free_context(rawFormatCtx);
+
 
             foreach (var decoder in decoderTable)
             {
                 AV.avcodec_close(decoder.Value);
             }
+			if (rawFormatCtx != null)
+				AV.avformat_free_context(rawFormatCtx);
         }
 
 

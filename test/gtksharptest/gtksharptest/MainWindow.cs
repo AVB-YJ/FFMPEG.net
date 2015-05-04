@@ -32,7 +32,16 @@ public partial class MainWindow: Gtk.Window
 	ASoundPlayer audioPlayer = new ASoundPlayer();
 	protected void Click_Handler (object sender, EventArgs e)
 	{
-		string file = "/home/apa/test.wmv";
+		Gtk.FileChooserDialog dialog = new FileChooserDialog ("Choose a file",
+		                                                     this,
+		                                                     FileChooserAction.Open,
+		                                                      new object[]{
+			Gtk.Stock.Open,
+			Gtk.ResponseType.Ok});
+		dialog.Run ();
+
+		string file = dialog.Filename;
+		dialog.Destroy ();
 		//writer.Seek(44, SeekOrigin.Begin);
 		workingThread = new Thread(new ThreadStart(() =>
 		                                           {

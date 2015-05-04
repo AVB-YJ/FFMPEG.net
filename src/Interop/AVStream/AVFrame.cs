@@ -134,8 +134,6 @@ namespace SharpFFmpeg
                 d.size = avFrame.linesize[0];
                 d.bit_rate = codecCtx.bit_rate;
                 d.sample_rate = avFrame.sample_rate;
-                Debug.WriteLine(string.Format("[audio] bit_per_sample {0}, sample rate {1}, bit_rate {2}", codecCtx.bits_per_coded_sample,
-                    avFrame.sample_rate, codecCtx.bit_rate));
                 ConvertAudioSample(ref d, avFrame.extended_data);
                 return d;
             }

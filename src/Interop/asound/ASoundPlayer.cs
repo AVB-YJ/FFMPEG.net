@@ -41,11 +41,11 @@ namespace SharpFFmpeg
 
 		public void Stop()
 		{
-			threadWorking = false;
+			//threadWorking = false;
 			queue.Close();
 			foreach (var thread in threads)
 				thread.Join();
-
+			//queue.Close ();
 			if (pcm != IntPtr.Zero)
 			{
 				Asound.snd_pcm_close (pcm);
