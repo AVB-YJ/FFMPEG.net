@@ -14,12 +14,14 @@ public partial class MainWindow: Gtk.Window
 		g = Gtk.DotNet.Graphics.FromDrawable (mainDraw.GdkWindow);
 		string myExeDir = (new FileInfo(System.Reflection.Assembly.GetEntryAssembly().Location)).Directory.FullName;
 		Environment.CurrentDirectory = myExeDir;
+		audioPlayer.Start ();
 	}
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 	{
 		Application.Quit ();
 		a.RetVal = true;
+
 	}
 
 
@@ -27,6 +29,7 @@ public partial class MainWindow: Gtk.Window
 
 	Thread workingThread = null;
 	bool closing = false;
+	ASoundPlayer audioPlayer = new ASoundPlayer();
 	protected void Click_Handler (object sender, EventArgs e)
 	{
 		string file = "/home/apa/test.wmv";
@@ -52,10 +55,12 @@ public partial class MainWindow: Gtk.Window
 					if (audio.Decode())
 					{
 						var data = audio.WaveDate;
+						audioPlayer.PutSample(data);
 					}
 				}
 				frame.Close();
 			}
+			audioPlayer.Stop();
 			stream.Close();
 		}));
 		workingThread.Start();

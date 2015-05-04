@@ -1,21 +1,19 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../../src/Interop/ffmpeg55/libavcodec/avcodec.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../../src/Interop/asound/ASoundPlayer.cs">
     <Files>
       <File FileName="gtksharptest/Program.cs" Line="17" Column="1" />
-      <File FileName="gtksharptest/MainWindow.cs" Line="16" Column="43" />
-      <File FileName="../../src/Interop/AVStream/AVStream.cs" Line="58" Column="53" />
+      <File FileName="gtksharptest/MainWindow.cs" Line="66" Column="9" />
+      <File FileName="../../src/Interop/AVStream/AVStream.cs" Line="100" Column="18" />
       <File FileName="../../src/Interop/ffmpeg55/libavformat/avformat.cs" Line="1026" Column="9" />
       <File FileName="../../src/Interop/ffmpeg51/AVCodec.cs" Line="41" Column="12" />
-      <File FileName="../../src/Interop/ffmpeg55/libavcodec/avcodec.cs" Line="2598" Column="1" />
+      <File FileName="../../src/Interop/Wave/WavePlayer.cs" Line="137" Column="10" />
+      <File FileName="../../src/Interop/asound/ASoundPlayer.cs" Line="12" Column="4" />
+      <File FileName="../../src/Interop/asound/asound.cs" Line="204" Column="24" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/home/apa/project/FFMPEG.net/test/gtksharptest/gtksharptest/MainWindow.cs" line="42" column="1" />
-      <Breakpoint file="/home/apa/project/FFMPEG.net/src/Interop/AVStream/AVStream.cs" line="64" column="1" />
-      <Breakpoint file="/home/apa/project/FFMPEG.net/src/Interop/AVStream/AVStream.cs" line="83" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

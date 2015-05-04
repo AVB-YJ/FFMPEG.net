@@ -201,7 +201,7 @@ public enum snd_pcm_format_t {
 		[DllImport(ASOUND), SuppressUnmanagedCodeSecurity]
 		public static extern 
 		long snd_pcm_writei(IntPtr /*snd_pcm_t* */pcm,
-			                    IntPtr buffer, ulong size);
+			                    IntPtr buffer, uint size);
 
 		[DllImport(ASOUND), SuppressUnmanagedCodeSecurity]
 		public static extern 

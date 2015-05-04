@@ -139,6 +139,7 @@
     <Compile Include="SizeQueue.cs" />
     <Compile Include="Wave\WaveNative.cs" />
     <Compile Include="Wave\WavePlayer.cs" />
+    <Compile Include="asound\ASoundPlayer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
