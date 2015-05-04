@@ -2595,8 +2595,7 @@ public struct AVCodecContext{
 	[MarshalAs(UnmanagedType.I8)]
 	public System.Int64 pts_correction_last_dts;
 
-	[MarshalAs(UnmanagedType.LPStr)]
-	public string sub_charenc;
+	public IntPtr sub_charenc;
 
 	[MarshalAs(UnmanagedType.I4)]
 	public System.Int32 sub_charenc_mode;

@@ -27,7 +27,11 @@ namespace SharpFFmpeg
 {
     public partial class AV 
 {
-public const string CHANNEL_LAYOUT = "avutil-52.dll";
+		#if WIN32
+		public const string CHANNEL_LAYOUT = "avutil-52.dll";
+		#else
+		public const string CHANNEL_LAYOUT = "avutil";
+		#endif
 
 
 public static readonly uint AV_CH_FRONT_LEFT = 0x00000001;

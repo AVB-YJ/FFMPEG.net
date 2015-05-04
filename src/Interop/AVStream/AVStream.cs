@@ -57,7 +57,7 @@ namespace SharpFFmpeg
             if (ret < 0)
                 throw new InvalidOperationException("can not open input file");
 
-            ret = AV.av_find_stream_info(fileContext);
+            ret = AV.avformat_find_stream_info(fileContext, IntPtr.Zero);
             if (ret < 0)
                 throw new InvalidOperationException("can not find stream info");
 
