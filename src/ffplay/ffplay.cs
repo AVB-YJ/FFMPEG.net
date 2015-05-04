@@ -600,7 +600,7 @@ static void blend_subrect(Native<AV.AVPicture> dst, Native<AV.AVSubtitleRect> re
     int wrap, wrap3, width2, skip2;
     int y, u, v, a, u1, v1, a1, w, h;
     IntPtr lum, cb, cr;
-    IntPtr p;
+    uint[] p;
     uint[] pal;
     int dstx, dsty, dstw, dsth;
 
@@ -616,10 +616,10 @@ static void blend_subrect(Native<AV.AVPicture> dst, Native<AV.AVSubtitleRect> re
     skip2 = dstx >> 1;
     wrap = dst.O.linesize[0];
     wrap3 = rect.O.pict.linesize[0];
-    p = rect.O.pict.data[0];
-    pal = (const uint32_t *)rect->pict.data[1];  /* Now in YCrCb! */
+    p = rect.O.pict.Data[0];
+    pal = rect.O.pict.Data[1];  /* Now in YCrCb! */
 
-    if (dsty & 1) {
+    if ((dsty & 1) != 0) {
         lum += dstx;
         cb += skip2;
         cr += skip2;
