@@ -96,6 +96,7 @@
     <Compile Include="ffmpeg55\libavutil\samplefmt.cs" />
     <Compile Include="ffmpeg55\libswresample\swresample.cs" />
     <Compile Include="ffmpeg55\libswscale\swscale.cs" />
+    <Compile Include="NativeHelper.cs" />
     <Compile Include="SDL\begin_code.cs" />
     <Compile Include="SDL\SDL.cs" />
     <Compile Include="SDL\SDL_assert.cs" />

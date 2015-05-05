@@ -38,7 +38,7 @@ public static readonly uint FF_LAMBDA_SCALE = 128;
 public static readonly uint FF_QP2LAMBDA = 118;
 public static readonly uint FF_LAMBDA_MAX = (256*128-1);
 public static readonly uint FF_QUALITY_SCALE = FF_LAMBDA_SCALE;
-public static readonly ulong AV_NOPTS_VALUE = (0x8000000000000000);
+public static readonly UInt64 AV_NOPTS_VALUE = (0x8000000000000000);
 public static readonly uint AV_TIME_BASE = 1000000;
 
 public static readonly uint AVERROR_BSF_NOT_FOUND = 0xb9acbd08; ///< Bitstream filter not found

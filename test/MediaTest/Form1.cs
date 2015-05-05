@@ -25,6 +25,7 @@ namespace MediaTest
         private IntPtr waveOut = IntPtr.Zero;
         private SDLNative.SDL_AudioSpec wanted_spec;
         private bool salOpend = false;
+        private int audioDevice = 0;
         private SizeQueue<WaveDataType> queue = new SizeQueue<WaveDataType>(10,
             (t => { return; }));
 
@@ -121,13 +122,14 @@ namespace MediaTest
             wanted_spec.userdata = IntPtr.Zero;
             IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(wanted_spec));
             Marshal.StructureToPtr(wanted_spec, ptr, false);
-            if (SDLNative.SDL_OpenAudio(ptr, IntPtr.Zero) < 0)
+            audioDevice = SDLNative.SDL_OpenAudioDevice(null, 0, ptr, IntPtr.Zero, (int)SDLNative.SDL_AUDIO_ALLOW_ANY_CHANGE);
+            if (audioDevice == 0)
             {
                 Debug.WriteLine("can't open audio.");
             }
             Marshal.FreeHGlobal(ptr);
 
-            SDLNative.SDL_PauseAudio(0);
+            SDLNative.SDL_PauseAudioDevice(audioDevice, 0);
         }
         
         private void button1_Click(object sender, EventArgs e)
