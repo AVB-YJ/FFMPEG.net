@@ -64,7 +64,7 @@ namespace Multimedia
 			int ret = 0;
 			if (pcm == IntPtr.Zero) {
 				int dir;
-                int rate = type.rate == 0 ? 44100 : type.rate;
+                int rate = type.bit_rate == 0 ? 44100 : type.bit_rate;
 
                 int channel = type.channel == 0 ? 2 : type.channel;
 
@@ -117,8 +117,8 @@ namespace Multimedia
             var type = frame.WaveDate;
             int ret;
             int size = type.size;
-            int rate = type.rate == 0 ? 44100 : type.rate;
-            int bit = type.bit == 0 ? 16 : type.bit;
+            int rate = type.sample_rate == 0 ? 44100 : type.sample_rate;
+            int bit = type.bit_per_sample == 0 ? 16 : type.bit_per_sample;
             int channel = type.channel == 0 ? 2 : type.channel;
             if (waveOut == IntPtr.Zero){
                 WaveLib.WaveFormat fmt = new WaveLib.WaveFormat(rate, bit, channel);

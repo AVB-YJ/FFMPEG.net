@@ -32,17 +32,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CppSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\cppsharp\CppSharp.dll</HintPath>
+    <Reference Include="CppSharp">
+      <HintPath>..\..\lib\cppsharp\CppSharp.dll</HintPath>
     </Reference>
-    <Reference Include="CppSharp.AST, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\cppsharp\CppSharp.AST.dll</HintPath>
+    <Reference Include="CppSharp.AST">
+      <HintPath>..\..\lib\cppsharp\CppSharp.AST.dll</HintPath>
     </Reference>
-    <Reference Include="CppSharp.Parser, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\cppsharp\CppSharp.Parser.dll</HintPath>
+    <Reference Include="CppSharp.Parser">
+      <HintPath>..\..\lib\cppsharp\CppSharp.Parser.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

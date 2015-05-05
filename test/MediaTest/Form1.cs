@@ -11,7 +11,9 @@ using SharpFFmpeg;
 using System.Runtime.InteropServices;
 using System.Threading;
 using WaveLib;
+using SDLLib;
 using Multimedia;
+using System.Diagnostics;
 
 namespace MediaTest
 {
@@ -21,25 +23,111 @@ namespace MediaTest
         private Graphics graph;
         private Thread workingThread = null;
         private IntPtr waveOut = IntPtr.Zero;
-        private SizeQueue<WaveDataType> queue = new SizeQueue<WaveDataType>(50,
-            new FreeQueueItemDelegate<WaveDataType>(item =>
-            {
-                return;
-            }
-        ));
-        private Thread[] waveThread = new Thread[5];
+        private SDLNative.SDL_AudioSpec wanted_spec;
+        private bool salOpend = false;
+        //private BinaryWriter writer = new BinaryWriter(new FileStream("c:\\test.wav", FileMode.Create));
+        //private int waveDataSize = 0;
+        private static SizeQueue<WaveDataType> queue = new SizeQueue<WaveDataType>(10,
+            (t => { return; }));
+
+        private static SDLNative.SDL_AudioCallback _callback = new SDLNative.SDL_AudioCallback(AudioCallback);
+
         public Form1()
         {
             InitializeComponent();
             string myExeDir = (new FileInfo(System.Reflection.Assembly.GetEntryAssembly().Location)).Directory.FullName;
             Environment.CurrentDirectory = myExeDir;
             graph = Graphics.FromHwnd(panelShow.Handle);
-            for (var i = 0; i < waveThread.Length; i++)
-            {
-                waveThread[i] = new Thread(new ThreadStart(WaveoutThread));
-                waveThread[i].Start();
+            var ret = SDLNative.SDL_Init(SDLNative.SDL_INIT_AUDIO | SDLNative.SDL_INIT_TIMER);
+            if (ret != 0)
+                Debug.WriteLine("SDL_Init fail");
+        }
 
+        //private void WriteWaveHeader(BinaryWriter writer, WaveDataType format)
+        //{
+        //    WAVE_Header wav_Header = new WAVE_Header();
+        //    wav_Header.RIFF_ID[0] = 'R';
+        //    wav_Header.RIFF_ID[1] = 'I';
+        //    wav_Header.RIFF_ID[2] = 'F';
+        //    wav_Header.RIFF_ID[3] = 'F';
+        //    wav_Header.File_Size = waveDataSize + 36;
+        //    wav_Header.RIFF_Type[0] = 'W';
+        //    wav_Header.RIFF_Type[1] = 'A';
+        //    wav_Header.RIFF_Type[2] = 'V';
+        //    wav_Header.RIFF_Type[3] = 'E';
+
+        //    wav_Header.FMT_ID[0] = 'f';
+        //    wav_Header.FMT_ID[1] = 'm';
+        //    wav_Header.FMT_ID[2] = 't';
+        //    wav_Header.FMT_ID[3] = ' ';
+        //    wav_Header.FMT_Size = 16;
+        //    wav_Header.FMT_Tag = 0x0001;
+        //    wav_Header.FMT_Channel = (ushort)format.channel;
+        //    wav_Header.FMT_SamplesPerSec = format.sample_rate;
+
+        //    var nBlockAlign = (short)(format.channel * (format.bit_per_sample / 8));
+        //    var nAvgBytesPerSec = format.sample_rate * nBlockAlign;
+
+        //    wav_Header.AvgBytesPerSec = nAvgBytesPerSec;
+        //    wav_Header.BlockAlign = (ushort)nBlockAlign;
+        //    wav_Header.BitsPerSample = (ushort)format.bit_per_sample;
+
+        //    wav_Header.DATA_ID[0] = 'd';
+        //    wav_Header.DATA_ID[1] = 'a';
+        //    wav_Header.DATA_ID[2] = 't';
+        //    wav_Header.DATA_ID[3] = 'a';
+        //    wav_Header.DATA_Size = waveDataSize;
+
+
+        //    int waveHdrSize = Marshal.SizeOf(wav_Header);
+        //    var ptr = Marshal.AllocHGlobal(waveHdrSize);
+        //    byte[] data = new byte[waveHdrSize];
+        //    Marshal.StructureToPtr(wav_Header, ptr, false);
+        //    Marshal.Copy(ptr, data, 0, waveHdrSize);
+        //    writer.Seek(0, SeekOrigin.Begin);
+        //    writer.Write(data);
+        //    writer.Flush();
+        //    Marshal.FreeHGlobal(ptr);
+        //}
+        private static void AudioCallback(IntPtr userdata, IntPtr stream, int len)
+        {
+            WaveDataType frame;
+            int left = len;
+            while(queue.Dequeue(out frame))
+            {
+                uint sampleSize = (uint)(frame.size > len ? len : frame.size);
+                IntPtr rawData = Marshal.AllocHGlobal(frame.managedData.Length);
+                Marshal.Copy(frame.managedData, 0, rawData, frame.managedData.Length);
+                SDLNative.SDL_MixAudio(stream, rawData, sampleSize, (int)SDLNative.SDL_MIX_MAXVOLUME);
+                left -= (int)sampleSize;
+                //Marshal.FreeHGlobal(rawData);
+                if (left <= 0)
+                    break;
             }
+
+        }
+
+        private void OpenSDLAudio(WaveDataType data)
+        {
+            wanted_spec = new SDLNative.SDL_AudioSpec();
+            wanted_spec.freq = data.sample_rate;
+            wanted_spec.format = (ushort)((data.fmt == AV.AVSampleFormat.AV_SAMPLE_FMT_S16) ? SDLNative.AUDIO_S16SYS :
+                (data.fmt == AV.AVSampleFormat.AV_SAMPLE_FMT_S32) ? SDLNative.AUDIO_S32SYS :
+                SDLNative.AUDIO_S16SYS);
+            wanted_spec.channels = (byte)data.channel;
+            wanted_spec.silence = 0;
+            wanted_spec.samples = (ushort)data.nb_samples;
+            wanted_spec.callback = _callback;
+            wanted_spec.userdata = IntPtr.Zero;
+            IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(wanted_spec));
+            Marshal.StructureToPtr(wanted_spec, ptr, false);
+            if (SDLNative.SDL_OpenAudio(ptr, IntPtr.Zero) < 0)
+            {
+                Debug.WriteLine("can't open audio.");
+            }
+            Marshal.FreeHGlobal(ptr);
+
+            SDLNative.SDL_PauseAudio(0);
         }
         
         private void button1_Click(object sender, EventArgs e)
@@ -47,6 +135,8 @@ namespace MediaTest
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.ShowDialog();
             string file = dialog.FileName;
+            //writer.Seek(44, SeekOrigin.Begin);
+            WaveDataType first = null;
             workingThread = new Thread(new ThreadStart(() =>
             {
                 var stream = FFMpegBase.Instance.GetAVStream(file);
@@ -65,23 +155,22 @@ namespace MediaTest
                         SharpFFmpeg.AudioFrame audio = (SharpFFmpeg.AudioFrame)frame;
                         audio.Decode();
                         var data = audio.WaveDate;
-                        if (waveOut == IntPtr.Zero)
-                        {
-                            WaveLib.WaveFormat fmt = new WaveLib.WaveFormat(data.rate, data.bit, data.channel);
-                            int ret = WaveNative.waveOutOpen(out waveOut, -1, fmt, null, 0, WaveNative.CALLBACK_NULL);
-                            if (ret != WaveNative.MMSYSERR_NOERROR)
-                                throw new Exception("can not open wave device");
-                        }
+
                         queue.Enqueue(data);
+                        if (salOpend == false)
+                        {
+                            OpenSDLAudio(data);
+                            salOpend = true;
+                        }
+                        //waveDataSize += data.size;
+                        //writer.Write(data.managedData);
                     }
                     frame.Close();
                 }
+                //writer.Flush();
+                //WriteWaveHeader(writer, first);
+                //writer.Close();
                 stream.Close();
-                if (waveOut != IntPtr.Zero)
-                {
-                    WaveNative.waveOutClose(waveOut);
-                    waveOut = IntPtr.Zero;
-                }
             }));
             workingThread.Start();
         }
@@ -126,68 +215,6 @@ namespace MediaTest
 
         }
 
-        private void WaveoutThread()
-        {
-            //int buffedSize = 0;
-            List<byte> list = new List<byte>();
-            int currentIndex = 0;
-            while (!closing)
-            {
-                WaveDataType frame;
-                if (!queue.Dequeue(out frame))
-                    break;
-
-                if (currentIndex + frame.size < frame.size * 2)
-                {
-                    list.AddRange(frame.managedData);
-                    currentIndex += frame.size;
-                }
-                else
-                {
-                    int len = currentIndex;
-                    IntPtr buf = Marshal.AllocHGlobal(currentIndex);
-                    Marshal.Copy(list.ToArray(), 0, buf, currentIndex);
-                    list.Clear();
-                    currentIndex = 0;
-
-                    list.AddRange(frame.managedData);
-                    currentIndex += frame.size;
-
-                    WriteWaveOut(buf, len);
-                    Marshal.FreeHGlobal(buf);
-                }
-                //WriteWaveOut(frame);
-            }
-        }
-
-        private int WriteWaveOut(IntPtr buf, int size)
-        {
-            int ret;
-            WaveNative.WaveHdr m_Header = new WaveNative.WaveHdr(); ;
-            GCHandle m_HeaderHandle = GCHandle.Alloc(m_Header, GCHandleType.Pinned);
-            m_Header.dwUser = (IntPtr)GCHandle.Alloc(this);
-            m_Header.lpData = buf;
-            m_Header.dwBufferLength = size;
-            ret = WaveNative.waveOutPrepareHeader(waveOut, ref m_Header, Marshal.SizeOf(m_Header));
-            if (ret != WaveNative.MMSYSERR_NOERROR)
-                throw new Exception("can not open wave device");
-
-            lock (queue)
-            {
-                ret = WaveNative.waveOutWrite(waveOut, ref m_Header, Marshal.SizeOf(m_Header));
-            }
-            if (ret != WaveNative.MMSYSERR_NOERROR)
-                throw new Exception("can not open wave device");
-
-            while (WaveNative.waveOutUnprepareHeader(waveOut, ref m_Header, Marshal.SizeOf(m_Header)) == WaveNative.WAVERR_STILLPLAYING)
-            {
-                Thread.Sleep(5);
-            }
-
-            ((GCHandle)m_Header.dwUser).Free();
-            m_HeaderHandle.Free();
-            return ret;
-        }
 
         private PlayerBase playerBase = null;
 
@@ -210,7 +237,6 @@ namespace MediaTest
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             closing = true;
-            queue.Close();
             if (workingThread != null)
             {
                 workingThread.Join();

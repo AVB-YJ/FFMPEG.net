@@ -1,4 +1,4 @@
-//  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+﻿//  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 //  KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 //  IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
 //  PURPOSE.
@@ -20,6 +20,44 @@ namespace WaveLib
 		Pcm = 1,
 		Float = 3
 	}
+
+    [StructLayout(LayoutKind.Sequential)] 
+    public class WAVE_Header
+    {
+        public WAVE_Header()
+        {
+            RIFF_ID = new char[4];
+            RIFF_Type = new char[4];
+            FMT_ID = new char[4];
+            DATA_ID = new char[4];
+        }
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+        public char[] RIFF_ID;         //4 byte , 'RIFF'
+        [MarshalAs(UnmanagedType.I4)]
+        public int File_Size;         //4 byte , file len
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+        public char[] RIFF_Type;       //4 byte , 'WAVE'
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+        public char[] FMT_ID;          //4 byte , 'fmt'
+        [MarshalAs(UnmanagedType.I4)]
+        public int FMT_Size;          //4 byte , 16/18
+        [MarshalAs(UnmanagedType.I2)]
+        public short FMT_Tag;          //2 byte , 0x0001
+        [MarshalAs(UnmanagedType.I2)]
+        public ushort FMT_Channel;     //2 byte ,
+        [MarshalAs(UnmanagedType.I4)]
+        public int FMT_SamplesPerSec;//4 byte , 
+        [MarshalAs(UnmanagedType.I4)]
+        public int AvgBytesPerSec;   //4 byte , 
+        [MarshalAs(UnmanagedType.I2)]
+        public ushort BlockAlign;      //2 byte , 
+        [MarshalAs(UnmanagedType.I2)]
+        public ushort BitsPerSample;   //2 byte , 
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+        public char[] DATA_ID;         //4 byte , 'data'
+        [MarshalAs(UnmanagedType.I4)]
+        public int DATA_Size;         //4 byte , 
+    }
 
 	[StructLayout(LayoutKind.Sequential)] 
 	public class WaveFormat

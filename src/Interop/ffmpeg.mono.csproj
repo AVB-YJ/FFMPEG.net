@@ -21,7 +21,7 @@
     <DefineConstants>TRACE;DEBUG;WIN32</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -96,6 +96,47 @@
     <Compile Include="ffmpeg55\libavutil\samplefmt.cs" />
     <Compile Include="ffmpeg55\libswresample\swresample.cs" />
     <Compile Include="ffmpeg55\libswscale\swscale.cs" />
+    <Compile Include="SDL\begin_code.cs" />
+    <Compile Include="SDL\SDL.cs" />
+    <Compile Include="SDL\SDL_assert.cs" />
+    <Compile Include="SDL\SDL_atomic.cs" />
+    <Compile Include="SDL\SDL_audio.cs" />
+    <Compile Include="SDL\SDL_blendmode.cs" />
+    <Compile Include="SDL\SDL_clipboard.cs" />
+    <Compile Include="SDL\SDL_config.cs" />
+    <Compile Include="SDL\SDL_cpuinfo.cs" />
+    <Compile Include="SDL\SDL_endian.cs" />
+    <Compile Include="SDL\SDL_error.cs" />
+    <Compile Include="SDL\SDL_events.cs" />
+    <Compile Include="SDL\SDL_filesystem.cs" />
+    <Compile Include="SDL\SDL_gamecontroller.cs" />
+    <Compile Include="SDL\SDL_gesture.cs" />
+    <Compile Include="SDL\SDL_haptic.cs" />
+    <Compile Include="SDL\SDL_joystick.cs" />
+    <Compile Include="SDL\SDL_keyboard.cs" />
+    <Compile Include="SDL\SDL_keycode.cs" />
+    <Compile Include="SDL\SDL_loadso.cs" />
+    <Compile Include="SDL\SDL_log.cs" />
+    <Compile Include="SDL\SDL_main.cs" />
+    <Compile Include="SDL\SDL_messagebox.cs" />
+    <Compile Include="SDL\SDL_mouse.cs" />
+    <Compile Include="SDL\SDL_mutex.cs" />
+    <Compile Include="SDL\SDL_pixels.cs" />
+    <Compile Include="SDL\SDL_platform.cs" />
+    <Compile Include="SDL\SDL_power.cs" />
+    <Compile Include="SDL\SDL_rect.cs" />
+    <Compile Include="SDL\SDL_render.cs" />
+    <Compile Include="SDL\SDL_rwops.cs" />
+    <Compile Include="SDL\SDL_scancode.cs" />
+    <Compile Include="SDL\SDL_stdinc.cs" />
+    <Compile Include="SDL\SDL_surface.cs" />
+    <Compile Include="SDL\SDL_system.cs" />
+    <Compile Include="SDL\SDL_thread.cs" />
+    <Compile Include="SDL\SDL_timer.cs" />
+    <Compile Include="SDL\SDL_touch.cs" />
+    <Compile Include="SDL\SDL_version.cs" />
+    <Compile Include="SDL\SDL_video.cs" />
+    <Compile Include="SDL\winapifamily.cs" />
     <Compile Include="Wave\WaveNative.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

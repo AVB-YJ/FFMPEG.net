@@ -18,11 +18,12 @@ namespace Translator
         static readonly string help =
             @"translator --include [path] --namespace [namespace] --class [class name] --dll [dll name] source";
 
-        private static string includePath = string.Empty;
         private static string nameSpace = string.Empty;
         private static string className = string.Empty;
         private static string dllName = string.Empty;
         private static string sourceFile = string.Empty;
+        private static List<string> includes = new List<string>();
+
         static void Main(string[] args)
         {
             if (args.Length == 0)
@@ -30,7 +31,6 @@ namespace Translator
                 Console.WriteLine(help);
                 return;
             }
-
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i] == "--include")
@@ -40,7 +40,10 @@ namespace Translator
                         Console.WriteLine(help);
                         return;
                     }
-                    includePath = args[i + 1];
+                    string includePath = args[i + 1];
+                    DirectoryInfo d = new DirectoryInfo(includePath);
+                    includes.Add(d.FullName);
+                    includePath = Environment.CurrentDirectory + "\\" + includePath;
                     i++;
                 }
 
@@ -80,7 +83,7 @@ namespace Translator
             }
 
             sourceFile = args[args.Length - 1];
-            if (string.IsNullOrEmpty(includePath) ||
+            if (includes.Count == 0 ||
                 string.IsNullOrEmpty(nameSpace) ||
                 string.IsNullOrEmpty(className) ||
                 string.IsNullOrEmpty(dllName))
@@ -89,12 +92,16 @@ namespace Translator
                 return;
             }
 
-
+            string srcFile = Environment.CurrentDirectory + "\\" + sourceFile;
+            if(!File.Exists(srcFile))
+            {
+                Console.WriteLine("Can not find file {0}, working directory {1}", srcFile, Environment.CurrentDirectory);
+            }
             ParserOptions options = new ParserOptions();
-            options.IncludeDirs.Add(includePath);
+            options.IncludeDirs.AddRange(includes);
             options.MicrosoftMode = true;
             options.ASTContext = new CppSharp.AST.ASTContext();
-            options.FileName = includePath + "\\" + sourceFile;
+            options.FileName = srcFile;
             options.Defines.Add("__STDC_CONSTANT_MACROS");
 
             SourceFile source = new SourceFile(options.FileName);
@@ -103,6 +110,7 @@ namespace Translator
             result = parser.ParseSourceFile(source, options);
             if (result.Kind != ParserResultKind.Success)
             {
+                Console.WriteLine("Error: {0}", result.Kind.ToString());
                 foreach (var diag in result.Diagnostics)
                     Console.WriteLine(diag.FileName + "(" + diag.LineNumber.ToString() + "):" + diag.Message);
             }
@@ -131,9 +139,15 @@ namespace Translator
 
             TypeWrapperFactory.CurrentPrefix = unit.FileNameWithoutExtension;
             var outFile = unit.FileNameWithoutExtension + ".cs";
-            var folder = unit.FilePath.Replace(includePath, "").Replace(unit.FileName, "").Replace("\\", "");
+            string path = unit.FilePath;
 
-            if (sourceFile.IndexOf(folder) == -1)
+            foreach (var inc in includes)
+                path = path.Replace(inc, "");
+
+            var folder = path.Replace(unit.FileName, "").Replace("\\", "");
+            if (string.IsNullOrEmpty(folder))
+                folder = "default";
+            else if (sourceFile.IndexOf(folder) == -1)
                 return;
 
             DirectoryInfo info = null;
