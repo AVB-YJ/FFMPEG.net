@@ -25,12 +25,8 @@ namespace MediaTest
         private IntPtr waveOut = IntPtr.Zero;
         private SDLNative.SDL_AudioSpec wanted_spec;
         private bool salOpend = false;
-        //private BinaryWriter writer = new BinaryWriter(new FileStream("c:\\test.wav", FileMode.Create));
-        //private int waveDataSize = 0;
-        private static SizeQueue<WaveDataType> queue = new SizeQueue<WaveDataType>(10,
+        private SizeQueue<WaveDataType> queue = new SizeQueue<WaveDataType>(10,
             (t => { return; }));
-
-        private static SDLNative.SDL_AudioCallback _callback = new SDLNative.SDL_AudioCallback(AudioCallback);
 
         public Form1()
         {
@@ -89,20 +85,24 @@ namespace MediaTest
         //    writer.Flush();
         //    Marshal.FreeHGlobal(ptr);
         //}
-        private static void AudioCallback(IntPtr userdata, IntPtr stream, int len)
+        private void AudioCallback(IntPtr userdata, IntPtr stream, int len)
         {
             WaveDataType frame;
             int left = len;
-            while(queue.Dequeue(out frame))
+            if (queue.Dequeue(out frame))
             {
                 uint sampleSize = (uint)(frame.size > len ? len : frame.size);
                 IntPtr rawData = Marshal.AllocHGlobal(frame.managedData.Length);
                 Marshal.Copy(frame.managedData, 0, rawData, frame.managedData.Length);
                 SDLNative.SDL_MixAudio(stream, rawData, sampleSize, (int)SDLNative.SDL_MIX_MAXVOLUME);
+                Marshal.Copy(frame.managedData, 0, stream, frame.managedData.Length);
                 left -= (int)sampleSize;
-                //Marshal.FreeHGlobal(rawData);
+                Marshal.FreeHGlobal(rawData);
                 if (left <= 0)
-                    break;
+                {
+                    Debug.WriteLine(string.Format("left if {0}", left));
+                    return;
+                }
             }
 
         }
@@ -117,7 +117,7 @@ namespace MediaTest
             wanted_spec.channels = (byte)data.channel;
             wanted_spec.silence = 0;
             wanted_spec.samples = (ushort)data.nb_samples;
-            wanted_spec.callback = _callback;
+            wanted_spec.callback = new SDLNative.SDL_AudioCallback(AudioCallback);
             wanted_spec.userdata = IntPtr.Zero;
             IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(wanted_spec));
             Marshal.StructureToPtr(wanted_spec, ptr, false);
@@ -162,14 +162,9 @@ namespace MediaTest
                             OpenSDLAudio(data);
                             salOpend = true;
                         }
-                        //waveDataSize += data.size;
-                        //writer.Write(data.managedData);
                     }
                     frame.Close();
                 }
-                //writer.Flush();
-                //WriteWaveHeader(writer, first);
-                //writer.Close();
                 stream.Close();
             }));
             workingThread.Start();

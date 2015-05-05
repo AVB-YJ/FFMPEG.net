@@ -280,7 +280,9 @@ namespace SDLLib
             public System.Int32 filter_index;
 
         };
+
         //typedef void (SDLCALL * SDL_AudioCallback) (void *userdata, Uint8 * stream,  int len);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] 
         public delegate void SDL_AudioCallback(IntPtr userdata, IntPtr stream, int len);
     }
 }
