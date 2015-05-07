@@ -45,7 +45,7 @@ public static extern System.Int32 av_log2_16bit(
 	System.UInt32 v);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Int32 av_clip_c(
+public static extern System.Int32 av_clip(
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 a, 
 	[MarshalAs(UnmanagedType.I4)]
@@ -54,7 +54,7 @@ public static extern System.Int32 av_clip_c(
 	System.Int32 amax);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Int64 av_clip64_c(
+public static extern System.Int64 av_clip64(
 	[MarshalAs(UnmanagedType.I8)]
 	System.Int64 a, 
 	[MarshalAs(UnmanagedType.I8)]
@@ -63,53 +63,53 @@ public static extern System.Int64 av_clip64_c(
 	System.Int64 amax);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Byte av_clip_uint8_c(
+public static extern System.Byte av_clip_uint8(
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 a);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Char av_clip_int8_c(
+public static extern System.Char av_clip_int8(
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 a);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.UInt16 av_clip_uint16_c(
+public static extern System.UInt16 av_clip_uint16(
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 a);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Int16 av_clip_int16_c(
+public static extern System.Int16 av_clip_int16(
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 a);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Int32 av_clipl_int32_c(
+public static extern System.Int32 av_clipl_int32(
 	[MarshalAs(UnmanagedType.I8)]
 	System.Int64 a);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.UInt32 av_clip_uintp2_c(
+public static extern System.UInt32 av_clip_uintp2(
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 a, 
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 p);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Int32 av_sat_add32_c(
+public static extern System.Int32 av_sat_add32(
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 a, 
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 b);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Int32 av_sat_dadd32_c(
+public static extern System.Int32 av_sat_dadd32(
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 a, 
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 b);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern float av_clipf_c(
+public static extern float av_clipf(
 	[MarshalAs(UnmanagedType.R4)]
 	float a, 
 	[MarshalAs(UnmanagedType.R4)]
@@ -118,7 +118,7 @@ public static extern float av_clipf_c(
 	float amax);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Double av_clipd_c(
+public static extern System.Double av_clipd(
 	[MarshalAs(UnmanagedType.R8)]
 	System.Double a, 
 	[MarshalAs(UnmanagedType.R8)]
@@ -127,17 +127,17 @@ public static extern System.Double av_clipd_c(
 	System.Double amax);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Int32 av_ceil_log2_c(
+public static extern System.Int32 av_ceil_log2(
 	[MarshalAs(UnmanagedType.I4)]
 	System.Int32 x);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Int32 av_popcount_c(
+public static extern System.Int32 av_popcount(
 	[MarshalAs(UnmanagedType.I4)]
 	System.UInt32 x);
 
 [DllImport(COMMON), SuppressUnmanagedCodeSecurity]
-public static extern System.Int32 av_popcount64_c(
+public static extern System.Int32 av_popcount64(
 	[MarshalAs(UnmanagedType.I8)]
 	System.UInt64 x);
 

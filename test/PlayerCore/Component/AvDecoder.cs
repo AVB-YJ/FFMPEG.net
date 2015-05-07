@@ -69,9 +69,11 @@ namespace Multimedia
                     return;
 
 
-                packet.Decode();
+                if (packet.Decode())
+                {
 
-                PushToNext(packet);
+                    PushToNext(packet);
+                }
                 packet.Close();                
             }
         }

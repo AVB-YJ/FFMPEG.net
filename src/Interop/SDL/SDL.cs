@@ -25,9 +25,9 @@ using System.Runtime.InteropServices;
 using System.Security;
 namespace SDLLib
 {
-    public partial class SDLNative 
+    public partial class SDL 
 {
-public const string SDL = "SDL2.dll";
+public const string SDLDLL = "SDL2.dll";
 
 
 public static readonly uint SDL_INIT_TIMER = 0x00000001;
@@ -42,27 +42,27 @@ public static readonly uint SDL_INIT_EVERYTHING = (
                 SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS | 
                 SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER 
             );
-[DllImport(SDL), SuppressUnmanagedCodeSecurity]
+[DllImport(SDLDLL), SuppressUnmanagedCodeSecurity]
 public static extern System.Int32 SDL_Init(
 	[MarshalAs(UnmanagedType.I4)]
 	System.UInt32 flags);
 
-[DllImport(SDL), SuppressUnmanagedCodeSecurity]
+[DllImport(SDLDLL), SuppressUnmanagedCodeSecurity]
 public static extern System.Int32 SDL_InitSubSystem(
 	[MarshalAs(UnmanagedType.I4)]
 	System.UInt32 flags);
 
-[DllImport(SDL), SuppressUnmanagedCodeSecurity]
+[DllImport(SDLDLL), SuppressUnmanagedCodeSecurity]
 public static extern void SDL_QuitSubSystem(
 	[MarshalAs(UnmanagedType.I4)]
 	System.UInt32 flags);
 
-[DllImport(SDL), SuppressUnmanagedCodeSecurity]
+[DllImport(SDLDLL), SuppressUnmanagedCodeSecurity]
 public static extern System.UInt32 SDL_WasInit(
 	[MarshalAs(UnmanagedType.I4)]
 	System.UInt32 flags);
 
-[DllImport(SDL), SuppressUnmanagedCodeSecurity]
+[DllImport(SDLDLL), SuppressUnmanagedCodeSecurity]
 public static extern void SDL_Quit(
 );
 

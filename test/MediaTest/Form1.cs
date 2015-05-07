@@ -22,22 +22,14 @@ namespace MediaTest
     {
         private Graphics graph;
         private Thread workingThread = null;
-        private IntPtr waveOut = IntPtr.Zero;
-        private SDLNative.SDL_AudioSpec wanted_spec;
-        private bool salOpend = false;
-        private int audioDevice = 0;
-        private SizeQueue<WaveDataType> queue = new SizeQueue<WaveDataType>(10,
-            (t => { return; }));
-
+        private WavePlayer player = new WavePlayer();
         public Form1()
         {
             InitializeComponent();
             string myExeDir = (new FileInfo(System.Reflection.Assembly.GetEntryAssembly().Location)).Directory.FullName;
             Environment.CurrentDirectory = myExeDir;
             graph = Graphics.FromHwnd(panelShow.Handle);
-            var ret = SDLNative.SDL_Init(SDLNative.SDL_INIT_AUDIO | SDLNative.SDL_INIT_TIMER);
-            if (ret != 0)
-                Debug.WriteLine("SDL_Init fail");
+            player.Start();
         }
 
         //private void WriteWaveHeader(BinaryWriter writer, WaveDataType format)
@@ -86,51 +78,7 @@ namespace MediaTest
         //    writer.Flush();
         //    Marshal.FreeHGlobal(ptr);
         //}
-        private void AudioCallback(IntPtr userdata, IntPtr stream, int len)
-        {
-            WaveDataType frame;
-            int left = len;
-            if (queue.Dequeue(out frame))
-            {
-                uint sampleSize = (uint)(frame.size > len ? len : frame.size);
-                IntPtr rawData = Marshal.AllocHGlobal(frame.managedData.Length);
-                Marshal.Copy(frame.managedData, 0, rawData, frame.managedData.Length);
-                SDLNative.SDL_MixAudio(stream, rawData, sampleSize, (int)SDLNative.SDL_MIX_MAXVOLUME);
-                Marshal.Copy(frame.managedData, 0, stream, frame.managedData.Length);
-                left -= (int)sampleSize;
-                Marshal.FreeHGlobal(rawData);
-                if (left <= 0)
-                {
-                    Debug.WriteLine(string.Format("left if {0}", left));
-                    return;
-                }
-            }
 
-        }
-
-        private void OpenSDLAudio(WaveDataType data)
-        {
-            wanted_spec = new SDLNative.SDL_AudioSpec();
-            wanted_spec.freq = data.sample_rate;
-            wanted_spec.format = (ushort)((data.fmt == AV.AVSampleFormat.AV_SAMPLE_FMT_S16) ? SDLNative.AUDIO_S16SYS :
-                (data.fmt == AV.AVSampleFormat.AV_SAMPLE_FMT_S32) ? SDLNative.AUDIO_S32SYS :
-                SDLNative.AUDIO_S16SYS);
-            wanted_spec.channels = (byte)data.channel;
-            wanted_spec.silence = 0;
-            wanted_spec.samples = (ushort)data.nb_samples;
-            wanted_spec.callback = new SDLNative.SDL_AudioCallback(AudioCallback);
-            wanted_spec.userdata = IntPtr.Zero;
-            IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(wanted_spec));
-            Marshal.StructureToPtr(wanted_spec, ptr, false);
-            audioDevice = SDLNative.SDL_OpenAudioDevice(null, 0, ptr, IntPtr.Zero, (int)SDLNative.SDL_AUDIO_ALLOW_ANY_CHANGE);
-            if (audioDevice == 0)
-            {
-                Debug.WriteLine("can't open audio.");
-            }
-            Marshal.FreeHGlobal(ptr);
-
-            SDLNative.SDL_PauseAudioDevice(audioDevice, 0);
-        }
         
         private void button1_Click(object sender, EventArgs e)
         {
@@ -148,26 +96,25 @@ namespace MediaTest
                     if (frame.FrameType == AVFrameType.Video)
                     {
                         SharpFFmpeg.VideoFrame video = (SharpFFmpeg.VideoFrame)frame;
-                        frame.Decode();
-                        var data = video.ImgData;
-                        DrawImage(data);
+                        if (frame.Decode())
+                        {
+                            var data = video.ImgData;
+                            DrawImage(data);
+                        }
                     }
                     else if(frame.FrameType == AVFrameType.Audio)
                     {
                         SharpFFmpeg.AudioFrame audio = (SharpFFmpeg.AudioFrame)frame;
-                        audio.Decode();
-                        var data = audio.WaveDate;
-
-                        queue.Enqueue(data);
-                        if (salOpend == false)
+                        if (audio.Decode())
                         {
-                            OpenSDLAudio(data);
-                            salOpend = true;
+                            var data = audio.WaveDate;
+                            player.PutSample(data);
                         }
                     }
                     frame.Close();
                 }
                 stream.Close();
+                player.Stop();
             }));
             workingThread.Start();
         }

@@ -25,7 +25,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 namespace SDLLib
 {
-    public partial class SDLNative 
+    public partial class SDL 
 {
 public const string BEGIN_CODE = "SDL2.dll";
 

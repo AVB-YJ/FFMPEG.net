@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace SharpFFmpeg
     public interface IAVFrame
     {
         AVFrameType FrameType { get; }
-        void Decode();
+        bool Decode();
         void Close();
     }
 
@@ -47,13 +48,21 @@ namespace SharpFFmpeg
             get { throw new NotImplementedException(); }
         }
 
-        public void Decode()
+        public bool Decode()
         {
             if (rawData != IntPtr.Zero)
                 AV.av_free(rawData);
 
             rawData = DoDecode();
-            avFrame = new NativeGetter<AV.AVFrame>(rawData).Get();
+            if (rawData != IntPtr.Zero)
+            {
+                avFrame = new NativeGetter<AV.AVFrame>(rawData).Get();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
 
@@ -85,7 +94,7 @@ namespace SharpFFmpeg
 
     public class AudioFrame : AVFrameAbs
     {
- 
+
         public AudioFrame(IntPtr pPacket, IntPtr codec)
             : base(pPacket, codec)
         {
@@ -102,8 +111,8 @@ namespace SharpFFmpeg
             int size = 0;
             IntPtr rawData = AV.avcodec_alloc_frame();
             int ret = AV.avcodec_decode_audio4(Codec,
-                rawData, 
-                out size, 
+                rawData,
+                out size,
                 Packet);
             if (ret <= 0 || size == 0)
             {
@@ -125,72 +134,54 @@ namespace SharpFFmpeg
                 d.size = avFrame.linesize[0];
                 d.bit_rate = codecCtx.bit_rate;
                 d.sample_rate = avFrame.sample_rate;
-                ConvertAudioSample(ref d, avFrame.data[0]);
+                Debug.WriteLine(string.Format("[audio] bit_per_sample {0}, sample rate {1}, bit_rate {2}", codecCtx.bits_per_coded_sample,
+                    avFrame.sample_rate, codecCtx.bit_rate));
+                ConvertAudioSample(ref d, avFrame.extended_data);
                 return d;
             }
         }
 
         private void ConvertAudioSample(ref WaveDataType input, IntPtr sample)
         {
+            int ret;
+            IntPtr swr = AV.swr_alloc_set_opts(IntPtr.Zero,
+                                            AV.av_get_default_channel_layout(codecCtx.channels),
+                                            AV.AVSampleFormat.AV_SAMPLE_FMT_S16,
+                                            codecCtx.sample_rate,
+                                            AV.av_get_default_channel_layout(codecCtx.channels),
+                                            codecCtx.sample_fmt,
+                                            codecCtx.sample_rate,
+                                            0,
+                                            IntPtr.Zero);
+            ret = AV.swr_init(swr);
 
-            if (input.fmt == AV.AVSampleFormat.AV_SAMPLE_FMT_FLTP)
-            {
-                System.Single val = new System.Single();
-                if (input.channel == 1)
-                {
-                    for (int i = 0; i < input.nb_samples; i++)
-                    {
-                        IntPtr address = new IntPtr(sample.ToInt64() + i * Marshal.SizeOf(val));
-                        val = (System.Single)Marshal.PtrToStructure(address, typeof(System.Single));
-                        if (val < -1.0)
-                            val = -1.0f;
-                        else if (val > 1.0)
-                            val = 1.0f;
-                        Int16 target = (Int16)(val * 32767.0f);
+            int needed_buf_size = AV.av_samples_get_buffer_size(IntPtr.Zero,
+                                                                codecCtx.channels,
+                                                                input.nb_samples,
+                                                                AV.AVSampleFormat.AV_SAMPLE_FMT_S16, 0);
+            IntPtr pOutput = Marshal.AllocCoTaskMem(needed_buf_size);
+            IntPtr ppOutput = Marshal.AllocCoTaskMem(Marshal.SizeOf(pOutput));
+            Marshal.WriteIntPtr(ppOutput, pOutput);
 
-                        IntPtr address2 = new IntPtr(sample.ToInt64() + i * Marshal.SizeOf(target));
-                        Marshal.WriteInt16(address2, target);
-                    }
-                }
-                else if (input.channel == 2)
-                {
-                    for (int i = 0; i < input.nb_samples; i++)
-                    {
-                        // channel 1
-                        IntPtr address = new IntPtr(sample.ToInt64() + i * Marshal.SizeOf(val));
-                        val = (System.Single)Marshal.PtrToStructure(address, typeof(System.Single));
-                        if (val < -1.0)
-                            val = -1.0f;
-                        else if (val > 1.0)
-                            val = 1.0f;
-                        Int16 target = (Int16)(val * 32767.0f);
+            int len = AV.swr_convert(swr, ppOutput, input.nb_samples, sample, input.nb_samples);
 
-                        IntPtr address2 = new IntPtr(sample.ToInt64() + (i * 2) * Marshal.SizeOf(target));
-                        Marshal.WriteInt16(address2, target);
+            int output_len = len * 2 * AV.av_get_bytes_per_sample(AV.AVSampleFormat.AV_SAMPLE_FMT_S16);
+            input.managedData = new byte[output_len];
+            Marshal.Copy(pOutput, input.managedData, 0, output_len);
 
-                        // channel 2
-                        address = new IntPtr(sample.ToInt64() + (i + 1) * Marshal.SizeOf(val));
-                        val = (System.Single)Marshal.PtrToStructure(address, typeof(System.Single));
-                        if (val < -1.0)
-                            val = -1.0f;
-                        else if (val > 1.0)
-                            val = 1.0f;
-                        target = (Int16)(val * 32767.0f);
+            Marshal.FreeCoTaskMem(pOutput);
+            Marshal.FreeCoTaskMem(ppOutput);
 
-                        address2 = new IntPtr(sample.ToInt64() + (i * 2 + 1) * Marshal.SizeOf(target));
-                        Marshal.WriteInt16(address2, target);
-                    }
-                }
-            }
-            else
-            {
-                // FIXME
-                // add convert from other format to AV_SAMPLE_FMT_S16
+            IntPtr ppSwr = Marshal.AllocCoTaskMem(Marshal.SizeOf(swr));
+            Marshal.WriteIntPtr(ppSwr, swr);
+            AV.swr_free(ppSwr);
+            Marshal.FreeCoTaskMem(ppSwr);
 
-            }
+            input.bit_per_sample = AV.av_get_bits_per_sample_fmt(AV.AVSampleFormat.AV_SAMPLE_FMT_S16);
+            input.channel = codecCtx.channels;
+            input.fmt = AV.AVSampleFormat.AV_SAMPLE_FMT_S16;
+            input.size = needed_buf_size;
 
-            input.managedData = new byte[input.size];
-            Marshal.Copy(sample, input.managedData, 0, input.size);
         }
 
     }
@@ -224,9 +215,9 @@ namespace SharpFFmpeg
             IntPtr rawData = AV.avcodec_alloc_frame();
 
             int finish = 0; ;
-            int ret = AV.avcodec_decode_video2(Codec, 
-                rawData, 
-                out finish, 
+            int ret = AV.avcodec_decode_video2(Codec,
+                rawData,
+                out finish,
                 Packet);
             if (ret < 0)
             {

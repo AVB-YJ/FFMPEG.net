@@ -83,6 +83,7 @@
     <Compile Include="ffmpeg55\libavutil\avconfig.cs" />
     <Compile Include="ffmpeg55\libavutil\avutil.cs" />
     <Compile Include="ffmpeg55\libavutil\buffer.cs" />
+    <Compile Include="ffmpeg55\libavutil\channel_layout.cs" />
     <Compile Include="ffmpeg55\libavutil\common.cs" />
     <Compile Include="ffmpeg55\libavutil\dict.cs" />
     <Compile Include="ffmpeg55\libavutil\frame.cs" />
@@ -138,7 +139,9 @@
     <Compile Include="SDL\SDL_version.cs" />
     <Compile Include="SDL\SDL_video.cs" />
     <Compile Include="SDL\winapifamily.cs" />
+    <Compile Include="SizeQueue.cs" />
     <Compile Include="Wave\WaveNative.cs" />
+    <Compile Include="Wave\WavePlayer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
