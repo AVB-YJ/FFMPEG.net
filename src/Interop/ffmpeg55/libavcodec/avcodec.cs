@@ -2759,6 +2759,22 @@ public struct AVSubtitleRect{
 };
 
 public struct AVPicture{
+
+    public List<byte[]> Data
+    {
+        get
+        {
+            List<byte[]> ret = new List<byte[]>();
+            for (var i = 0; i < data.Length; i++)
+            {
+                byte[] bs = new byte[linesize[i]];
+                Marshal.Copy(data[i], bs, 0, linesize[i]);
+                ret.Add(bs);
+            }
+            return ret;
+        }
+    }
+
 	[MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
 	public IntPtr[] data;
 

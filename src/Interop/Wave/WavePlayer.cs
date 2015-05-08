@@ -5,12 +5,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using WaveLib;
 
-namespace WaveLib
+namespace SharpFFmpeg
 {
     public class WavePlayer
     {
-        private Thread[] threads = new Thread[1];
+        private Thread[] threads = new Thread[2];
         private bool threadWorking = false;
         private SizeQueue<WaveDataType> queue = new SizeQueue<WaveDataType>(200,
             new FreeQueueItemDelegate<WaveDataType>(item =>
@@ -112,7 +113,7 @@ namespace WaveLib
                 if (!queue.Dequeue(out frame))
                     break;
 
-                if (currentIndex + frame.size < frame.size * 3)
+                if (currentIndex + frame.size < frame.size * 2)
                 {
                     list.AddRange(frame.managedData);
                     currentIndex += frame.size;

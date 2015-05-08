@@ -140,7 +140,7 @@ public enum snd_pcm_format_t {
 
 		[DllImport(ASOUND), SuppressUnmanagedCodeSecurity]
 		public static extern 
-int snd_pcm_open (out IntPtr /* snd_pcm_t ** */pcm, 
+        int snd_pcm_open (out IntPtr /* snd_pcm_t ** */pcm, 
 			                 [MarshalAs(UnmanagedType.LPStr)]
 			                 string name, 
 		 snd_pcm_stream_t stream, int mode);

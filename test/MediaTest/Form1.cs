@@ -22,14 +22,15 @@ namespace MediaTest
     {
         private Graphics graph;
         private Thread workingThread = null;
-        private WavePlayer player = new WavePlayer();
+        private WavePlayer audioPlayer = new WavePlayer();
+
         public Form1()
         {
             InitializeComponent();
             string myExeDir = (new FileInfo(System.Reflection.Assembly.GetEntryAssembly().Location)).Directory.FullName;
             Environment.CurrentDirectory = myExeDir;
             graph = Graphics.FromHwnd(panelShow.Handle);
-            player.Start();
+            audioPlayer.Start();
         }
 
         //private void WriteWaveHeader(BinaryWriter writer, WaveDataType format)
@@ -108,13 +109,13 @@ namespace MediaTest
                         if (audio.Decode())
                         {
                             var data = audio.WaveDate;
-                            player.PutSample(data);
+                            audioPlayer.PutSample(data);
                         }
                     }
                     frame.Close();
                 }
                 stream.Close();
-                player.Stop();
+                audioPlayer.Stop();
             }));
             workingThread.Start();
         }
@@ -155,6 +156,7 @@ namespace MediaTest
             writer.Seek(0, SeekOrigin.Begin);
             Bitmap bitmap = new Bitmap(str);
             graph.DrawImage(bitmap, 0, 0, panelShow.Width, panelShow.Height);
+            bitmap.Dispose();
             writer.Close();
 
         }
